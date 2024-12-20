@@ -8,12 +8,64 @@ type ApiResponse = {
 function App() {
   const [data, setData] = useState<ApiResponse | null>(null);
 
+  // the categories should correspond to what the nurse has to do in response to the patient query and the urgency
+
   const dummyData = [
-    { mrn: "123456", lastName: "Smith", firstName: "John", dob: "01/01/1980", subject: "Lab Results", dateReceived: "12/18/2024", fromUser: "Dr. Doe", message: "I am very worried about my lab results. Why am I still waiting? I need answers!" },
-    { mrn: "234567", lastName: "Doe", firstName: "Jane", dob: "02/02/1985", subject: "Prescription", dateReceived: "12/17/2024", fromUser: "Nurse Joy", message: "My prescription is missing, and I have been waiting for days. What is going on?" },
-    { mrn: "345678", lastName: "Brown", firstName: "Charlie", dob: "03/03/1990", subject: "Message", dateReceived: "12/16/2024", fromUser: "Dr. Smith", message: "Why haven’t I received any updates? I am anxious about my condition." },
-    { mrn: "456789", lastName: "Johnson", firstName: "Emily", dob: "04/04/1995", subject: "Image Upload", dateReceived: "12/15/2024", fromUser: "Dr. White", message: "The image upload process was confusing. I am not sure if I did it right." },
-    { mrn: "567890", lastName: "Lee", firstName: "Chris", dob: "05/05/2000", subject: "Document", dateReceived: "12/14/2024", fromUser: "Receptionist", message: "I have submitted all documents, but I haven't heard back yet. Please confirm if everything is okay." },
+    { 
+      mrn: "123456", 
+      lastName: "Smith", 
+      firstName: "John", 
+      dob: "01/01/1980", 
+      subject: "Lab Results", 
+      dateReceived: "12/18/2024", 
+      fromUser: "Dr. Doe", 
+      message: "I am very worried about my lab results. Why am I still waiting? I need answers!", 
+      categories: ["Urgent Response", "Follow-up", "High Urgency"]
+    },
+    { 
+      mrn: "234567", 
+      lastName: "Doe", 
+      firstName: "Jane", 
+      dob: "02/02/1985", 
+      subject: "Prescription", 
+      dateReceived: "12/17/2024", 
+      fromUser: "Nurse Joy", 
+      message: "My prescription is missing, and I have been waiting for days. What is going on?", 
+      categories: ["Prescription Issue", "High Urgency", "Follow-up"]
+    },
+    { 
+      mrn: "345678", 
+      lastName: "Brown", 
+      firstName: "Charlie", 
+      dob: "03/03/1990", 
+      subject: "Message", 
+      dateReceived: "12/16/2024", 
+      fromUser: "Dr. Smith", 
+      message: "Why haven’t I received any updates? I am anxious about my condition.", 
+      categories: ["General Inquiry", "Medium Urgency", "Clarification Needed"]
+    },
+    { 
+      mrn: "456789", 
+      lastName: "Johnson", 
+      firstName: "Emily", 
+      dob: "04/04/1995", 
+      subject: "Image Upload", 
+      dateReceived: "12/15/2024", 
+      fromUser: "Dr. White", 
+      message: "The image upload process was confusing. I am not sure if I did it right.", 
+      categories: ["Image Upload Assistance", "Medium Urgency", "Clarification Needed"]
+    },
+    { 
+      mrn: "567890", 
+      lastName: "Lee", 
+      firstName: "Chris", 
+      dob: "05/05/2000", 
+      subject: "Document", 
+      dateReceived: "12/14/2024", 
+      fromUser: "Receptionist", 
+      message: "I have submitted all documents, but I haven't heard back yet. Please confirm if everything is okay.", 
+      categories: ["Document Submission", "Low Urgency", "Follow-up"]
+    },
   ];
 
   return (
@@ -86,6 +138,7 @@ const Inbox = ({ dummyData }: InboxProps) => {
             <th className="border-b border-gray-400 p-2 text-left">Subject</th>
             <th className="border-b border-gray-400 p-2 text-left">Date Received</th>
             <th className="border-b border-gray-400 p-2 text-left">From User</th>
+            <th className="border-b border-gray-400 p-2 text-left text-blue-400">Categories</th>
           </tr>
         </thead>
         <tbody>
@@ -102,6 +155,16 @@ const Inbox = ({ dummyData }: InboxProps) => {
               <td className="border-b border-gray-300 p-2">{entry.subject}</td>
               <td className="border-b border-gray-300 p-2">{entry.dateReceived}</td>
               <td className="border-b border-gray-300 p-2">{entry.fromUser}</td>
+              <td className="border-b border-gray-300 p-2">
+              {entry.categories.map((category, index) => (
+                <span
+                  key={index}
+                  className="inline-block bg-blue-200 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full text-center"
+                >
+                  {category}
+                </span>
+              ))}
+            </td>
             </tr>
           ))}
         </tbody>

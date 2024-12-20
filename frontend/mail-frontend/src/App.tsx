@@ -20,7 +20,21 @@ function App() {
       dateReceived: "12/18/2024", 
       fromUser: "Dr. Doe", 
       message: "I am very worried about my lab results. Why am I still waiting? I need answers!", 
-      categories: ["Urgent Response", "Follow-up", "High Urgency"]
+      categories: ["Urgent Response", "Follow-up", "High Urgency"],
+      aiReplies: [
+        { 
+          label: "Empathetic Reply", 
+          content: "I completely understand how stressful this must be for you, and I’m so sorry for the delay. Your results are important, and we're doing everything we can to get them to you as soon as possible. Please hang in there, and we’ll update you shortly."
+        },
+        { 
+          label: "Direct Reply", 
+          content: "We are currently processing your lab results. You will receive an update once they are available. Please rest assured that we are actively working on them."
+        },
+        { 
+          label: "Reassurance Reply", 
+          content: "I know waiting for results can be nerve-wracking, but please know that your results are a priority for us. We are closely monitoring the situation and will notify you immediately once they are ready. You are in good hands."
+        }
+      ]
     },
     { 
       mrn: "234567", 
@@ -31,7 +45,21 @@ function App() {
       dateReceived: "12/17/2024", 
       fromUser: "Nurse Joy", 
       message: "My prescription is missing, and I have been waiting for days. What is going on?", 
-      categories: ["Prescription Issue", "High Urgency", "Follow-up"]
+      categories: ["Prescription Issue", "High Urgency", "Follow-up"],
+      aiReplies: [
+        { 
+          label: "Empathetic Reply", 
+          content: "I am so sorry for the frustration this delay has caused. I completely understand how important your prescription is. Let me look into this right away and ensure it is processed as quickly as possible."
+        },
+        { 
+          label: "Direct Reply", 
+          content: "We are aware of the missing prescription and are currently working to resolve the issue. I will follow up with the pharmacy to ensure it is sent out as soon as possible."
+        },
+        { 
+          label: "Reassurance Reply", 
+          content: "I completely understand your concern, and I want to assure you that we’re prioritizing this issue. I’m checking with the pharmacy now, and you’ll be receiving your prescription soon. Thanks for your patience."
+        }
+      ]
     },
     { 
       mrn: "345678", 
@@ -42,7 +70,21 @@ function App() {
       dateReceived: "12/16/2024", 
       fromUser: "Dr. Smith", 
       message: "Why haven’t I received any updates? I am anxious about my condition.", 
-      categories: ["General Inquiry", "Medium Urgency", "Clarification Needed"]
+      categories: ["General Inquiry", "Medium Urgency", "Clarification Needed"],
+      aiReplies: [
+        { 
+          label: "Empathetic Reply", 
+          content: "I completely understand your concern. It’s very natural to feel anxious when waiting for updates. I’m currently reviewing your case and will provide you with an update as soon as I have more information. Hang in there."
+        },
+        { 
+          label: "Direct Reply", 
+          content: "I’m aware that you’re waiting for updates on your condition. We’re still awaiting results, and I’ll be sure to inform you once we have the necessary information."
+        },
+        { 
+          label: "Reassurance Reply", 
+          content: "I understand how difficult it can be to wait for updates. Rest assured, we are closely monitoring your condition and will provide you with any updates as soon as we have them. You’re being taken care of."
+        }
+      ]
     },
     { 
       mrn: "456789", 
@@ -53,7 +95,21 @@ function App() {
       dateReceived: "12/15/2024", 
       fromUser: "Dr. White", 
       message: "The image upload process was confusing. I am not sure if I did it right.", 
-      categories: ["Image Upload Assistance", "Medium Urgency", "Clarification Needed"]
+      categories: ["Image Upload Assistance", "Medium Urgency", "Clarification Needed"],
+      aiReplies: [
+        { 
+          label: "Empathetic Reply", 
+          content: "I completely understand how frustrating technical issues can be, especially when you're trying to do everything right. Let’s work together to make sure your image is properly uploaded. I’ll guide you through the process step-by-step."
+        },
+        { 
+          label: "Direct Reply", 
+          content: "I’ve checked your image upload, and it appears that everything is in order. If you’d like, I can walk you through the steps again to ensure there are no issues."
+        },
+        { 
+          label: "Reassurance Reply", 
+          content: "Don’t worry, your image has been uploaded successfully. If you need any help with the process, I’m here to assist you and ensure everything is done correctly."
+        }
+      ]
     },
     { 
       mrn: "567890", 
@@ -64,9 +120,24 @@ function App() {
       dateReceived: "12/14/2024", 
       fromUser: "Receptionist", 
       message: "I have submitted all documents, but I haven't heard back yet. Please confirm if everything is okay.", 
-      categories: ["Document Submission", "Low Urgency", "Follow-up"]
+      categories: ["Document Submission", "Low Urgency", "Follow-up"],
+      aiReplies: [
+        { 
+          label: "Empathetic Reply", 
+          content: "I understand how concerning it can be to wait for confirmation. Thank you for submitting your documents. I’m reviewing everything now and will confirm as soon as possible."
+        },
+        { 
+          label: "Direct Reply", 
+          content: "All documents have been submitted and are currently under review. You will be notified once everything has been processed."
+        },
+        { 
+          label: "Reassurance Reply", 
+          content: "Thank you for submitting everything! I want to assure you that we have received your documents, and everything looks great. You’ll hear from us soon regarding the next steps."
+        }
+      ]
     },
   ];
+  
 
   return (
     <Router>
@@ -185,6 +256,7 @@ const MessageDetail = ({ dummyData }: MessageDetailProps) => {
     to: entryData ? `${entryData.firstName} ${entryData.lastName}` : "",
     subject: entryData ? entryData.subject : "Patient Message",
     reply: "",
+    aiReplies: entryData?.aiReplies || [],
   });
 
   const handleInputChange = (e, field) => {
@@ -192,6 +264,12 @@ const MessageDetail = ({ dummyData }: MessageDetailProps) => {
       ...entry,
       [field]: e.target.value,
     });
+  };
+
+  const handleAIReplyChange = (index, newContent) => {
+    const updatedReplies = [...entry.aiReplies];
+    updatedReplies[index].content = newContent;
+    setEntry({ ...entry, aiReplies: updatedReplies });
   };
 
   if (!entryData) {
@@ -236,6 +314,31 @@ const MessageDetail = ({ dummyData }: MessageDetailProps) => {
         </div>
       </div>
       <div className="bg-white p-4 border border-blue-400 rounded mt-4">
+        <p className='mb-4'><strong>Generated Replies: (Click to edit)</strong></p>
+        {entry.aiReplies.map((reply, index) => (
+          <div key={index} className="mb-3">
+            <p className='mb-4 text-blue-400 text-md'><strong>{reply.label}:</strong></p>
+            <textarea
+              className="w-full p-2 border border-gray-300 bg-blue-100"
+              value={reply.content}
+              onChange={(e) => handleAIReplyChange(index, e.target.value)}
+            />
+            <button
+              
+              className=" mt-4 bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-200 hover:text-black"
+            >
+              Send Reply
+            </button>
+            <button
+              
+              className=" mt-4 bg-blue-500 text-white py-1 px-2 rounded ml-3 hover:bg-blue-200 hover:text-black"
+            >
+              Regenerate
+            </button>
+          </div>
+        ))}
+      </div>
+      <div className="bg-white p-4 border border-blue-400 rounded mt-4">
         <p className='mb-4'><strong>Your Reply:</strong></p>
         <textarea
           className="w-full h-24 p-2 border border-gray-300"
@@ -243,9 +346,12 @@ const MessageDetail = ({ dummyData }: MessageDetailProps) => {
           onChange={(e) => handleInputChange(e, "reply")}
           placeholder="Write your reply here..."
         />
+        <button className=" mt-4 bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-200 hover:text-black">
+          Send Reply
+        </button>
       </div>
       <div className="mt-5">
-        <Link to="/" className="mt-4 bg-blue-500 text-white p-2 rounded">
+        <Link to="/" className="mt-4 bg-blue-200 text-black p-2 rounded">
           Back to Inbox
         </Link>
       </div>

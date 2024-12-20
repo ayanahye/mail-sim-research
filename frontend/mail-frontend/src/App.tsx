@@ -178,7 +178,7 @@ type MessageDetailProps = {
 };
 
 const MessageDetail = ({ dummyData }: MessageDetailProps) => {
-  const { mrn } = useParams(); // get MRN from url params
+  const { mrn } = useParams(); // get MRN from URL params
   const entryData = dummyData.find((item) => item.mrn === mrn);
 
   const [entry, setEntry] = useState({
@@ -209,6 +209,7 @@ const MessageDetail = ({ dummyData }: MessageDetailProps) => {
           readOnly
         />
       </div>
+      
       <div className="flex items-center mb-4">
         <p className="w-20"><strong>Subject:</strong></p>
         <input
@@ -220,6 +221,19 @@ const MessageDetail = ({ dummyData }: MessageDetailProps) => {
       <div className="bg-gray-100 p-4 mb-4 border border-gray-300 rounded">
         <p><strong>Patient Message:</strong></p>
         <p>{entryData.message}</p>
+      </div>
+      <div className="mb-4">
+        <strong className='text-blue-400'>Categories:</strong>
+        <div className="mt-2">
+          {entryData.categories.map((category, index) => (
+            <span
+              key={index}
+              className="inline-block bg-blue-200 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
+            >
+              {category}
+            </span>
+          ))}
+        </div>
       </div>
       <div className="bg-white p-4 border border-blue-400 rounded mt-4">
         <p className='mb-4'><strong>Your Reply:</strong></p>
@@ -238,5 +252,6 @@ const MessageDetail = ({ dummyData }: MessageDetailProps) => {
     </div>
   );
 };
+
 
 export default App;

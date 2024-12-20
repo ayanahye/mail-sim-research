@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 
+/*
 type ApiResponse = {
   message: string;
 };
+*/
 
 function App() {
-  const [data, setData] = useState<ApiResponse | null>(null);
+  //const [data, setData] = useState<ApiResponse | null>(null);
 
   // the categories should correspond to what the nurse has to do in response to the patient query and the urgency
 
@@ -227,7 +229,7 @@ const Inbox = ({ dummyData }: InboxProps) => {
               <td className="border-b border-gray-300 p-2">{entry.dateReceived}</td>
               <td className="border-b border-gray-300 p-2">{entry.fromUser}</td>
               <td className="border-b border-gray-300 p-2">
-              {entry.categories.map((category, index) => (
+              {entry.categories.map((category: string, index: number) => (
                 <span
                   key={index}
                   className="inline-block bg-blue-200 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full text-center"
@@ -259,14 +261,14 @@ const MessageDetail = ({ dummyData }: MessageDetailProps) => {
     aiReplies: entryData?.aiReplies || [],
   });
 
-  const handleInputChange = (e, field) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
     setEntry({
       ...entry,
       [field]: e.target.value,
     });
   };
 
-  const handleAIReplyChange = (index, newContent) => {
+  const handleAIReplyChange = (index:number, newContent:string) => {
     const updatedReplies = [...entry.aiReplies];
     updatedReplies[index].content = newContent;
     setEntry({ ...entry, aiReplies: updatedReplies });
@@ -275,6 +277,11 @@ const MessageDetail = ({ dummyData }: MessageDetailProps) => {
   if (!entryData) {
     return <div>Message not found.</div>;
   }
+
+  interface AIReply {
+    label: string;
+    content: string
+  };
 
   return (
     <div className="p-4">
@@ -303,7 +310,7 @@ const MessageDetail = ({ dummyData }: MessageDetailProps) => {
       <div className="mb-4">
         <strong className='text-blue-400'>Categories:</strong>
         <div className="mt-2">
-          {entryData.categories.map((category, index) => (
+          {entryData.categories.map((category:string, index:number) => (
             <span
               key={index}
               className="inline-block bg-blue-200 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
@@ -315,7 +322,7 @@ const MessageDetail = ({ dummyData }: MessageDetailProps) => {
       </div>
       <div className="bg-white p-4 border border-blue-400 rounded mt-4">
         <p className='mb-4'><strong>Generated Replies: (Click to edit)</strong></p>
-        {entry.aiReplies.map((reply, index) => (
+        {entry.aiReplies.map((reply:AIReply, index:number) => (
           <div key={index} className="mb-3">
             <p className='mb-4 text-blue-400 text-md'><strong>{reply.label}:</strong></p>
             <textarea

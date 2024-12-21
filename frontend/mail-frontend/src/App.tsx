@@ -26,15 +26,15 @@ function App() {
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "I completely understand how stressful this must be for you, and I’m so sorry for the delay. Your results are important, and we're doing everything we can to get them to you as soon as possible. Please hang in there, and we’ll update you shortly."
+          content: "Dear John,\n\nI completely understand how stressful this must be for you, and I’m so sorry for the delay. Your results are important, and we're doing everything we can to get them to you as soon as possible. Please hang in there, and we’ll update you shortly.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         },
         { 
           label: "Direct Reply", 
-          content: "We are currently processing your lab results. You will receive an update once they are available. Please rest assured that we are actively working on them."
+          content: "Hi John,\n\nWe are currently processing your lab results. You will receive an update once they are available. Please rest assured that we are actively working on them.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         },
         { 
           label: "Reassurance Reply", 
-          content: "I know waiting for results can be nerve-wracking, but please know that your results are a priority for us. We are closely monitoring the situation and will notify you immediately once they are ready. You are in good hands."
+          content: "Hello John,\n\nI know waiting for results can be nerve-wracking, but please know that your results are a priority for us. We are closely monitoring the situation and will notify you immediately once they are ready. You are in good hands.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         }
       ]
     },
@@ -51,15 +51,15 @@ function App() {
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "I am so sorry for the frustration this delay has caused. I completely understand how important your prescription is. Let me look into this right away and ensure it is processed as quickly as possible."
+          content: "Dear Jane,\n\nI am so sorry for the frustration this delay has caused. I completely understand how important your prescription is. Let me look into this right away and ensure it is processed as quickly as possible.\n\nSincerely,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
         },
         { 
           label: "Direct Reply", 
-          content: "We are aware of the missing prescription and are currently working to resolve the issue. I will follow up with the pharmacy to ensure it is sent out as soon as possible."
+          content: "Hi Jane,\n\nWe are aware of the missing prescription and are currently working to resolve the issue. I will follow up with the pharmacy to ensure it is sent out as soon as possible.\n\nBest,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
         },
         { 
           label: "Reassurance Reply", 
-          content: "I completely understand your concern, and I want to assure you that we’re prioritizing this issue. I’m checking with the pharmacy now, and you’ll be receiving your prescription soon. Thanks for your patience."
+          content: "Hello Jane,\n\nI completely understand your concern, and I want to assure you that we’re prioritizing this issue. I’m checking with the pharmacy now, and you’ll be receiving your prescription soon. Thanks for your patience.\n\nKind regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
         }
       ]
     },
@@ -76,15 +76,15 @@ function App() {
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "I completely understand your concern. It’s very natural to feel anxious when waiting for updates. I’m currently reviewing your case and will provide you with an update as soon as I have more information. Hang in there."
+          content: "Hi Charlie,\n\nI completely understand your concern. It’s very natural to feel anxious when waiting for updates. I’m currently reviewing your case and will provide you with an update as soon as I have more information. Hang in there.\n\nBest regards,\nDr. Smith\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. Smith.*"
         },
         { 
           label: "Direct Reply", 
-          content: "I’m aware that you’re waiting for updates on your condition. We’re still awaiting results, and I’ll be sure to inform you once we have the necessary information."
+          content: "Hello Charlie,\n\nI’m aware that you’re waiting for updates on your condition. We’re still awaiting results, and I’ll be sure to inform you once we have the necessary information.\n\nSincerely,\nDr. Smith\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. Smith.*"
         },
         { 
           label: "Reassurance Reply", 
-          content: "I understand how difficult it can be to wait for updates. Rest assured, we are closely monitoring your condition and will provide you with any updates as soon as we have them. You’re being taken care of."
+          content: "Dear Charlie,\n\nI understand how difficult it can be to wait for updates. Rest assured, we are closely monitoring your condition and will provide you with any updates as soon as we have them. You’re being taken care of.\n\nWarm regards,\nDr. Smith\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. Smith.*"
         }
       ]
     },
@@ -101,15 +101,15 @@ function App() {
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "I completely understand how frustrating technical issues can be, especially when you're trying to do everything right. Let’s work together to make sure your image is properly uploaded. I’ll guide you through the process step-by-step."
+          content: "Dear Emily,\n\nI completely understand how frustrating technical issues can be, especially when you're trying to do everything right. Let’s work together to make sure your image is properly uploaded. I’ll guide you through the process step-by-step.\n\nKind regards,\nDr. White\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. White.*"
         },
         { 
           label: "Direct Reply", 
-          content: "I’ve checked your image upload, and it appears that everything is in order. If you’d like, I can walk you through the steps again to ensure there are no issues."
+          content: "Hi Emily,\n\nI’ve checked your image upload, and it appears that everything is in order. If you’d like, I can walk you through the steps again to ensure there are no issues.\n\nBest regards,\nDr. White\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. White.*"
         },
         { 
           label: "Reassurance Reply", 
-          content: "Don’t worry, your image has been uploaded successfully. If you need any help with the process, I’m here to assist you and ensure everything is done correctly."
+          content: "Hello Emily,\n\nDon’t worry, your image has been uploaded successfully. If you need any help with the process, I’m here to assist you and ensure everything is done correctly.\n\nSincerely,\nDr. White\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. White.*"
         }
       ]
     },
@@ -126,31 +126,37 @@ function App() {
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "I understand how concerning it can be to wait for confirmation. Thank you for submitting your documents. I’m reviewing everything now and will confirm as soon as possible."
+          content: "Dear Chris,\n\nI understand how concerning it can be to wait for confirmation. Thank you for submitting your documents. I’m reviewing everything now and will confirm as soon as possible.\n\nSincerely,\nReceptionist\n\n*This email was drafted with AI assistance and reviewed/approved by Receptionist.*"
         },
         { 
           label: "Direct Reply", 
-          content: "All documents have been submitted and are currently under review. You will be notified once everything has been processed."
+          content: "Hi Chris,\n\nAll documents have been submitted and are currently under review. You will be notified once everything has been processed.\n\nBest regards,\nReceptionist\n\n*This email was drafted with AI assistance and reviewed/approved by Receptionist.*"
         },
         { 
           label: "Reassurance Reply", 
-          content: "Thank you for submitting everything! I want to assure you that we have received your documents, and everything looks great. You’ll hear from us soon regarding the next steps."
+          content: "Hello Chris,\n\nThank you for submitting everything! I want to assure you that we have received your documents, and everything looks great. You’ll hear from us soon regarding the next steps.\n\nKind regards,\nReceptionist\n\n*This email was drafted with AI assistance and reviewed/approved by Receptionist.*"
         }
       ]
-    },
+    }
   ];
   
-
+  
+// notes:
   return (
     <Router>
-      <div className="min-h-screen flex flex-col m-1">
-        <div className="flex flex-1">
-          <div className="w-1/4 bg-white flex flex-col pr-1">
-            <div className="bg-blue-200 border-2 border-blue-500 p-2 text-center">
-              <p className="font-semibold">Inbox</p>
-            </div>
-            <div className="flex-1 bg-white border-b-2 border-x-2 border-blue-500 overflow-y-auto">
-              {[ 
+      <div className="min-h-screen flex flex-col bg-gray-50">
+      <header className="bg-gray-200 text-gray-800 p-3 flex justify-between items-center border-b fixed top-0 left-0 right-0 z-10">
+        <h1 className="text-lg font-medium">Inbox Messaging System</h1>
+        <nav className="space-x-6">
+          <Link to="/" className="text-gray-800 hover:text-blue-600">Inbox</Link>
+          <Link to="/settings" className="text-gray-800 hover:text-blue-600">Settings</Link>
+        </nav>
+      </header>
+        <div className="flex flex-1 pt-12">
+          <aside className="w-1/6 bg-gray-100 border-r">
+            <div className="bg-blue-200 border-b p-3 text-center font-semibold">Categories</div>
+            <nav className="overflow-y-auto">
+              {[
                 { label: "Labs/Diag - 8", id: "labs" },
                 { label: "Prescriptions - 6", id: "prescriptions" },
                 { label: "Messages - 5", id: "messages" },
@@ -163,81 +169,96 @@ function App() {
               ].map((item) => (
                 <button
                   key={item.id}
-                  className={`p-2 border-b border-gray-300 w-full text-left hover:bg-gray-100 ${item.id === "messages" ? "bg-blue-400 text-white border-blue-600 hover:text-black" : "bg-white"}`}
+                  className={`block p-3 text-left w-full hover:bg-blue-100 border-b transition-colors ${
+                    item.id === "messages" ? "bg-blue-500 text-white" : "bg-white"
+                  }`}
                 >
                   {item.label}
                 </button>
               ))}
-            </div>
-          </div>
-          <div className="w-3/4 border-2 border-gray-300 overflow-auto">
+            </nav>
+          </aside>
+          <main className="w-5/6 bg-white overflow-auto">
             <Routes>
-              <Route
-                path="/"
-                element={<Inbox dummyData={dummyData} />}
-              />
-              <Route
-                path="/message/:mrn"
-                element={<MessageDetail dummyData={dummyData} />}
-              />
+              <Route path="/" element={<Inbox dummyData={dummyData} />} />
+              <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} />} />
             </Routes>
-          </div>
+          </main>
         </div>
       </div>
     </Router>
   );
 }
 
-type InboxProps = {
-  dummyData: any[];
+type AIReply = {
+  label: string;
+  content: string;
 };
 
-const Inbox = ({ dummyData }: InboxProps) => {
+type InboxEntry = {
+  mrn: string;
+  lastName: string;
+  firstName: string;
+  dob: string;
+  subject: string;
+  dateReceived: string;
+  fromUser: string;
+  message: string;
+  categories: string[];
+  aiReplies: AIReply[];
+};
+
+type InboxProps = {
+  dummyData: InboxEntry[];
+};
+
+const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
   const navigate = useNavigate();
 
-  const handleRowClick = (entry: any) => {
+  const handleRowClick = (entry: InboxEntry) => {
     navigate(`/message/${entry.mrn}`);
   };
 
   return (
-    <div className="w-full p-4">
-      <table className="w-full border-collapse">
+    <div className="p-6">
+      <h2 className="text-xl font-bold mb-4 text-gray-800">Inbox Overview</h2>
+      <table className="w-full border-collapse text-sm bg-gray-50">
         <thead>
-          <tr className="bg-white">
-            <th className="border-b border-gray-400 p-2 text-left">MRN</th>
-            <th className="border-b border-gray-400 p-2 text-left">Last Name</th>
-            <th className="border-b border-gray-400 p-2 text-left">First Name</th>
-            <th className="border-b border-gray-400 p-2 text-left">DOB</th>
-            <th className="border-b border-gray-400 p-2 text-left">Subject</th>
-            <th className="border-b border-gray-400 p-2 text-left">Date Received</th>
-            <th className="border-b border-gray-400 p-2 text-left">From User</th>
-            <th className="border-b border-gray-400 p-2 text-left text-blue-400">Categories</th>
+          <tr className="bg-blue-100 text-gray-700">
+            <th className="border p-2 text-left">MRN</th>
+            <th className="border p-2 text-left">Last Name</th>
+            <th className="border p-2 text-left">First Name</th>
+            <th className="border p-2 text-left">DOB</th>
+            <th className="border p-2 text-left">Subject</th>
+            <th className="border p-2 text-left">Date Received</th>
+            <th className="border p-2 text-left">From User</th>
+            <th className="border p-2 text-left">Categories</th>
           </tr>
         </thead>
         <tbody>
           {dummyData.map((entry, index) => (
             <tr
               key={entry.mrn}
-              className={`${index % 2 === 0 ? "bg-blue-100" : "bg-white"} cursor-pointer hover:bg-blue-200`}
+              className={`cursor-pointer hover:bg-blue-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-100"}`}
               onClick={() => handleRowClick(entry)}
             >
-              <td className="border-b border-gray-300 p-2">{entry.mrn}</td>
-              <td className="border-b border-gray-300 p-2">{entry.lastName}</td>
-              <td className="border-b border-gray-300 p-2">{entry.firstName}</td>
-              <td className="border-b border-gray-300 p-2">{entry.dob}</td>
-              <td className="border-b border-gray-300 p-2">{entry.subject}</td>
-              <td className="border-b border-gray-300 p-2">{entry.dateReceived}</td>
-              <td className="border-b border-gray-300 p-2">{entry.fromUser}</td>
-              <td className="border-b border-gray-300 p-2">
-              {entry.categories.map((category: string, index: number) => (
-                <span
-                  key={index}
-                  className="inline-block bg-blue-200 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full text-center"
-                >
-                  {category}
-                </span>
-              ))}
-            </td>
+              <td className="border p-2">{entry.mrn}</td>
+              <td className="border p-2">{entry.lastName}</td>
+              <td className="border p-2">{entry.firstName}</td>
+              <td className="border p-2">{entry.dob}</td>
+              <td className="border p-2">{entry.subject}</td>
+              <td className="border p-2">{entry.dateReceived}</td>
+              <td className="border p-2">{entry.fromUser}</td>
+              <td className="border p-2">
+                {entry.categories.map((category, index) => (
+                  <span
+                    key={index}
+                    className="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
+                  >
+                    {category}
+                  </span>
+                ))}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -246,122 +267,273 @@ const Inbox = ({ dummyData }: InboxProps) => {
   );
 };
 
+// typescript...
+
 type MessageDetailProps = {
-  dummyData: any[];
+  dummyData: InboxEntry[];
 };
 
-const MessageDetail = ({ dummyData }: MessageDetailProps) => {
-  const { mrn } = useParams(); // get MRN from URL params
+type EntryState = {
+  to: string;
+  subject: string;
+  reply: string;
+  aiReplies: AIReply[];
+};
+
+type Rating = number; 
+type Feedback = string;
+
+const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
+  const { mrn } = useParams();
   const entryData = dummyData.find((item) => item.mrn === mrn);
 
-  const [entry, setEntry] = useState({
+  const [entry, setEntry] = useState<EntryState>({
     to: entryData ? `${entryData.firstName} ${entryData.lastName}` : "",
     subject: entryData ? entryData.subject : "Patient Message",
     reply: "",
     aiReplies: entryData?.aiReplies || [],
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
+  const [showModal, setShowModal] = useState(false);
+  const [sentReplies, setSentReplies] = useState<{ content: string; timestamp: Date }[]>([]);
+  const [ratings, setRatings] = useState<Rating[]>([]);
+  const [feedback, setFeedback] = useState<Feedback[]>([]);
+  const [showRating, setShowRating] = useState<{ [key: number]: boolean }>({});
+
+  const handleRateButtonClick = (index: number) => {
+    setShowRating((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  const handleRatingChange = (index: number, newRating: Rating) => {
+    const updatedRatings = [...ratings];
+    updatedRatings[index] = newRating;
+    setRatings(updatedRatings);
+  };
+
+  const handleFeedbackChange = (index: number, newFeedback: Feedback) => {
+    const updatedFeedback = [...feedback];
+    updatedFeedback[index] = newFeedback;
+    setFeedback(updatedFeedback);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>, field: keyof EntryState) => {
     setEntry({
       ...entry,
       [field]: e.target.value,
     });
   };
 
-  const handleAIReplyChange = (index:number, newContent:string) => {
+  const handleSendReply = (replyContent: string, isAIReply: boolean = false) => {
+    console.log("send Reply clicked");
+    if (isAIReply && replyContent.trim()) {
+      setSentReplies((prevReplies) => [
+        ...prevReplies,
+        { content: replyContent, timestamp: new Date() },
+      ]);
+      const updatedReplies = entry.aiReplies.map(reply => {
+        if (reply.content === replyContent) {
+          return { ...reply, content: reply.content };
+        }
+        return reply;
+      });
+      setEntry({ ...entry, aiReplies: updatedReplies });
+    } 
+    else if (!isAIReply && entry.reply.trim()) {
+      setSentReplies((prevReplies) => [
+        ...prevReplies,
+        { content: entry.reply, timestamp: new Date() },
+      ]);
+    } else {
+      console.error("Reply cannot be empty");
+    }
+
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const handleAIReplyChange = (index: number, newContent: string) => {
     const updatedReplies = [...entry.aiReplies];
     updatedReplies[index].content = newContent;
     setEntry({ ...entry, aiReplies: updatedReplies });
   };
 
   if (!entryData) {
-    return <div>Message not found.</div>;
+    return <div className="p-6 text-gray-700">Message not found.</div>;
   }
 
-  interface AIReply {
-    label: string;
-    content: string
-  };
-
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-5">Message Details</h2>
-      <div className="flex items-center mb-4">
-        <p className="w-20"><strong>To:</strong></p>
+    <div className="p-6">
+      <h2 className="text-xl font-bold mb-5 text-gray-800">Message Details</h2>
+      <div className="mb-4">
+        <label className="font-semibold text-gray-600">To:</label>
         <input
-          className="ml-4 border border-4 border-gray-300 px-2 w-64 text-blue-600"
+          className="border w-full p-2 mt-1 text-blue-700 rounded"
           value={entry.to}
           readOnly
         />
       </div>
-      
-      <div className="flex items-center mb-4">
-        <p className="w-20"><strong>Subject:</strong></p>
+      <div className="mb-4">
+        <label className="font-semibold text-gray-600">Subject:</label>
         <input
-          className="ml-4 border border-4 border-gray-300 px-2 w-64"
-          value={'RE: ' + entry.subject}
+          className="border w-full p-2 mt-1 text-gray-700 rounded"
+          value={`RE: ${entry.subject}`}
           readOnly
         />
       </div>
-      <div className="bg-gray-100 p-4 mb-4 border border-gray-300 rounded">
-        <p><strong>Patient Message:</strong></p>
-        <p>{entryData.message}</p>
+      <div className="bg-gray-100 p-4 mb-4 border rounded">
+        <label className="font-semibold text-gray-600">Patient Message:</label>
+        <p className="text-sm text-gray-700">{entryData.message}</p>
       </div>
-      <div className="mb-4">
-        <strong className='text-blue-400'>Categories:</strong>
+      <div className="mt-6 bg-gray-50 p-4 border rounded">
+        <h3 className="font-semibold text-gray-600">Sent Replies</h3>
+        {sentReplies.length > 0 ? (
+          sentReplies.map((sent, index) => (
+            <div key={index} className="mt-2 border-b">
+              <p className="text-sm text-gray-700 mb-2">{sent.content}</p>
+              <p className="text-xs text-gray-500 mb-2">
+                Sent at {sent.timestamp.toLocaleTimeString()} on{" "}
+                {sent.timestamp.toLocaleDateString()}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-sm text-gray-600">No replies sent yet.</p>
+        )}
+      </div>
+      <div className="mb-4 mt-4">
+        <label className="font-semibold text-gray-600">Categories:</label>
         <div className="mt-2">
-          {entryData.categories.map((category:string, index:number) => (
+          {entryData.categories.map((category, index) => (
             <span
               key={index}
-              className="inline-block bg-blue-200 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
+              className="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
             >
               {category}
             </span>
           ))}
         </div>
       </div>
-      <div className="bg-white p-4 border border-blue-400 rounded mt-4">
-        <p className='mb-4'><strong>Generated Replies: (Click to edit)</strong></p>
-        {entry.aiReplies.map((reply:AIReply, index:number) => (
+      <div className="bg-white p-4 border rounded mt-4">
+        <label className="font-semibold text-gray-700">Generated Replies (Click to edit):</label>
+        {entry.aiReplies.map((reply, index) => (
           <div key={index} className="mb-3">
-            <p className='mb-4 text-blue-400 text-md'><strong>{reply.label}:</strong></p>
+            <p className="text-sm font-semibold text-blue-600 mt-4">{reply.label}:</p>
             <textarea
-              className="w-full p-2 border border-gray-300 bg-blue-100"
+              className="w-full h-40 p-2 border rounded mt-1 bg-gray-50"
               value={reply.content}
               onChange={(e) => handleAIReplyChange(index, e.target.value)}
             />
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={() => handleSendReply(reply.content, true)}
+                className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+              >
+                Send Reply
+              </button>
+              <button
+                className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+              >
+                Regenerate
+              </button>
+            </div>
+
             <button
-              
-              className=" mt-4 bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-200 hover:text-black"
+              onClick={() => handleRateButtonClick(index)}
+              className="mt-3 inline-flex items-center text-black py-1 cursor-pointer"
             >
-              Send Reply
+              Rate this Reply
+              <span
+                className={`ml-2 transform ${showRating[index] ? 'rotate-180' : 'rotate-0'} transition-transform`}
+              >
+                ▼
+              </span>
             </button>
-            <button
-              
-              className=" mt-4 bg-blue-500 text-white py-1 px-2 rounded ml-3 hover:bg-blue-200 hover:text-black"
-            >
-              Regenerate
-            </button>
+            {showRating[index] && (
+              <div className="mt-3">
+                <label className="text-sm font-medium text-gray-700">Rating:</label>
+                <div className="flex gap-1 mt-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => handleRatingChange(index, star)}
+                      className={`text-xl ${ratings[index] >= star ? "text-yellow-500" : "text-gray-300"}`}
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {showRating[index] && (
+              <div className="mt-3">
+                <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
+                <textarea
+                  className="w-full p-2 border rounded mt-1 bg-gray-50"
+                  value={feedback[index]}
+                  onChange={(e) => handleFeedbackChange(index, e.target.value)}
+                  placeholder="Optional: Share more thoughts..."
+                />
+              </div>
+            )}
+            {showRating[index] && (
+              <div className="mt-3">
+                <button
+                  onClick={() => {}}
+                  className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                >
+                  Submit
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>
-      <div className="bg-white p-4 border border-blue-400 rounded mt-4">
-        <p className='mb-4'><strong>Your Reply:</strong></p>
+      <div className="bg-white p-4 border rounded mt-4">
+        <label className="font-semibold text-gray-700">Your Reply:</label>
         <textarea
-          className="w-full h-24 p-2 border border-gray-300"
+          className="w-full h-24 p-2 border rounded mt-1 bg-gray-50"
           value={entry.reply}
           onChange={(e) => handleInputChange(e, "reply")}
           placeholder="Write your reply here..."
         />
-        <button className=" mt-4 bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-200 hover:text-black">
+        <button
+          onClick={() => {
+            if (entry.reply.trim()) {
+              handleSendReply(entry.reply);
+            } else {
+              console.error("Reply cannot be empty");
+            }
+          }}
+          className="mt-3 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+        >
           Send Reply
         </button>
       </div>
       <div className="mt-5">
-        <Link to="/" className="mt-4 bg-blue-200 text-black p-2 rounded">
+        <Link to="/" className="text-blue-500 hover:underline">
           Back to Inbox
         </Link>
       </div>
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-lg font-bold mb-4">Confirmation</h2>
+            <p>Your email has been sent successfully!</p>
+            <button
+              onClick={closeModal}
+              className="mt-4 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

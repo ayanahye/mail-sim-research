@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 
 /*
@@ -9,7 +9,6 @@ type ApiResponse = {
 
 function App() {
   //const [data, setData] = useState<ApiResponse | null>(null);
-
   // the categories should correspond to what the nurse has to do in response to the patient query and the urgency
 
   const dummyData = [
@@ -20,22 +19,14 @@ function App() {
       dob: "01/01/1980", 
       subject: "Lab Results", 
       dateReceived: "12/18/2024", 
+      aiReplies: [],
       fromUser: "Dr. Doe", 
       message: "I am very worried about my lab results. Why am I still waiting? I need answers!", 
       categories: ["Urgent Response", "Follow-up", "High Urgency"],
-      aiReplies: [
-        { 
-          label: "Empathetic Reply", 
-          content: "Dear John,\n\nI completely understand how stressful this must be for you, and I’m so sorry for the delay. Your results are important, and we're doing everything we can to get them to you as soon as possible. Please hang in there, and we’ll update you shortly.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
-        },
-        { 
-          label: "Direct Reply", 
-          content: "Hi John,\n\nWe are currently processing your lab results. You will receive an update once they are available. Please rest assured that we are actively working on them.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
-        },
-        { 
-          label: "Reassurance Reply", 
-          content: "Hello John,\n\nI know waiting for results can be nerve-wracking, but please know that your results are a priority for us. We are closely monitoring the situation and will notify you immediately once they are ready. You are in good hands.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
-        }
+      negativeMessages: [
+        "Well I am not a religious person, I hope and expect that you will spend eternity in hell. You are an abusive, nasty, cheap person.",
+        "I would ask that you go ahead and prescribe the Lasix as I will be raising he** about the poor communication here.",
+        "Are you just put out with what’s going on? This is serious to me and I am very concerned about it. If this is how you’re feeling about my issue, then fu** it. You’re not the one that is experiencing it!!!"
       ]
     },
     { 
@@ -45,22 +36,13 @@ function App() {
       dob: "02/02/1985", 
       subject: "Prescription", 
       dateReceived: "12/17/2024", 
+      aiReplies: [],
       fromUser: "Nurse Joy", 
       message: "My prescription is missing, and I have been waiting for days. What is going on?", 
       categories: ["Prescription Issue", "High Urgency", "Follow-up"],
-      aiReplies: [
-        { 
-          label: "Empathetic Reply", 
-          content: "Dear Jane,\n\nI am so sorry for the frustration this delay has caused. I completely understand how important your prescription is. Let me look into this right away and ensure it is processed as quickly as possible.\n\nSincerely,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
-        },
-        { 
-          label: "Direct Reply", 
-          content: "Hi Jane,\n\nWe are aware of the missing prescription and are currently working to resolve the issue. I will follow up with the pharmacy to ensure it is sent out as soon as possible.\n\nBest,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
-        },
-        { 
-          label: "Reassurance Reply", 
-          content: "Hello Jane,\n\nI completely understand your concern, and I want to assure you that we’re prioritizing this issue. I’m checking with the pharmacy now, and you’ll be receiving your prescription soon. Thanks for your patience.\n\nKind regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
-        }
+      negativeMessages: [
+        "This is ridiculous! Why is my prescription missing? I shouldn’t have to chase this down, and I will raise hell if this isn’t fixed immediately.",
+        "You’re telling me I have to wait even longer? I’ve been waiting for days and now you’re giving me excuses. Enough is enough!"
       ]
     },
     { 
@@ -70,22 +52,13 @@ function App() {
       dob: "03/03/1990", 
       subject: "Message", 
       dateReceived: "12/16/2024", 
+      aiReplies: [],
       fromUser: "Dr. Smith", 
       message: "Why haven’t I received any updates? I am anxious about my condition.", 
       categories: ["General Inquiry", "Medium Urgency", "Clarification Needed"],
-      aiReplies: [
-        { 
-          label: "Empathetic Reply", 
-          content: "Hi Charlie,\n\nI completely understand your concern. It’s very natural to feel anxious when waiting for updates. I’m currently reviewing your case and will provide you with an update as soon as I have more information. Hang in there.\n\nBest regards,\nDr. Smith\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. Smith.*"
-        },
-        { 
-          label: "Direct Reply", 
-          content: "Hello Charlie,\n\nI’m aware that you’re waiting for updates on your condition. We’re still awaiting results, and I’ll be sure to inform you once we have the necessary information.\n\nSincerely,\nDr. Smith\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. Smith.*"
-        },
-        { 
-          label: "Reassurance Reply", 
-          content: "Dear Charlie,\n\nI understand how difficult it can be to wait for updates. Rest assured, we are closely monitoring your condition and will provide you with any updates as soon as we have them. You’re being taken care of.\n\nWarm regards,\nDr. Smith\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. Smith.*"
-        }
+      negativeMessages: [
+        "I have been waiting for too long! How hard is it to get a simple update? Why hasn’t anyone contacted me? I’m seriously frustrated right now.",
+        "I can’t believe I haven’t received any updates yet. If this is how you handle urgent cases, I’m losing trust in this whole process."
       ]
     },
     { 
@@ -95,22 +68,13 @@ function App() {
       dob: "04/04/1995", 
       subject: "Image Upload", 
       dateReceived: "12/15/2024", 
+      aiReplies: [],
       fromUser: "Dr. White", 
       message: "The image upload process was confusing. I am not sure if I did it right.", 
       categories: ["Image Upload Assistance", "Medium Urgency", "Clarification Needed"],
-      aiReplies: [
-        { 
-          label: "Empathetic Reply", 
-          content: "Dear Emily,\n\nI completely understand how frustrating technical issues can be, especially when you're trying to do everything right. Let’s work together to make sure your image is properly uploaded. I’ll guide you through the process step-by-step.\n\nKind regards,\nDr. White\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. White.*"
-        },
-        { 
-          label: "Direct Reply", 
-          content: "Hi Emily,\n\nI’ve checked your image upload, and it appears that everything is in order. If you’d like, I can walk you through the steps again to ensure there are no issues.\n\nBest regards,\nDr. White\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. White.*"
-        },
-        { 
-          label: "Reassurance Reply", 
-          content: "Hello Emily,\n\nDon’t worry, your image has been uploaded successfully. If you need any help with the process, I’m here to assist you and ensure everything is done correctly.\n\nSincerely,\nDr. White\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. White.*"
-        }
+      negativeMessages: [
+        "This is unbelievable! How hard can it be to upload a simple image? Why is this process so complicated?",
+        "I’m getting fed up with this! I can’t believe I had trouble just uploading an image. This should be much simpler."
       ]
     },
     { 
@@ -120,26 +84,16 @@ function App() {
       dob: "05/05/2000", 
       subject: "Document", 
       dateReceived: "12/14/2024", 
+      aiReplies: [],
       fromUser: "Receptionist", 
       message: "I have submitted all documents, but I haven't heard back yet. Please confirm if everything is okay.", 
       categories: ["Document Submission", "Low Urgency", "Follow-up"],
-      aiReplies: [
-        { 
-          label: "Empathetic Reply", 
-          content: "Dear Chris,\n\nI understand how concerning it can be to wait for confirmation. Thank you for submitting your documents. I’m reviewing everything now and will confirm as soon as possible.\n\nSincerely,\nReceptionist\n\n*This email was drafted with AI assistance and reviewed/approved by Receptionist.*"
-        },
-        { 
-          label: "Direct Reply", 
-          content: "Hi Chris,\n\nAll documents have been submitted and are currently under review. You will be notified once everything has been processed.\n\nBest regards,\nReceptionist\n\n*This email was drafted with AI assistance and reviewed/approved by Receptionist.*"
-        },
-        { 
-          label: "Reassurance Reply", 
-          content: "Hello Chris,\n\nThank you for submitting everything! I want to assure you that we have received your documents, and everything looks great. You’ll hear from us soon regarding the next steps.\n\nKind regards,\nReceptionist\n\n*This email was drafted with AI assistance and reviewed/approved by Receptionist.*"
-        }
+      negativeMessages: [
+        "Why am I still waiting? I submitted everything days ago and still haven’t heard back. This is extremely frustrating!",
+        "I’ve been patient, but this is ridiculous. Why haven’t I received any updates? I want a response now!"
       ]
     }
   ];
-  
   
 // notes:
   return (
@@ -204,6 +158,7 @@ type InboxEntry = {
   dateReceived: string;
   fromUser: string;
   message: string;
+  negativeMessages: string[];
   categories: string[];
   aiReplies: AIReply[];
 };
@@ -291,8 +246,38 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     to: entryData ? `${entryData.firstName} ${entryData.lastName}` : "",
     subject: entryData ? entryData.subject : "Patient Message",
     reply: "",
-    aiReplies: entryData?.aiReplies || [],
+    aiReplies: [],
   });
+
+  const BACKEND_URL = "http://localhost:5000";
+  
+  useEffect(() => {
+    async function fetchAIReplies() {
+      if (!mrn || !entryData?.negativeMessages[0]) return;
+  
+      const patientMessage = entryData.negativeMessages[0]; 
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/get-ai-replies`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ patientMessage }), 
+        });
+  
+        if (response.ok) {
+          const { aiReplies } = await response.json();
+          setEntry((prevEntry) => ({ ...prevEntry, aiReplies }));
+        } else {
+          console.error(`Failed to fetch AI replies for MRN: ${mrn}`);
+        }
+      } catch (error) {
+        console.error("Error fetching AI replies:", error);
+      }
+    }
+  
+    fetchAIReplies();
+  }, [mrn, entryData]);  
 
   const [showModal, setShowModal] = useState(false);
   const [sentReplies, setSentReplies] = useState<{ content: string; timestamp: Date }[]>([]);
@@ -388,7 +373,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       </div>
       <div className="bg-gray-100 p-4 mb-4 border rounded">
         <label className="font-semibold text-gray-600">Patient Message:</label>
-        <p className="text-sm text-gray-700">{entryData.message}</p>
+        <p className="text-sm text-gray-700">{entryData.negativeMessages[0]}</p>
       </div>
       <div className="mt-6 bg-gray-50 p-4 border rounded">
         <h3 className="font-semibold text-gray-600">Sent Replies</h3>
@@ -421,7 +406,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       </div>
       <div className="bg-white p-4 border rounded mt-4">
         <label className="font-semibold text-gray-700">Generated Replies (Click to edit):</label>
-        {entry.aiReplies.map((reply, index) => (
+        {entry.aiReplies.length > 0 && entry.aiReplies.map((reply, index) => (
           <div key={index} className="mb-3">
             <p className="text-sm font-semibold text-blue-600 mt-4">{reply.label}:</p>
             <textarea

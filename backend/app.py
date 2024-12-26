@@ -1,8 +1,8 @@
-from flask import Flask, jsonify
+import re
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from openai import OpenAI
 
-'''
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
 
@@ -11,62 +11,65 @@ client = OpenAI(
     api_key="fake-key"
 )
 
-@app.route('/api/data', methods=['GET'])
-def get_data():
+@app.route('/api/get-ai-replies', methods=['POST'])
+def get_ai_replies():
+    data = request.json
+    patient_message = data.get('patientMessage', '') 
+
+    if not patient_message:
+        return jsonify({"error": "Patient message is required."}), 400
+
+    prompt = f"""
+        Respond to the following message from a patient as if you were their nurse. Note the message MAY BE negative or contain hate speech since the patient may be distressed, but maintain an empathetic nature because we want to help them. Do not include any other words aside from the 3 replies. Add a "\n" to end each reply. Generate **three unique responses**, each concise, empathetic, and professional, focusing on addressing the patient’s specific concerns. Use the following guidelines for each response:
+
+        1. **Informative:** Provide details about procedures or policies.
+        2. **Suggestive:** Recommend actionable next steps or contacts.
+        3. **Redirective:** Redirect the issue to the appropriate resources if needed.
+
+        Patient Message: "{patient_message}"
+
+        Ensure each response adheres to these principles:
+        - Avoid repetition or overly generic apologies unless explicitly warranted.
+        - Maintain a professional tone.
+        - Do not interpret test results, diagnose symptoms, or provide medical advice.
+        - Each response should serve a specific purpose (e.g., Informative, Suggestive, Redirective).
+    """
+
+    print(prompt)
+
     chat_completion = client.chat.completions.create(
-        messages=[{
-            "role": "user",
-            "content": """
-                Respond to the following message from a patient as if you were their nurse. Your response should be concise, empathetic, and professional, focused on addressing the patient’s specific concerns. Choose from the following actions based on the situation (only choose relevant action(s)):
-
-                Informative: Provide clear details about procedures, policies, or prior care relevant to the patient’s concerns without over-explaining.
-                Suggestive: Recommend next steps, such as scheduling an appointment, contacting another department, or considering a specific action (e.g., follow-up).
-                Redirection: Redirect urgent or specific issues to the appropriate crisis resources, departments, or specialists.
-                Following-Up: Request additional details if necessary or promise follow-up when further discussions are needed.
-                Avoid over-apologizing or generic reassurances unless the patient’s message specifically calls for them. Do not interpret test results, diagnose symptoms, or provide medical advice. Maintain a professional and empathetic tone even in the face of negative or critical messages. If the patient requests medication or treatment, ask that they schedule an appointment to review their request.
-
-                Responses should focus on actionable support, ensuring the patient feels heard and guided toward resolution. Be very concise and NEVER repeat yourself.
-
-                Patient: “So I have to tell you I’m pretty perturbed by this whole thing. I don’t care what the rules are, I think it’s pretty cra**y, that there couldn’t have been an exception regarding having the Covid test the morning before the procedure, considering all this cra* that could have been avoided, by you giving me the exact info, and your staff taking care of the insurance deal. Two trips up there again is a bit much. Why don’t you see what you can do about it? If not, why don’t you have one of these upper ups that make these rules give me a call.”
-            """
-        }],
+        messages=[{"role": "user", "content": prompt}],
         model="llama3"
     )
 
-    return jsonify({"response": chat_completion.choices[0].message.content})
+    raw_replies = chat_completion.choices[0].message.content
+    print(raw_replies)
+
+    cleaned_replies = re.sub(r'\*\*Response \d+\*\*|\<\|eot_id\|\>|\\"|\\"', '', raw_replies)
+
+    replies = cleaned_replies.split("\n\n")  
+
+    labels = ["Informative", "Suggestive", "Redirective"]
+
+    formatted_replies = [
+        {"label": labels[i], "content": reply.strip()} 
+        for i, reply in enumerate(replies) if reply.strip()
+    ]
+
+    return jsonify({"aiReplies": formatted_replies})
 
 if __name__ == '__main__':
     app.run(debug=True)
 
+
 '''
+Notes (talk w prof)
+- Sometimes model does not allow itself to return a response due to "negative" nature/potential hate speech
+- Discuss potential of using 2 diff models 1 larger 1 smaller and then comparing the results with half nurses each
+- Are the labels correct?
 
-# initial test - its def much faster using llamafile
-
-client = OpenAI(
-    base_url="http://localhost:8080/v1",
-    api_key="fake-key"
-)
-
-chat_completion = client.chat.completions.create(
-    messages=[{
-        "role": "user",
-        "content": """
-            Respond to the following message from a patient as if you were their nurse. Your response should be concise, empathetic, and professional, focused on addressing the patient’s specific concerns. Choose from the following actions based on the situation (only choose relevant action(s)):
-
-            Informative: Provide clear details about procedures, policies, or prior care relevant to the patient’s concerns without over-explaining.
-            Suggestive: Recommend next steps, such as scheduling an appointment, contacting another department, or considering a specific action (e.g., follow-up).
-            Redirection: Redirect urgent or specific issues to the appropriate crisis resources, departments, or specialists.
-            Following-Up: Request additional details if necessary or promise follow-up when further discussions are needed.
-            Avoid over-apologizing or generic reassurances unless the patient’s message specifically calls for them. Do not interpret test results, diagnose symptoms, or provide medical advice. Maintain a professional and empathetic tone even in the face of negative or critical messages. If the patient requests medication or treatment, ask that they schedule an appointment to review their request.
-
-            Responses should focus on actionable support, ensuring the patient feels heard and guided toward resolution. Be very concise and NEVER repeat yourself.
-
-            Patient: “So I have to tell you I’m pretty perturbed by this whole thing. I don’t care what the rules are, I think it’s pretty cra**y, that there couldn’t have been an exception regarding having the Covid test the morning before the procedure, considering all this cra* that could have been avoided, by you giving me the exact info, and your staff taking care of the insurance deal. Two trips up there again is a bit much. Why don’t you see what you can do about it? If not, why don’t you have one of these upper ups that make these rules give me a call.”
-        """
-    }],
-    model="llama3"
-)
-
-print(chat_completion.choices[0].message.content)
-
-
+My notes
+- Need to pre-render all responses aka move the useEffect to on app start not on message click and all messages should have AI replies generated immediately
+- Need to add nurse sign off myself in the reply and also reformat it myself
+- add a loading screen in case the AI generated reply DNE yet
+'''

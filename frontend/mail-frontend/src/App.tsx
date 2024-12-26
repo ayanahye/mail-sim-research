@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
-
+import './App.css';
 /*
 type ApiResponse = {
   message: string;
@@ -10,6 +10,8 @@ type ApiResponse = {
 function App() {
   //const [data, setData] = useState<ApiResponse | null>(null);
   // the categories should correspond to what the nurse has to do in response to the patient query and the urgency
+
+  const BACKEND_URL = "http://localhost:5000";
 
   const dummyData = [
     { 
@@ -94,6 +96,49 @@ function App() {
       ]
     }
   ];
+
+  const [dataWithReplies, setDataWithReplies] = useState<InboxEntry[]>(dummyData);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function generateAllAIReplies() {
+      const totalEntries = dummyData.length;
+      let completedEntries = 0;
+
+      for (const entry of dummyData) {
+        if (entry.negativeMessages.length > 0 && entry.aiReplies.length === 0) {
+          const patientMessage = entry.negativeMessages[0];
+          try {
+            const response = await fetch(`${BACKEND_URL}/api/get-ai-replies`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ patientMessage }),
+            });
+
+            if (response.ok) {
+              const { aiReplies } = await response.json();
+              setDataWithReplies(prevData => 
+                prevData.map(item => 
+                  item.mrn === entry.mrn ? { ...item, aiReplies } : item
+                )
+              );
+            }
+          } catch (error) {
+            console.error("Error fetching AI replies:", error);
+          }
+        }
+        
+        completedEntries++;
+        if (completedEntries === totalEntries) {
+          setLoading(false);
+        }
+      }
+    }
+
+    generateAllAIReplies();
+  }, []);
   
 // notes:
   return (
@@ -134,8 +179,8 @@ function App() {
           </aside>
           <main className="w-5/6 bg-white overflow-auto">
             <Routes>
-              <Route path="/" element={<Inbox dummyData={dummyData} />} />
-              <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} />} />
+              <Route path="/" element={<Inbox dummyData={dataWithReplies} />} />
+              <Route path="/message/:mrn" element={<MessageDetail dummyData={dataWithReplies} />} />
             </Routes>
           </main>
         </div>
@@ -167,12 +212,26 @@ type InboxProps = {
   dummyData: InboxEntry[];
 };
 
+type MessageDetailProps = {
+  dummyData: InboxEntry[];
+};
+
+type EntryState = {
+  to: string;
+  subject: string;
+  reply: string;
+  aiReplies: AIReply[];
+};
+
+type Rating = number; 
+type Feedback = string;
+
 const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
   const navigate = useNavigate();
 
   const handleRowClick = (entry: InboxEntry) => {
     navigate(`/message/${entry.mrn}`);
-  };
+  };  
 
   return (
     <div className="p-6">
@@ -224,20 +283,6 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
 
 // typescript...
 
-type MessageDetailProps = {
-  dummyData: InboxEntry[];
-};
-
-type EntryState = {
-  to: string;
-  subject: string;
-  reply: string;
-  aiReplies: AIReply[];
-};
-
-type Rating = number; 
-type Feedback = string;
-
 const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const { mrn } = useParams();
   const entryData = dummyData.find((item) => item.mrn === mrn);
@@ -246,25 +291,30 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     to: entryData ? `${entryData.firstName} ${entryData.lastName}` : "",
     subject: entryData ? entryData.subject : "Patient Message",
     reply: "",
-    aiReplies: [],
+    aiReplies: entryData ? entryData.aiReplies : [],
   });
 
+  const [loading, setLoading] = useState<boolean>(true);  
+
+  /*
   const BACKEND_URL = "http://localhost:5000";
-  
+
   useEffect(() => {
     async function fetchAIReplies() {
       if (!mrn || !entryData?.negativeMessages[0]) return;
-  
-      const patientMessage = entryData.negativeMessages[0]; 
+
+      const patientMessage = entryData.negativeMessages[0];
+      setLoading(true);  
+
       try {
         const response = await fetch(`${BACKEND_URL}/api/get-ai-replies`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ patientMessage }), 
+          body: JSON.stringify({ patientMessage }),
         });
-  
+
         if (response.ok) {
           const { aiReplies } = await response.json();
           setEntry((prevEntry) => ({ ...prevEntry, aiReplies }));
@@ -273,11 +323,29 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         }
       } catch (error) {
         console.error("Error fetching AI replies:", error);
+      } finally {
+        setLoading(false);  // End loading
       }
     }
-  
+
     fetchAIReplies();
-  }, [mrn, entryData]);  
+  }, [mrn, entryData]);
+
+  */
+
+  useEffect(() => {
+    if (entryData && entryData.aiReplies && entryData.aiReplies.length > 0) {
+      setLoading(false);
+      setEntry({
+        ...entry,
+        aiReplies: entryData.aiReplies, 
+      });
+    }
+  }, [entryData]);  
+
+  if (!entryData) {
+    return <div className="p-6 text-gray-700">Message not found.</div>;
+  }
 
   const [showModal, setShowModal] = useState(false);
   const [sentReplies, setSentReplies] = useState<{ content: string; timestamp: Date }[]>([]);
@@ -318,15 +386,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         ...prevReplies,
         { content: replyContent, timestamp: new Date() },
       ]);
-      const updatedReplies = entry.aiReplies.map(reply => {
+      const updatedReplies = entry.aiReplies.map((reply) => {
         if (reply.content === replyContent) {
           return { ...reply, content: reply.content };
         }
         return reply;
       });
       setEntry({ ...entry, aiReplies: updatedReplies });
-    } 
-    else if (!isAIReply && entry.reply.trim()) {
+    } else if (!isAIReply && entry.reply.trim()) {
       setSentReplies((prevReplies) => [
         ...prevReplies,
         { content: entry.reply, timestamp: new Date() },
@@ -375,110 +442,102 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <label className="font-semibold text-gray-600">Patient Message:</label>
         <p className="text-sm text-gray-700">{entryData.negativeMessages[0]}</p>
       </div>
-      <div className="mt-6 bg-gray-50 p-4 border rounded">
-        <h3 className="font-semibold text-gray-600">Sent Replies</h3>
-        {sentReplies.length > 0 ? (
-          sentReplies.map((sent, index) => (
-            <div key={index} className="mt-2 border-b">
-              <p className="text-sm text-gray-700 mb-2">{sent.content}</p>
-              <p className="text-xs text-gray-500 mb-2">
-                Sent at {sent.timestamp.toLocaleTimeString()} on{" "}
-                {sent.timestamp.toLocaleDateString()}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p className="text-sm text-gray-600">No replies sent yet.</p>
-        )}
-      </div>
-      <div className="mb-4 mt-4">
-        <label className="font-semibold text-gray-600">Categories:</label>
-        <div className="mt-2">
-          {entryData.categories.map((category, index) => (
-            <span
-              key={index}
-              className="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
-            >
-              {category}
-            </span>
-          ))}
-        </div>
-      </div>
-      <div className="bg-white p-4 border rounded mt-4">
-        <label className="font-semibold text-gray-700">Generated Replies (Click to edit):</label>
-        {entry.aiReplies.length > 0 && entry.aiReplies.map((reply, index) => (
-          <div key={index} className="mb-3">
-            <p className="text-sm font-semibold text-blue-600 mt-4">{reply.label}:</p>
-            <textarea
-              className="w-full h-40 p-2 border rounded mt-1 bg-gray-50"
-              value={reply.content}
-              onChange={(e) => handleAIReplyChange(index, e.target.value)}
-            />
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={() => handleSendReply(reply.content, true)}
-                className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-              >
-                Send Reply
-              </button>
-              <button
-                className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-              >
-                Regenerate
-              </button>
-            </div>
 
-            <button
-              onClick={() => handleRateButtonClick(index)}
-              className="mt-3 inline-flex items-center text-black py-1 cursor-pointer"
-            >
-              Rate this Reply
-              <span
-                className={`ml-2 transform ${showRating[index] ? 'rotate-180' : 'rotate-0'} transition-transform`}
-              >
-                ▼
-              </span>
-            </button>
-            {showRating[index] && (
-              <div className="mt-3">
-                <label className="text-sm font-medium text-gray-700">Rating:</label>
-                <div className="flex gap-1 mt-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      onClick={() => handleRatingChange(index, star)}
-                      className={`text-xl ${ratings[index] >= star ? "text-yellow-500" : "text-gray-300"}`}
-                    >
-                      ★
-                    </button>
-                  ))}
-                </div>
+      {loading ? (
+        <div className="loading-overlay">
+          <div className="flex justify-center items-center">
+            <div>
+              <div className="loading-message text-white">Loading</div>
+              <div className="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
               </div>
-            )}
-            {showRating[index] && (
-              <div className="mt-3">
-                <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
-                <textarea
-                  className="w-full p-2 border rounded mt-1 bg-gray-50"
-                  value={feedback[index]}
-                  onChange={(e) => handleFeedbackChange(index, e.target.value)}
-                  placeholder="Optional: Share more thoughts..."
-                />
-              </div>
-            )}
-            {showRating[index] && (
-              <div className="mt-3">
-                <button
-                  onClick={() => {}}
-                  className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-                >
-                  Submit
-                </button>
-              </div>
-            )}
+            </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )  : (
+        <div className="mt-6 bg-gray-50 p-4 border rounded">
+          <h3 className="font-semibold text-gray-600">Generated Replies (Click to edit):</h3>
+          {entry.aiReplies.length > 0 ? (
+            entry.aiReplies.map((reply, index) => (
+              <div key={index} className="mb-3">
+                <p className="text-sm font-semibold text-blue-600 mt-4">{reply.label}:</p>
+                <textarea
+                  className="w-full h-40 p-2 border rounded mt-1 bg-gray-50"
+                  value={reply.content}
+                  onChange={(e) => handleAIReplyChange(index, e.target.value)}
+                />
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => handleSendReply(reply.content, true)}
+                    className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                  >
+                    Send Reply
+                  </button>
+                  <button
+                    className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+                  >
+                    Regenerate
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => handleRateButtonClick(index)}
+                  className="mt-3 inline-flex items-center text-black py-1 cursor-pointer"
+                >
+                  Rate this Reply
+                  <span
+                    className={`ml-2 transform ${showRating[index] ? "rotate-180" : "rotate-0"} transition-transform`}
+                  >
+                    ▼
+                  </span>
+                </button>
+                {showRating[index] && (
+                  <div className="mt-3">
+                    <label className="text-sm font-medium text-gray-700">Rating:</label>
+                    <div className="flex gap-1 mt-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          onClick={() => handleRatingChange(index, star)}
+                          className={`text-xl ${ratings[index] >= star ? "text-yellow-500" : "text-gray-300"}`}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {showRating[index] && (
+                  <div className="mt-3">
+                    <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
+                    <textarea
+                      className="w-full p-2 border rounded mt-1 bg-gray-50"
+                      value={feedback[index]}
+                      onChange={(e) => handleFeedbackChange(index, e.target.value)}
+                      placeholder="Optional: Share more thoughts..."
+                    />
+                  </div>
+                )}
+                {showRating[index] && (
+                  <div className="mt-3">
+                    <button
+                      onClick={() => {}}
+                      className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <p className="text-sm text-gray-600">No AI replies generated yet.</p>
+          )}
+        </div>
+      )}
+
       <div className="bg-white p-4 border rounded mt-4">
         <label className="font-semibold text-gray-700">Your Reply:</label>
         <textarea

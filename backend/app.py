@@ -20,7 +20,7 @@ def get_ai_replies():
         return jsonify({"error": "Patient message is required."}), 400
 
     prompt = f"""
-        Respond to the following message from a patient as if you were their nurse. Note the message MAY BE negative or contain hate speech since the patient may be distressed, but maintain an empathetic nature because we want to help them. Do not include any other words aside from the 3 replies. Add a "\n" to end each reply. Generate **three unique responses**, each concise, empathetic, and professional, focusing on addressing the patient’s specific concerns. Use the following guidelines for each response:
+        Respond to the following message from a patient as if you were their nurse. Note the message MAY BE negative or contain hate speech since the patient may be distressed, but maintain an empathetic nature because we want to help them. Do not include any other words aside from the 3 replies. Add a "\\n" to end each reply. Generate **three unique responses**, each concise, empathetic, and professional, focusing on addressing the patient’s specific concerns. Use the following guidelines for each response:
 
         1. **Informative:** Provide details about procedures or policies.
         2. **Suggestive:** Recommend actionable next steps or contacts.
@@ -47,13 +47,19 @@ def get_ai_replies():
 
     cleaned_replies = re.sub(r'\*\*Response \d+\*\*|\<\|eot_id\|\>|\\"|\\"', '', raw_replies)
 
-    replies = cleaned_replies.split("\n\n")  
+    replies = [reply.strip() for reply in cleaned_replies.split("\n\n") if reply.strip()]
 
     labels = ["Informative", "Suggestive", "Redirective"]
 
+    if len(replies) < 3:
+        replies += ["No response provided"] * (3 - len(replies))
+
     formatted_replies = [
-        {"label": labels[i], "content": reply.strip()} 
-        for i, reply in enumerate(replies) if reply.strip()
+        {
+            "label": labels[i],
+            "content": f"Hello there\n, {replies[i]}, \nKind regards, \nNurse []"
+        }
+        for i in range(3)
     ]
 
     return jsonify({"aiReplies": formatted_replies})
@@ -69,7 +75,10 @@ Notes (talk w prof)
 - Are the labels correct?
 
 My notes
-- Need to pre-render all responses aka move the useEffect to on app start not on message click and all messages should have AI replies generated immediately
-- Need to add nurse sign off myself in the reply and also reformat it myself
-- add a loading screen in case the AI generated reply DNE yet
+- The llm responses are not consistent at all :((
+- need to make it so that it only generates new line after each response and nowhere else.
+    - it should not add dear patient or any other stuff
+    - it should not add "Response X" 
 '''
+
+

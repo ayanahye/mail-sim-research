@@ -299,6 +299,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [showRating, setShowRating] = useState<{ [key: number]: boolean }>({});
+  const [activeTab, setActiveTab] = useState<number>(0);
+
+  const handleTabClick = (index: number) => {
+    setActiveTab(index);
+  };
 
   const handleRateButtonClick = (index: number) => {
     setShowRating((prev) => ({
@@ -419,80 +424,95 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           ))}
         </div>
       </div>
-      <div className="bg-white p-4 border rounded mt-4">
-        <label className="font-semibold text-gray-700">Generated Replies (Click to edit):</label>
-        {entry.aiReplies.map((reply, index) => (
-          <div key={index} className="mb-3">
-            <p className="text-sm font-semibold text-blue-600 mt-4">{reply.label}:</p>
-            <textarea
-              className="w-full h-40 p-2 border rounded mt-1 bg-gray-50"
-              value={reply.content}
-              onChange={(e) => handleAIReplyChange(index, e.target.value)}
-            />
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={() => handleSendReply(reply.content, true)}
-                className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-              >
-                Send Reply
-              </button>
-              <button
-                className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-              >
-                Regenerate
-              </button>
-            </div>
-
+      <div className="mt-6 bg-white border rounded shadow">
+        <h3 className="font-semibold text-gray-600 px-4 pt-4">Generated Replies:</h3>
+        <div className="flex border-b">
+          {entry.aiReplies.map((reply, index) => (
             <button
-              onClick={() => handleRateButtonClick(index)}
-              className="mt-3 inline-flex items-center text-black py-1 cursor-pointer"
+              key={index}
+              onClick={() => handleTabClick(index)}
+              className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+                activeTab === index
+                  ? "border-b-2 border-blue-500 text-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
             >
-              Rate this Reply
-              <span
-                className={`ml-2 transform ${showRating[index] ? 'rotate-180' : 'rotate-0'} transition-transform`}
-              >
-                ▼
-              </span>
+              {reply.label}
             </button>
-            {showRating[index] && (
-              <div className="mt-3">
-                <label className="text-sm font-medium text-gray-700">Rating:</label>
-                <div className="flex gap-1 mt-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      onClick={() => handleRatingChange(index, star)}
-                      className={`text-xl ${ratings[index] >= star ? "text-yellow-500" : "text-gray-300"}`}
-                    >
-                      ★
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-            {showRating[index] && (
-              <div className="mt-3">
-                <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
-                <textarea
-                  className="w-full p-2 border rounded mt-1 bg-gray-50"
-                  value={feedback[index]}
-                  onChange={(e) => handleFeedbackChange(index, e.target.value)}
-                  placeholder="Optional: Share more thoughts..."
-                />
-              </div>
-            )}
-            {showRating[index] && (
-              <div className="mt-3">
+          ))}
+        </div>
+
+        <div className="p-4">
+          {entry.aiReplies[activeTab] && (
+            <>
+              <textarea
+                className="w-full h-40 p-2 border rounded mt-1 bg-gray-50"
+                value={entry.aiReplies[activeTab].content}
+                onChange={(e) => handleAIReplyChange(activeTab, e.target.value)}
+              />
+              <div className="flex gap-2 mt-2">
                 <button
-                  onClick={() => {}}
-                  className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                  onClick={() => handleSendReply(entry.aiReplies[activeTab].content, true)}
+                  className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
                 >
-                  Submit
+                  Send Reply
+                </button>
+                <button
+                  className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+                >
+                  Regenerate
                 </button>
               </div>
-            )}
-          </div>
-        ))}
+
+              <button
+                onClick={() => handleRateButtonClick(activeTab)}
+                className="mt-3 inline-flex items-center text-black py-1 cursor-pointer"
+              >
+                Rate this Reply
+                <span
+                  className={`ml-2 transform ${showRating[activeTab] ? 'rotate-180' : 'rotate-0'} transition-transform`}
+                >
+                  ▼
+                </span>
+              </button>
+              {showRating[activeTab] && (
+                <>
+                  <div className="mt-3">
+                    <label className="text-sm font-medium text-gray-700">Rating:</label>
+                    <div className="flex gap-1 mt-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          onClick={() => handleRatingChange(activeTab, star)}
+                          className={`text-xl ${ratings[activeTab] >= star ? "text-yellow-500" : "text-gray-300"}`}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
+                    <textarea
+                      className="w-full p-2 border rounded mt-1 bg-gray-50"
+                      value={feedback[activeTab]}
+                      onChange={(e) => handleFeedbackChange(activeTab, e.target.value)}
+                      placeholder="Optional: Share more thoughts..."
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <button
+                      onClick={() => {}}
+                      className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </div>
       </div>
       <div className="bg-white p-4 border rounded mt-4">
         <label className="font-semibold text-gray-700">Your Reply:</label>
@@ -537,6 +557,5 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     </div>
   );
 };
-
 
 export default App;

@@ -315,14 +315,14 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
 // typescript...
 
 const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
-  const { mrn } = useParams();
+  const { mrn } = useParams<{ mrn: string }>();
   const entryData = dummyData.find((item) => item.mrn === mrn);
 
   const [entry, setEntry] = useState<EntryState>({
     to: entryData ? `${entryData.firstName} ${entryData.lastName}` : "",
     subject: entryData ? entryData.subject : "Patient Message",
     reply: "",
-    aiReplies: entryData ? entryData.aiReplies : [],
+    aiReplies: entryData?.aiReplies || [],
   });
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -332,13 +332,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [showRating, setShowRating] = useState<{ [key: number]: boolean }>({});
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [showRatingModal, setShowRatingModal] = useState(false);
 
   useEffect(() => {
     if (entryData && entryData.aiReplies?.length > 0) {
       setLoading(false);
       setEntry((prev) => ({
         ...prev,
-        aiReplies: entryData.aiReplies,
+        aiReplies: entryData.aiReplies || [],
       }));
     }
   }, [entryData]);
@@ -387,10 +388,30 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setEntry({ ...entry, aiReplies: updatedReplies });
   };
 
+  const handleRateButtonClick = (index: number) => {
+    setShowRating((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  const handleSubmitRating = () => {
+    console.log("Submitting rating:", ratings[activeTab]);
+    console.log("Submitting feedback:", feedback[activeTab]);
+    setShowRatingModal(true);
+  };
+
+  const handleCloseRatingModal = () => {
+    setShowRatingModal(false);
+    setShowRating((prev) => ({
+      ...prev,
+      [activeTab]: false,
+    }));
+  };
+
   if (!entryData) {
     return <div className="p-6 text-gray-700">Message not found.</div>;
   }
-
   return (
     <div className="p-6">
       <h2 className="text-xl font-bold mb-5 text-gray-800">Message Details</h2>
@@ -415,7 +436,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <label className="font-semibold text-gray-600">Patient Message:</label>
         <p className="text-sm text-gray-700">{entryData.message}</p>
       </div>
-
       <div className="mt-6 bg-gray-50 p-4 border rounded">
         <h3 className="font-semibold text-gray-600">Sent Replies</h3>
         {sentReplies.length > 0 ? (
@@ -432,20 +452,23 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           <p className="text-sm text-gray-600">No replies sent yet.</p>
         )}
       </div>
-      <div className="mb-4 mt-4">
+      <div className="mt-4">
         <label className="font-semibold text-gray-600">Categories:</label>
         <div className="mt-2">
           {entryData.categories.map((category, index) => {
-            const colorClass = {
-              "High Urgency": "bg-red-500 text-white",
-              "Medium Urgency": "bg-orange-500 text-white",
-              "Low Urgency": "bg-yellow-500 text-black",
-            }[category] || "bg-blue-100 text-blue-800";
+            const colorClass =
+              category === "High Urgency"
+                ? "bg-red-500 text-white"
+                : category === "Medium Urgency"
+                ? "bg-orange-500 text-white"
+                : category === "Low Urgency"
+                ? "bg-yellow-500 text-black"
+                : "bg-blue-100 text-blue-800";
 
             return (
               <span
                 key={index}
-                className={`inline-block ${colorClass} text-xs font-medium mr-2 px-2 py-1 rounded-full mb-2`}
+                className={`inline-block ${colorClass} text-xs font-medium mr-2 px-2 py-1 rounded-full`}
               >
                 {category}
               </span>
@@ -467,7 +490,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           </div>
         </div>
       ) : (
-        <>
+        !loading && entry.aiReplies.length > 0 && (
           <div className="mt-6 bg-white border rounded shadow">
             <div className="flex border-b">
               {entry.aiReplies.map((reply, index) => (
@@ -484,7 +507,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
                 </button>
               ))}
             </div>
-
             <div className="p-4">
               {entry.aiReplies[activeTab] && (
                 <>
@@ -504,11 +526,61 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
                       Regenerate
                     </button>
                   </div>
+                  <button
+                    onClick={() => handleRateButtonClick(activeTab)}
+                    className="mt-3 inline-flex items-center text-black py-1 cursor-pointer"
+                  >
+                    Rate this Reply
+                    <span
+                      className={`ml-2 transform ${
+                        showRating[activeTab] ? "rotate-180" : "rotate-0"
+                      } transition-transform`}
+                    >
+                      ▼
+                    </span>
+                  </button>
+                  {showRating[activeTab] && (
+                    <>
+                      <div className="mt-3">
+                        <label className="text-sm font-medium text-gray-700">Rating:</label>
+                        <div className="flex gap-1 mt-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              onClick={() => handleRatingChange(activeTab, star)}
+                              className={`text-xl ${
+                                ratings[activeTab] >= star ? "text-yellow-500" : "text-gray-300"
+                              }`}
+                            >
+                              ★
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="mt-3">
+                        <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
+                        <textarea
+                          className="w-full p-2 border rounded mt-1 bg-gray-50"
+                          value={feedback[activeTab]}
+                          onChange={(e) => handleFeedbackChange(activeTab, e.target.value)}
+                          placeholder="Optional: Share more thoughts..."
+                        />
+                      </div>
+                      <div className="mt-3">
+                        <button
+                          onClick={handleSubmitRating}
+                          className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </div>
           </div>
-        </>
+        )
       )}
       <div className="bg-white p-4 border rounded mt-4">
         <label className="font-semibold text-gray-700">Your Reply:</label>
@@ -532,6 +604,20 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             <p>Your reply has been sent successfully!</p>
             <button
               onClick={handleCloseModal}
+              className="mt-4 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {showRatingModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-lg font-bold mb-4">Rating Submitted</h2>
+            <p>Thank you for your feedback!</p>
+            <button
+              onClick={handleCloseRatingModal}
               className="mt-4 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
             >
               Close

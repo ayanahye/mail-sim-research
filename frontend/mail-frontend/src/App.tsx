@@ -219,6 +219,24 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
     navigate(`/message/${entry.mrn}`);
   };
 
+  const getUrgencyColor = (urgency: string) => {
+    switch (urgency) {
+      case 'High Urgency':
+        return 'bg-red-500 text-white';
+      case 'Medium Urgency':
+        return 'bg-orange-500 text-black';
+      case 'Low Urgency':
+        return 'bg-yellow-500 text-black';
+      default:
+        return 'bg-gray-200 text-gray-700';
+    }
+  };
+
+  const getUrgency = (categories: string[]) => {
+    const urgencyTags = ['High Urgency', 'Medium Urgency', 'Low Urgency'];
+    return categories.find(category => urgencyTags.includes(category)) || 'N/A';
+  };
+
   return (
     <div className="p-6">
       <h2 className="text-xl font-bold mb-4 text-gray-800">Inbox Overview</h2>
@@ -233,34 +251,46 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
             <th className="border p-2 text-left">Date Received</th>
             <th className="border p-2 text-left">From User</th>
             <th className="border p-2 text-left">Categories</th>
+            <th className='border p-2 text-left'>Urgency</th>
           </tr>
         </thead>
         <tbody>
-          {dummyData.map((entry, index) => (
-            <tr
-              key={entry.mrn}
-              className={`cursor-pointer hover:bg-blue-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-100"}`}
-              onClick={() => handleRowClick(entry)}
-            >
-              <td className="border p-2">{entry.mrn}</td>
-              <td className="border p-2">{entry.lastName}</td>
-              <td className="border p-2">{entry.firstName}</td>
-              <td className="border p-2">{entry.dob}</td>
-              <td className="border p-2">{entry.subject}</td>
-              <td className="border p-2">{entry.dateReceived}</td>
-              <td className="border p-2">{entry.fromUser}</td>
-              <td className="border p-2">
-                {entry.categories.map((category, index) => (
-                  <span
-                    key={index}
-                    className="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
-                  >
-                    {category}
+        {dummyData.map((entry, index) => {
+            const urgency = getUrgency(entry.categories);
+            const urgencyColor = getUrgencyColor(urgency);
+            const filteredCategories = entry.categories.filter(category => !['High Urgency', 'Medium Urgency', 'Low Urgency'].includes(category));
+            
+            return (
+              <tr
+                key={entry.mrn}
+                className={`cursor-pointer hover:bg-blue-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-100"}`}
+                onClick={() => handleRowClick(entry)}
+              >
+                <td className="border p-2">{entry.mrn}</td>
+                <td className="border p-2">{entry.lastName}</td>
+                <td className="border p-2">{entry.firstName}</td>
+                <td className="border p-2">{entry.dob}</td>
+                <td className="border p-2">{entry.subject}</td>
+                <td className="border p-2">{entry.dateReceived}</td>
+                <td className="border p-2">{entry.fromUser}</td>
+                <td className="border p-2">
+                  {filteredCategories.map((category, index) => (
+                    <span
+                      key={index}
+                      className="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
+                    >
+                      {category}
+                    </span>
+                  ))}
+                </td>
+                <td className="border p-2">
+                  <span className={`inline-block ${urgencyColor} text-xs font-medium px-2 py-1 rounded-full`}>
+                    {urgency}
                   </span>
-                ))}
-              </td>
-            </tr>
-          ))}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -414,16 +444,27 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       <div className="mb-4 mt-4">
         <label className="font-semibold text-gray-600">Categories:</label>
         <div className="mt-2">
-          {entryData.categories.map((category, index) => (
-            <span
-              key={index}
-              className="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
-            >
-              {category}
-            </span>
-          ))}
+          {entryData.categories.map((category, index) => {
+            let colorClass = 'bg-blue-100 text-blue-800';
+            
+            if (category === 'High Urgency') {
+              colorClass = 'bg-red-500 text-white';
+            } else if (category === 'Medium Urgency') {
+              colorClass = 'bg-orange-500 text-white';
+            } else if (category === 'Low Urgency') {
+              colorClass = 'bg-yellow-500 text-black';
+            }
+
+            return (
+              <span
+                key={index}
+                className={`inline-block ${colorClass} text-xs font-medium mr-2 px-2 py-1 rounded-full mb-2`}
+              >
+                {category}
+              </span>
+            );
+          })}
         </div>
-      </div>
       <div className="mt-6 bg-white border rounded shadow">
         <h3 className="font-semibold text-gray-600 px-4 pt-4">Generated Replies:</h3>
         <div className="flex border-b">
@@ -554,6 +595,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };

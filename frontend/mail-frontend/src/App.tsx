@@ -233,6 +233,25 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
     navigate(`/message/${entry.mrn}`);
   };  
 
+  const getUrgencyColor = (urgency: string) => {
+    switch (urgency) {
+      case 'High Urgency':
+        return 'bg-red-500 text-white';
+      case 'Medium Urgency':
+        return 'bg-orange-500 text-black';
+      case 'Low Urgency':
+        return 'bg-yellow-500 text-black';
+      default:
+        return 'bg-gray-200 text-gray-700';
+    }
+  };
+
+
+  const getUrgency = (categories: string[]) => {
+    const urgencyTags = ['High Urgency', 'Medium Urgency', 'Low Urgency'];
+    return categories.find(category => urgencyTags.includes(category)) || 'N/A';
+  };
+
   return (
     <div className="p-6">
       <h2 className="text-xl font-bold mb-4 text-gray-800">Inbox Overview</h2>
@@ -247,34 +266,46 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
             <th className="border p-2 text-left">Date Received</th>
             <th className="border p-2 text-left">From User</th>
             <th className="border p-2 text-left">Categories</th>
+            <th className='border p-2 text-left'>Urgency</th>
           </tr>
         </thead>
         <tbody>
-          {dummyData.map((entry, index) => (
-            <tr
-              key={entry.mrn}
-              className={`cursor-pointer hover:bg-blue-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-100"}`}
-              onClick={() => handleRowClick(entry)}
-            >
-              <td className="border p-2">{entry.mrn}</td>
-              <td className="border p-2">{entry.lastName}</td>
-              <td className="border p-2">{entry.firstName}</td>
-              <td className="border p-2">{entry.dob}</td>
-              <td className="border p-2">{entry.subject}</td>
-              <td className="border p-2">{entry.dateReceived}</td>
-              <td className="border p-2">{entry.fromUser}</td>
-              <td className="border p-2">
-                {entry.categories.map((category, index) => (
-                  <span
-                    key={index}
-                    className="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
-                  >
-                    {category}
+        {dummyData.map((entry, index) => {
+            const urgency = getUrgency(entry.categories);
+            const urgencyColor = getUrgencyColor(urgency);
+            const filteredCategories = entry.categories.filter(category => !['High Urgency', 'Medium Urgency', 'Low Urgency'].includes(category));
+           
+            return (
+              <tr
+                key={entry.mrn}
+                className={`cursor-pointer hover:bg-blue-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-100"}`}
+                onClick={() => handleRowClick(entry)}
+              >
+                <td className="border p-2">{entry.mrn}</td>
+                <td className="border p-2">{entry.lastName}</td>
+                <td className="border p-2">{entry.firstName}</td>
+                <td className="border p-2">{entry.dob}</td>
+                <td className="border p-2">{entry.subject}</td>
+                <td className="border p-2">{entry.dateReceived}</td>
+                <td className="border p-2">{entry.fromUser}</td>
+                <td className="border p-2">
+                  {filteredCategories.map((category, index) => (
+                    <span
+                      key={index}
+                      className="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
+                    >
+                      {category}
+                    </span>
+                  ))}
+                </td>
+                <td className="border p-2">
+                  <span className={`inline-block ${urgencyColor} text-xs font-medium px-2 py-1 rounded-full`}>
+                    {urgency}
                   </span>
-                ))}
-              </td>
-            </tr>
-          ))}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -294,71 +325,49 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     aiReplies: entryData ? entryData.aiReplies : [],
   });
 
-  const [loading, setLoading] = useState<boolean>(true);  
-
-  /*
-  const BACKEND_URL = "http://localhost:5000";
-
-  useEffect(() => {
-    async function fetchAIReplies() {
-      if (!mrn || !entryData?.negativeMessages[0]) return;
-
-      const patientMessage = entryData.negativeMessages[0];
-      setLoading(true);  
-
-      try {
-        const response = await fetch(`${BACKEND_URL}/api/get-ai-replies`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ patientMessage }),
-        });
-
-        if (response.ok) {
-          const { aiReplies } = await response.json();
-          setEntry((prevEntry) => ({ ...prevEntry, aiReplies }));
-        } else {
-          console.error(`Failed to fetch AI replies for MRN: ${mrn}`);
-        }
-      } catch (error) {
-        console.error("Error fetching AI replies:", error);
-      } finally {
-        setLoading(false);  // End loading
-      }
-    }
-
-    fetchAIReplies();
-  }, [mrn, entryData]);
-
-  */
-
-  useEffect(() => {
-    if (entryData && entryData.aiReplies && entryData.aiReplies.length > 0) {
-      setLoading(false);
-      setEntry({
-        ...entry,
-        aiReplies: entryData.aiReplies, 
-      });
-    }
-  }, [entryData]);  
-
-  if (!entryData) {
-    return <div className="p-6 text-gray-700">Message not found.</div>;
-  }
-
+  const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState(false);
   const [sentReplies, setSentReplies] = useState<{ content: string; timestamp: Date }[]>([]);
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [showRating, setShowRating] = useState<{ [key: number]: boolean }>({});
+  const [activeTab, setActiveTab] = useState<number>(0);
 
-  const handleRateButtonClick = (index: number) => {
-    setShowRating((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
+  useEffect(() => {
+    if (entryData && entryData.aiReplies?.length > 0) {
+      setLoading(false);
+      setEntry((prev) => ({
+        ...prev,
+        aiReplies: entryData.aiReplies,
+      }));
+    }
+  }, [entryData]);
+
+  const handleTabClick = (index: number) => {
+    setActiveTab(index);
   };
+
+  const handleSendReply = (replyContent: string, isAIReply = false) => {
+    if ((isAIReply && replyContent.trim()) || (!isAIReply && entry.reply.trim())) {
+      setSentReplies((prev) => [
+        ...prev,
+        { content: replyContent || entry.reply, timestamp: new Date() },
+      ]);
+
+      if (isAIReply) {
+        const updatedReplies = entry.aiReplies.map((reply) =>
+          reply.content === replyContent ? { ...reply, content: replyContent } : reply
+        );
+        setEntry({ ...entry, aiReplies: updatedReplies });
+      }
+
+      setShowModal(true);
+    } else {
+      console.error("Reply cannot be empty");
+    }
+  };
+
+  const handleCloseModal = () => setShowModal(false);
 
   const handleRatingChange = (index: number, newRating: Rating) => {
     const updatedRatings = [...ratings];
@@ -370,43 +379,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     const updatedFeedback = [...feedback];
     updatedFeedback[index] = newFeedback;
     setFeedback(updatedFeedback);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>, field: keyof EntryState) => {
-    setEntry({
-      ...entry,
-      [field]: e.target.value,
-    });
-  };
-
-  const handleSendReply = (replyContent: string, isAIReply: boolean = false) => {
-    console.log("send Reply clicked");
-    if (isAIReply && replyContent.trim()) {
-      setSentReplies((prevReplies) => [
-        ...prevReplies,
-        { content: replyContent, timestamp: new Date() },
-      ]);
-      const updatedReplies = entry.aiReplies.map((reply) => {
-        if (reply.content === replyContent) {
-          return { ...reply, content: reply.content };
-        }
-        return reply;
-      });
-      setEntry({ ...entry, aiReplies: updatedReplies });
-    } else if (!isAIReply && entry.reply.trim()) {
-      setSentReplies((prevReplies) => [
-        ...prevReplies,
-        { content: entry.reply, timestamp: new Date() },
-      ]);
-    } else {
-      console.error("Reply cannot be empty");
-    }
-
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
   };
 
   const handleAIReplyChange = (index: number, newContent: string) => {
@@ -422,6 +394,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   return (
     <div className="p-6">
       <h2 className="text-xl font-bold mb-5 text-gray-800">Message Details</h2>
+
       <div className="mb-4">
         <label className="font-semibold text-gray-600">To:</label>
         <input
@@ -440,9 +413,46 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       </div>
       <div className="bg-gray-100 p-4 mb-4 border rounded">
         <label className="font-semibold text-gray-600">Patient Message:</label>
-        <p className="text-sm text-gray-700">{entryData.negativeMessages[0]}</p>
+        <p className="text-sm text-gray-700">{entryData.message}</p>
       </div>
 
+      <div className="mt-6 bg-gray-50 p-4 border rounded">
+        <h3 className="font-semibold text-gray-600">Sent Replies</h3>
+        {sentReplies.length > 0 ? (
+          sentReplies.map((sent, index) => (
+            <div key={index} className="mt-2 border-b">
+              <p className="text-sm text-gray-700 mb-2">{sent.content}</p>
+              <p className="text-xs text-gray-500 mb-2">
+                Sent at {sent.timestamp.toLocaleTimeString()} on{" "}
+                {sent.timestamp.toLocaleDateString()}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-sm text-gray-600">No replies sent yet.</p>
+        )}
+      </div>
+      <div className="mb-4 mt-4">
+        <label className="font-semibold text-gray-600">Categories:</label>
+        <div className="mt-2">
+          {entryData.categories.map((category, index) => {
+            const colorClass = {
+              "High Urgency": "bg-red-500 text-white",
+              "Medium Urgency": "bg-orange-500 text-white",
+              "Low Urgency": "bg-yellow-500 text-black",
+            }[category] || "bg-blue-100 text-blue-800";
+
+            return (
+              <span
+                key={index}
+                className={`inline-block ${colorClass} text-xs font-medium mr-2 px-2 py-1 rounded-full mb-2`}
+              >
+                {category}
+              </span>
+            );
+          })}
+        </div>
+      </div>
       {loading ? (
         <div className="loading-overlay">
           <div className="flex justify-center items-center">
@@ -456,121 +466,72 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             </div>
           </div>
         </div>
-      )  : (
-        <div className="mt-6 bg-gray-50 p-4 border rounded">
-          <h3 className="font-semibold text-gray-600">Generated Replies (Click to edit):</h3>
-          {entry.aiReplies.length > 0 ? (
-            entry.aiReplies.map((reply, index) => (
-              <div key={index} className="mb-3">
-                <p className="text-sm font-semibold text-blue-600 mt-4">{reply.label}:</p>
-                <textarea
-                  className="w-full h-40 p-2 border rounded mt-1 bg-gray-50"
-                  value={reply.content}
-                  onChange={(e) => handleAIReplyChange(index, e.target.value)}
-                />
-                <div className="flex gap-2 mt-2">
-                  <button
-                    onClick={() => handleSendReply(reply.content, true)}
-                    className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                  >
-                    Send Reply
-                  </button>
-                  <button
-                    className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-                  >
-                    Regenerate
-                  </button>
-                </div>
-
+      ) : (
+        <>
+          <div className="mt-6 bg-white border rounded shadow">
+            <div className="flex border-b">
+              {entry.aiReplies.map((reply, index) => (
                 <button
-                  onClick={() => handleRateButtonClick(index)}
-                  className="mt-3 inline-flex items-center text-black py-1 cursor-pointer"
+                  key={index}
+                  onClick={() => handleTabClick(index)}
+                  className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+                    activeTab === index
+                      ? "border-b-2 border-blue-500 text-blue-600"
+                      : "text-gray-500 hover:text-gray-700"
+                  }`}
                 >
-                  Rate this Reply
-                  <span
-                    className={`ml-2 transform ${showRating[index] ? "rotate-180" : "rotate-0"} transition-transform`}
-                  >
-                    ▼
-                  </span>
+                  {reply.label}
                 </button>
-                {showRating[index] && (
-                  <div className="mt-3">
-                    <label className="text-sm font-medium text-gray-700">Rating:</label>
-                    <div className="flex gap-1 mt-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          onClick={() => handleRatingChange(index, star)}
-                          className={`text-xl ${ratings[index] >= star ? "text-yellow-500" : "text-gray-300"}`}
-                        >
-                          ★
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {showRating[index] && (
-                  <div className="mt-3">
-                    <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
-                    <textarea
-                      className="w-full p-2 border rounded mt-1 bg-gray-50"
-                      value={feedback[index]}
-                      onChange={(e) => handleFeedbackChange(index, e.target.value)}
-                      placeholder="Optional: Share more thoughts..."
-                    />
-                  </div>
-                )}
-                {showRating[index] && (
-                  <div className="mt-3">
+              ))}
+            </div>
+
+            <div className="p-4">
+              {entry.aiReplies[activeTab] && (
+                <>
+                  <textarea
+                    className="w-full h-40 p-2 border rounded mt-1 bg-gray-50"
+                    value={entry.aiReplies[activeTab].content}
+                    onChange={(e) => handleAIReplyChange(activeTab, e.target.value)}
+                  />
+                  <div className="flex gap-2 mt-2">
                     <button
-                      onClick={() => {}}
-                      className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                      onClick={() => handleSendReply(entry.aiReplies[activeTab].content, true)}
+                      className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
                     >
-                      Submit
+                      Send Reply
+                    </button>
+                    <button className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">
+                      Regenerate
                     </button>
                   </div>
-                )}
-              </div>
-            ))
-          ) : (
-            <p className="text-sm text-gray-600">No AI replies generated yet.</p>
-          )}
-        </div>
+                </>
+              )}
+            </div>
+          </div>
+        </>
       )}
-
       <div className="bg-white p-4 border rounded mt-4">
         <label className="font-semibold text-gray-700">Your Reply:</label>
         <textarea
           className="w-full h-24 p-2 border rounded mt-1 bg-gray-50"
           value={entry.reply}
-          onChange={(e) => handleInputChange(e, "reply")}
+          onChange={(e) => setEntry({ ...entry, reply: e.target.value })}
           placeholder="Write your reply here..."
         />
         <button
-          onClick={() => {
-            if (entry.reply.trim()) {
-              handleSendReply(entry.reply);
-            } else {
-              console.error("Reply cannot be empty");
-            }
-          }}
+          onClick={() => handleSendReply(entry.reply)}
           className="mt-3 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
         >
           Send Reply
         </button>
       </div>
-      <div className="mt-5">
-        <Link to="/" className="text-blue-500 hover:underline">
-          Back to Inbox
-        </Link>
-      </div>
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded shadow-lg">
             <h2 className="text-lg font-bold mb-4">Confirmation</h2>
-            <p>Your email has been sent successfully!</p>
+            <p>Your reply has been sent successfully!</p>
             <button
-              onClick={closeModal}
+              onClick={handleCloseModal}
               className="mt-4 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
             >
               Close
@@ -581,6 +542,5 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     </div>
   );
 };
-
 
 export default App;

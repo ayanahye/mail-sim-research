@@ -11,6 +11,16 @@ client = OpenAI(
     api_key="fake-key"
 )
 
+def clean_and_extract_replies(raw_replies):
+    pattern = r'\(\w+\):\s*"(.*?)"(?:<\|eot_id\|>)?'
+    matches = re.findall(pattern, raw_replies)
+    cleaned_replies = [match.replace('"', '').replace("'", '').strip() for match in matches]
+    
+    while len(cleaned_replies) < 3:
+        cleaned_replies.append("No response provided")
+    
+    return cleaned_replies
+
 @app.route('/api/get-ai-replies', methods=['POST'])
 def get_ai_replies():
     data = request.json
@@ -33,13 +43,11 @@ def get_ai_replies():
 
         Patient Message: "{patient_message}"
 
-        Your response should be strictly in the following format:
+        Your response should be strictly in the following format (include the 3 response types as shown):
         1. **First reply** (Informative): "Hello there, (informative response), Kind regards, Nurse ___."
         2. **Second reply** (Suggestive): "Hello there, (suggestive response), Kind regards, Nurse ___."
         3. **Third reply** (Redirective): "Hello there, (redirective response), Kind regards, Nurse ___."
         """
-
-    #print(prompt)
 
     chat_completion = client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
@@ -47,33 +55,25 @@ def get_ai_replies():
     )
 
     raw_replies = chat_completion.choices[0].message.content
-    print(raw_replies)
-
-    replies = re.split(r'<\|eot_id\|>', raw_replies)
-
-    replies = [re.sub(r'\*\*Response \d+\*\*|\<\|eot_id\|\>|\\"|\\"', '', reply).strip() for reply in replies]
-
-    replies = [reply for reply in replies if reply]
-
-    if len(replies) < 3:
-        replies += ["No response provided"] * (3 - len(replies))
-
+    
+    cleaned_replies = clean_and_extract_replies(raw_replies)
+    
     labels = ["Informative", "Suggestive", "Redirective"]
-
+    
     formatted_replies = [
         {
             "label": labels[i],
-            "content": f'{replies[i]} Note: This email was drafted with AI assistance and reviewed/approved by the nurse.'
+            "content": f'{cleaned_replies[i]} Note: This email was drafted with AI assistance and reviewed/approved by the nurse.'
         }
         for i in range(3)
     ]
+
+    print(formatted_replies)
 
     return jsonify({"aiReplies": formatted_replies})
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
 
 '''
 Notes (talk w prof)
@@ -88,6 +88,3 @@ My notes
 
 - todo later: rate this reply database functionality
 '''
-
-
-

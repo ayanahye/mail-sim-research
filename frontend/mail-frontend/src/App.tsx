@@ -428,12 +428,16 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     if (!entryData || !entry.aiReplies[activeTab]) return;
   
     setLoading(true);
+    const BACKEND_URL = "http://localhost:5000";
   
     try {
-      const response = await fetch("/api/get-ai-replies", {
+      const response = await fetch(`${BACKEND_URL}/api/regenerate-ai-reply`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ patientMessage: entryData.message }), 
+        body: JSON.stringify({ 
+          patientMessage: entryData?.message || "", 
+          activeTab 
+        }),
       });
   
       if (!response.ok) {
@@ -442,9 +446,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   
       const data = await response.json();
   
-      if (data.aiReplies && data.aiReplies[activeTab]) {
+      if (data.aiReply) {
         const updatedReplies = [...entry.aiReplies];
-        updatedReplies[activeTab] = data.aiReplies[activeTab]; 
+        updatedReplies[activeTab] = data.aiReply; 
   
         setEntry({ ...entry, aiReplies: updatedReplies });
       }

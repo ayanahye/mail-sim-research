@@ -333,6 +333,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [showRating, setShowRating] = useState<{ [key: number]: boolean }>({});
   const [activeTab, setActiveTab] = useState<number>(0);
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [blankReply, setBlankReply] = useState("");
+  const [showBlankReplyForm, setShowBlankReplyForm] = useState(false);
 
   useEffect(() => {
     if (entryData && entryData.aiReplies?.length > 0) {
@@ -348,21 +350,25 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setActiveTab(index);
   };
 
-  const handleSendReply = (replyContent: string, isAIReply = false) => {
-    if ((isAIReply && replyContent.trim()) || (!isAIReply && entry.reply.trim())) {
-      setSentReplies((prev) => [
-        ...prev,
-        { content: replyContent || entry.reply, timestamp: new Date() },
+  const handleSendReply = (replyContent: string, isAIReply: boolean = false) => {
+    console.log("send Reply clicked");
+    if (replyContent.trim()) {
+      setSentReplies((prevReplies) => [
+        ...prevReplies,
+        { content: replyContent, timestamp: new Date() },
       ]);
-
       if (isAIReply) {
-        const updatedReplies = entry.aiReplies.map((reply) =>
-          reply.content === replyContent ? { ...reply, content: replyContent } : reply
-        );
+        const updatedReplies = entry.aiReplies.map(reply => {
+          if (reply.content === replyContent) {
+            return { ...reply, content: reply.content };
+          }
+          return reply;
+        });
         setEntry({ ...entry, aiReplies: updatedReplies });
       }
-
       setShowModal(true);
+      setBlankReply("");
+      setShowBlankReplyForm(false);
     } else {
       console.error("Reply cannot be empty");
     }
@@ -407,6 +413,15 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       ...prev,
       [activeTab]: false,
     }));
+  };
+
+  const handleStartBlank = () => {
+    setShowBlankReplyForm(!showBlankReplyForm);
+    setBlankReply("");
+  };
+
+  const handleBlankReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setBlankReply(e.target.value);
   };
 
   if (!entryData) {
@@ -522,6 +537,12 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
                     >
                       Send Reply
                     </button>
+                    <button
+                      onClick={handleStartBlank}
+                      className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
+                    >
+                      Start Blank
+                    </button>
                     <button className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">
                       Regenerate
                     </button>
@@ -582,20 +603,30 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           </div>
         )
       )}
-      <div className="bg-white p-4 border rounded mt-4">
-        <label className="font-semibold text-gray-700">Your Reply:</label>
-        <textarea
-          className="w-full h-24 p-2 border rounded mt-1 bg-gray-50"
-          value={entry.reply}
-          onChange={(e) => setEntry({ ...entry, reply: e.target.value })}
-          placeholder="Write your reply here..."
-        />
+      {showBlankReplyForm && (
+        <div className="mt-4 bg-white p-4 border rounded">
+          <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
+          
+          <textarea
+            id="blankReplyTextarea"
+            className="w-full h-40 p-2 border rounded"
+            value={blankReply}
+            onChange={handleBlankReplyChange}
+            placeholder="Write your reply here..."
+          />
+          
         <button
-          onClick={() => handleSendReply(entry.reply)}
-          className="mt-3 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+          onClick={() => handleSendReply(blankReply)}
+          className="mt-2 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
         >
           Send Reply
         </button>
+      </div>
+      )}
+      <div className="mt-20">
+        <Link to="/" className="text-blue-500 hover:underline">
+          Back to Inbox
+        </Link>
       </div>
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

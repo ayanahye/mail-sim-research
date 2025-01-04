@@ -424,6 +424,37 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setBlankReply(e.target.value);
   };
 
+  const handleRegenerateReply = async () => {
+    if (!entryData || !entry.aiReplies[activeTab]) return;
+  
+    setLoading(true);
+  
+    try {
+      const response = await fetch("/api/get-ai-replies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ patientMessage: entryData.message }), 
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to regenerate AI reply.");
+      }
+  
+      const data = await response.json();
+  
+      if (data.aiReplies && data.aiReplies[activeTab]) {
+        const updatedReplies = [...entry.aiReplies];
+        updatedReplies[activeTab] = data.aiReplies[activeTab]; 
+  
+        setEntry({ ...entry, aiReplies: updatedReplies });
+      }
+    } catch (error) {
+      console.error("Error regenerating AI reply:", error);
+    }
+  
+    setLoading(false);
+  };
+
   if (!entryData) {
     return <div className="p-6 text-gray-700">Message not found.</div>;
   }
@@ -543,8 +574,12 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
                     >
                       Start Blank
                     </button>
-                    <button className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">
-                      Regenerate
+                    <button
+                      onClick={handleRegenerateReply}
+                      disabled={loading}
+                      className={`px-3 py-1 rounded text-white ${loading ? "bg-gray-400" : "bg-gray-500 hover:bg-gray-600"}`}
+                    >
+                      {loading ? "Regenerating..." : "Regenerate"}
                     </button>
                   </div>
                   <button

@@ -330,6 +330,13 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [showRating, setShowRating] = useState<{ [key: number]: boolean }>({});
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [blankReply, setBlankReply] = useState("");
+  const [isBold, setIsBold] = useState(false);
+  const [isUnderline, setIsUnderline] = useState(false);
+  const [showBlankReplyForm, setShowBlankReplyForm] = useState(false);
+
+  const [selectedText, setSelectedText] = useState({ start: 0, end: 0 });
 
   const handleTabClick = (index: number) => {
     setActiveTab(index);
@@ -339,6 +346,20 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setShowRating((prev) => ({
       ...prev,
       [index]: !prev[index],
+    }));
+  };
+
+  const handleSubmitRating = () => {
+    console.log("Submitting rating:", ratings[activeTab]);
+    console.log("Submitting feedback:", feedback[activeTab]);
+    setShowRatingModal(true);
+  };
+
+  const handleCloseRatingModal = () => {
+    setShowRatingModal(false);
+    setShowRating((prev) => ({
+      ...prev,
+      [activeTab]: false,
     }));
   };
 
@@ -354,38 +375,28 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setFeedback(updatedFeedback);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>, field: keyof EntryState) => {
-    setEntry({
-      ...entry,
-      [field]: e.target.value,
-    });
-  };
-
   const handleSendReply = (replyContent: string, isAIReply: boolean = false) => {
     console.log("send Reply clicked");
-    if (isAIReply && replyContent.trim()) {
+    if (replyContent.trim()) {
       setSentReplies((prevReplies) => [
         ...prevReplies,
         { content: replyContent, timestamp: new Date() },
       ]);
-      const updatedReplies = entry.aiReplies.map(reply => {
-        if (reply.content === replyContent) {
-          return { ...reply, content: reply.content };
-        }
-        return reply;
-      });
-      setEntry({ ...entry, aiReplies: updatedReplies });
-    } 
-    else if (!isAIReply && entry.reply.trim()) {
-      setSentReplies((prevReplies) => [
-        ...prevReplies,
-        { content: entry.reply, timestamp: new Date() },
-      ]);
+      if (isAIReply) {
+        const updatedReplies = entry.aiReplies.map(reply => {
+          if (reply.content === replyContent) {
+            return { ...reply, content: reply.content };
+          }
+          return reply;
+        });
+        setEntry({ ...entry, aiReplies: updatedReplies });
+      }
+      setShowModal(true);
+      setBlankReply("");
+      setShowBlankReplyForm(false);
     } else {
       console.error("Reply cannot be empty");
     }
-
-    setShowModal(true);
   };
 
   const closeModal = () => {
@@ -398,9 +409,70 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setEntry({ ...entry, aiReplies: updatedReplies });
   };
 
+  const handleStartBlank = () => {
+    setShowBlankReplyForm(!showBlankReplyForm);
+    setBlankReply("");
+    setIsBold(false);
+    setIsUnderline(false);
+  };
+
+  const handleBlankReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setBlankReply(e.target.value);
+  };
+
+  const handleBoldClick = () => {
+    setIsBold(!isBold);
+  };
+
+  const handleUnderlineClick = () => {
+    setIsUnderline(!isUnderline);
+  };
+
+  const handleTextSelect = () => {
+    const textarea = document.getElementById('blankReplyTextarea') as HTMLTextAreaElement;
+    setSelectedText({ start: textarea.selectionStart, end: textarea.selectionEnd });
+  };
+
+  const applyFormatting = (format: 'bold' | 'underline') => {
+    if (selectedText.start === selectedText.end) return;
+  
+    const before = blankReply.substring(0, selectedText.start);
+    const selected = blankReply.substring(selectedText.start, selectedText.end);
+    const after = blankReply.substring(selectedText.end);
+  
+    const formattedText = format === 'bold' ? `<b>${selected}</b>` : `<u>${selected}</u>`;
+    setBlankReply(before + formattedText + after);
+  };
+
   if (!entryData) {
     return <div className="p-6 text-gray-700">Message not found.</div>;
   }
+
+  /*
+  for testing:
+
+  <div className="mb-2">
+              <button
+              onClick={() => applyFormatting('bold')}
+              className="mr-2 px-2 py-1 rounded bg-gray-200 hover:bg-blue-500 hover:text-white"
+            >
+              B
+            </button>
+            <button
+              onClick={() => applyFormatting('underline')}
+              className="px-2 py-1 rounded bg-gray-200 hover:bg-blue-500 hover:text-white"
+            >
+              U
+            </button>
+    </div>
+
+  dont want to dangerouslysethtml so leaving out for now
+
+  <div className="mt-2 text-sm text-gray-600">
+        Preview:
+        <div className="p-2 border rounded mt-1 bg-gray-50" dangerouslySetInnerHTML={{ __html: blankReply }} />
+        </div>
+  */
 
   return (
     <div className="p-6">
@@ -465,8 +537,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             );
           })}
         </div>
+      </div>
       <div className="mt-6 bg-white border rounded shadow">
-        <h3 className="font-semibold text-gray-600 px-4 pt-4">Generated Replies:</h3>
+        <h3 className="font-semibold text-gray-600 px-4 pt-4">Generated Replies: (Click to Edit)</h3>
         <div className="flex border-b">
           {entry.aiReplies.map((reply, index) => (
             <button
@@ -499,12 +572,17 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
                   Send Reply
                 </button>
                 <button
+                  onClick={handleStartBlank}
+                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
+                >
+                  Start Blank
+                </button>
+                <button
                   className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
                 >
                   Regenerate
                 </button>
               </div>
-
               <button
                 onClick={() => handleRateButtonClick(activeTab)}
                 className="mt-3 inline-flex items-center text-black py-1 cursor-pointer"
@@ -543,7 +621,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
                   </div>
                   <div className="mt-3">
                     <button
-                      onClick={() => {}}
+                      onClick={handleSubmitRating}
                       className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
                     >
                       Submit
@@ -555,27 +633,27 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           )}
         </div>
       </div>
-      <div className="bg-white p-4 border rounded mt-4">
-        <label className="font-semibold text-gray-700">Your Reply:</label>
-        <textarea
-          className="w-full h-24 p-2 border rounded mt-1 bg-gray-50"
-          value={entry.reply}
-          onChange={(e) => handleInputChange(e, "reply")}
-          placeholder="Write your reply here..."
-        />
+      {showBlankReplyForm && (
+        <div className="mt-4 bg-white p-4 border rounded">
+          <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
+          
+          <textarea
+            id="blankReplyTextarea"
+            className="w-full h-40 p-2 border rounded"
+            value={blankReply}
+            onChange={handleBlankReplyChange}
+            onSelect={handleTextSelect}
+            placeholder="Write your reply here..."
+          />
+          
         <button
-          onClick={() => {
-            if (entry.reply.trim()) {
-              handleSendReply(entry.reply);
-            } else {
-              console.error("Reply cannot be empty");
-            }
-          }}
-          className="mt-3 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+          onClick={() => handleSendReply(blankReply)}
+          className="mt-2 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
         >
           Send Reply
         </button>
       </div>
+      )}
       <div className="mt-5">
         <Link to="/" className="text-blue-500 hover:underline">
           Back to Inbox
@@ -595,7 +673,20 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           </div>
         </div>
       )}
-    </div>
+      {showRatingModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-lg font-bold mb-4">Rating Submitted</h2>
+            <p>Thank you for your feedback!</p>
+            <button
+              onClick={handleCloseRatingModal}
+              className="mt-4 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

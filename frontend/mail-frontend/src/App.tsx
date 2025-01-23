@@ -20,21 +20,21 @@ function App() {
       dob: "01/01/1980", 
       subject: "Lab Results", 
       dateReceived: "12/18/2024", 
-      fromUser: "Dr. Doe", 
-      message: "I am very worried about my lab results. Why am I still waiting? I need answers!", 
+      fromUser: "Patient", 
+      message: "I’ve been waiting for my lab results for what feels like forever, and it’s starting to take a serious toll on me. I’m losing sleep, I can’t focus at work, and the uncertainty is just too much to bear. I don’t understand why it’s taking this long, and honestly, it feels like no one even cares about how stressful this is for me. I’ve reached out multiple times, but I haven’t gotten any clear answers. I just want to know what’s happening and when I’ll get the results. Please, I need someone to take this seriously and give me some clarity. I can’t handle this waiting anymore.",
       categories: ["Urgent Response", "Follow-up", "High Urgency"],
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "Dear John,\n\nI completely understand how stressful this must be for you, and I’m so sorry for the delay. Your results are important, and we're doing everything we can to get them to you as soon as possible. Please hang in there, and we’ll update you shortly.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Dear John,\n\nI’m truly sorry to hear how this delay has been impacting you. I completely understand how stressful it is to wait for important results. Please know that we’re prioritizing your case, and I’ll personally ensure you’re updated as soon as we have any information. Thank you for your patience during this difficult time.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         },
         { 
           label: "Direct Reply", 
-          content: "Hi John,\n\nWe are currently processing your lab results. You will receive an update once they are available. Please rest assured that we are actively working on them.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Hi John,\n\nYour lab results are still being processed. I completely understand the urgency, and I’ll notify you immediately once they are ready. Please rest assured that we’re working to get this resolved for you as quickly as possible.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         },
         { 
           label: "Reassurance Reply", 
-          content: "Hello John,\n\nI know waiting for results can be nerve-wracking, but please know that your results are a priority for us. We are closely monitoring the situation and will notify you immediately once they are ready. You are in good hands.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Hello John,\n\nI understand how frustrating this wait must be, and I want to reassure you that your results are a priority for us. We’re actively monitoring the situation and will reach out as soon as the information is available. You are in good hands, and I appreciate your patience.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         }
       ]
     },
@@ -45,21 +45,21 @@ function App() {
       dob: "02/02/1985", 
       subject: "Prescription", 
       dateReceived: "12/17/2024", 
-      fromUser: "Nurse Joy", 
-      message: "My prescription is missing, and I have been waiting for days. What is going on?", 
+      fromUser: "Patient", 
+      message: "This situation with my missing prescription has been absolutely unacceptable. I’ve been without my medication for several days now, and it’s causing me serious distress. This medication isn’t optional for me—it’s something I rely on every day to manage my condition. I feel like I’m being completely ignored. No one seems to understand how urgent this is, and I’m starting to feel like I can’t trust the system to take care of me. I need answers, and I need someone to take responsibility for fixing this immediately. I shouldn’t have to beg for something so basic and essential to my health.",
       categories: ["Prescription Issue", "High Urgency", "Follow-up"],
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "Dear Jane,\n\nI am so sorry for the frustration this delay has caused. I completely understand how important your prescription is. Let me look into this right away and ensure it is processed as quickly as possible.\n\nSincerely,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          content: "Dear Jane,\n\nI’m so sorry for the distress and inconvenience this has caused. I completely understand how important your medication is and how frustrating delays can be. I’m looking into this immediately and will ensure it is resolved as quickly as possible. Your trust is very important to us, and we’ll do everything we can to make this right.\n\nSincerely,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
         },
         { 
           label: "Direct Reply", 
-          content: "Hi Jane,\n\nWe are aware of the missing prescription and are currently working to resolve the issue. I will follow up with the pharmacy to ensure it is sent out as soon as possible.\n\nBest,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          content: "Hi Jane,\n\nI understand how critical your medication is, and I apologize for the delay. I’ve already reached out to the pharmacy and will follow up with you as soon as I have an update. Thank you for bringing this to my attention.\n\nBest regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
         },
         { 
           label: "Reassurance Reply", 
-          content: "Hello Jane,\n\nI completely understand your concern, and I want to assure you that we’re prioritizing this issue. I’m checking with the pharmacy now, and you’ll be receiving your prescription soon. Thanks for your patience.\n\nKind regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          content: "Hello Jane,\n\nI completely understand your frustration and want to assure you that we’re working to resolve this issue as a top priority. I’m in contact with the pharmacy to ensure your medication is sent out immediately. Thank you for your patience as we address this.\n\nKind regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
         }
       ]
     },
@@ -70,21 +70,21 @@ function App() {
       dob: "03/03/1990", 
       subject: "Message", 
       dateReceived: "12/16/2024", 
-      fromUser: "Dr. Smith", 
-      message: "Why haven’t I received any updates? I am anxious about my condition.", 
+      fromUser: "Patient", 
+      message: "I don’t know what’s going on with my condition, and the lack of communication has been unbearable. I’m constantly on edge, wondering if I’ve been forgotten or if something has gone wrong. The anxiety is making it hard for me to function in my daily life. I don’t understand why it’s so hard to get updates. I’ve tried to be patient, but it feels like I’m being left in the dark with no regard for how this is affecting me emotionally. I need someone to step up and provide me with the information I’ve been waiting for because I can’t take this silence anymore.",
       categories: ["General Inquiry", "Medium Urgency", "Clarification Needed"],
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "Hi Charlie,\n\nI completely understand your concern. It’s very natural to feel anxious when waiting for updates. I’m currently reviewing your case and will provide you with an update as soon as I have more information. Hang in there.\n\nBest regards,\nDr. Smith\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. Smith.*"
+          content: "Hi Charlie,\n\nI’m so sorry for the anxiety this is causing you. It’s absolutely understandable to feel this way, and I want to reassure you that your case is important to us. I’m reviewing your file now and will provide you with an update as soon as I have more information. You are not being forgotten.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         },
         { 
           label: "Direct Reply", 
-          content: "Hello Charlie,\n\nI’m aware that you’re waiting for updates on your condition. We’re still awaiting results, and I’ll be sure to inform you once we have the necessary information.\n\nSincerely,\nDr. Smith\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. Smith.*"
+          content: "Hello Charlie,\n\nI understand your concerns. Your condition is being monitored closely, and I’ll notify you as soon as there are any updates. Thank you for your patience while we work through this.\n\nSincerely,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         },
         { 
           label: "Reassurance Reply", 
-          content: "Dear Charlie,\n\nI understand how difficult it can be to wait for updates. Rest assured, we are closely monitoring your condition and will provide you with any updates as soon as we have them. You’re being taken care of.\n\nWarm regards,\nDr. Smith\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. Smith.*"
+          content: "Dear Charlie,\n\nI completely understand how stressful waiting can be. Please know that we’re actively working on your case, and I’ll ensure you receive updates as soon as we have them. You’re in good hands, and we’re here to support you.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         }
       ]
     },
@@ -95,21 +95,21 @@ function App() {
       dob: "04/04/1995", 
       subject: "Image Upload", 
       dateReceived: "12/15/2024", 
-      fromUser: "Dr. White", 
-      message: "The image upload process was confusing. I am not sure if I did it right.", 
+      fromUser: "Patient", 
+      message: "I tried to follow the instructions for uploading the images, but the process was so confusing and frustrating that I’m not even sure I did it correctly. I feel like I wasted hours trying to figure it out, and now I’m worried that I’ve made a mistake that could delay my care. This whole experience has been overwhelming and stressful. I don’t understand why something so important has to be so difficult. I need help making sure everything is correct because I can’t afford for there to be any delays. This has been such a frustrating experience, and I just want to know that someone is there to help me.",
       categories: ["Image Upload Assistance", "Medium Urgency", "Clarification Needed"],
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "Dear Emily,\n\nI completely understand how frustrating technical issues can be, especially when you're trying to do everything right. Let’s work together to make sure your image is properly uploaded. I’ll guide you through the process step-by-step.\n\nKind regards,\nDr. White\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. White.*"
+          content: "Dear Emily,\n\nI’m so sorry to hear that the process was confusing. I completely understand how important it is to ensure your images are uploaded correctly. Let’s work together to verify everything and make sure there are no delays in your care. I’m here to help.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         },
         { 
           label: "Direct Reply", 
-          content: "Hi Emily,\n\nI’ve checked your image upload, and it appears that everything is in order. If you’d like, I can walk you through the steps again to ensure there are no issues.\n\nBest regards,\nDr. White\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. White.*"
+          content: "Hi Emily,\n\nI’ve reviewed your upload, and everything seems to be in order. If you’d like, I can guide you through the steps again to make sure there are no issues. Let me know how I can assist you further.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         },
         { 
           label: "Reassurance Reply", 
-          content: "Hello Emily,\n\nDon’t worry, your image has been uploaded successfully. If you need any help with the process, I’m here to assist you and ensure everything is done correctly.\n\nSincerely,\nDr. White\n\n*This email was drafted with AI assistance and reviewed/approved by Dr. White.*"
+          content: "Hello Emily,\n\nI want to assure you that your images have been received and uploaded successfully. If you have any concerns or would like assistance, please don’t hesitate to reach out. I’m happy to help.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         }
       ]
     },
@@ -120,25 +120,25 @@ function App() {
       dob: "05/05/2000", 
       subject: "Document", 
       dateReceived: "12/14/2024", 
-      fromUser: "Receptionist", 
-      message: "I have submitted all documents, but I haven't heard back yet. Please confirm if everything is okay.", 
+      fromUser: "Patient", 
+      message: "I submitted all of my documents over a week ago, and I haven’t heard a single word back. I’m starting to feel like no one is even paying attention to my case, and it’s making me incredibly anxious. I keep wondering if something went wrong—were my documents lost, or did I miss a step? The uncertainty is driving me crazy, and I feel completely ignored. I just need someone to confirm that everything is in order and let me know what’s going on. This is so important to me, and I can’t understand why it’s taking so long to get even a simple acknowledgment.",
       categories: ["Document Submission", "Low Urgency", "Follow-up"],
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "Dear Chris,\n\nI understand how concerning it can be to wait for confirmation. Thank you for submitting your documents. I’m reviewing everything now and will confirm as soon as possible.\n\nSincerely,\nReceptionist\n\n*This email was drafted with AI assistance and reviewed/approved by Receptionist.*"
+          content: "Dear Chris,\n\nI understand how stressful it can be to wait for confirmation. Thank you for letting me know. I’ll review your documents immediately and confirm everything for you. Please don’t worry—we’ll make sure everything is in order.\n\nSincerely,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         },
         { 
           label: "Direct Reply", 
-          content: "Hi Chris,\n\nAll documents have been submitted and are currently under review. You will be notified once everything has been processed.\n\nBest regards,\nReceptionist\n\n*This email was drafted with AI assistance and reviewed/approved by Receptionist.*"
+          content: "Hi Chris,\n\nYour documents have been received and are currently under review. I’ll notify you as soon as everything is processed. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         },
         { 
           label: "Reassurance Reply", 
-          content: "Hello Chris,\n\nThank you for submitting everything! I want to assure you that we have received your documents, and everything looks great. You’ll hear from us soon regarding the next steps.\n\nKind regards,\nReceptionist\n\n*This email was drafted with AI assistance and reviewed/approved by Receptionist.*"
+          content: "Hello Chris,\n\nI want to let you know that your documents have been received and everything looks great. You’ll hear from us soon regarding the next steps. Thank you for keeping us updated.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
         }
       ]
     }
-  ];
+  ];  
   
   
 // notes:

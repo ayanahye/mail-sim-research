@@ -340,6 +340,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   const handleTabClick = (index: number) => {
     setActiveTab(index);
+    if (index === entry.aiReplies.length) {
+      setShowBlankReplyForm(true);
+    } else {
+      setShowBlankReplyForm(false);
+    }
   };
 
   const handleRateButtonClick = (index: number) => {
@@ -526,7 +531,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             } else if (category === 'Low Urgency') {
               colorClass = 'bg-yellow-500 text-black';
             }
-
             return (
               <span
                 key={index}
@@ -554,10 +558,20 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
               {reply.label}
             </button>
           ))}
+          <button
+            onClick={() => handleTabClick(entry.aiReplies.length)}
+            className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+              activeTab === entry.aiReplies.length
+                ? "border-b-2 border-red-600 text-red-600"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            Start Blank
+          </button>
         </div>
-
+  
         <div className="p-4">
-          {entry.aiReplies[activeTab] && (
+          {activeTab < entry.aiReplies.length && (
             <>
               <textarea
                 className="w-full h-40 p-2 border rounded mt-1 bg-gray-50"
@@ -570,12 +584,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
                   className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
                 >
                   Send Reply
-                </button>
-                <button
-                  onClick={handleStartBlank}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
-                >
-                  Start Blank
                 </button>
                 <button
                   className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
@@ -631,30 +639,43 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
               )}
             </>
           )}
+          {activeTab === entry.aiReplies.length && (
+            <div className="bg-white p-4 border rounded">
+              <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
+              
+              <textarea
+                id="blankReplyTextarea"
+                className="w-full h-40 p-2 border rounded"
+                value={blankReply}
+                onChange={handleBlankReplyChange}
+                onSelect={handleTextSelect}
+                placeholder="Write your reply here..."
+              />
+              
+              <div className="mt-2 flex gap-2">
+                <button
+                  onClick={() => handleSendReply(blankReply)}
+                  className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                >
+                  Send Reply
+                </button>
+                <button
+                  onClick={handleStartBlank}
+                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
+                >
+                  Clear
+                </button>
+                <button
+                  className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+                >
+                  Regenerate
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-      {showBlankReplyForm && (
-        <div className="mt-4 bg-white p-4 border rounded">
-          <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
-          
-          <textarea
-            id="blankReplyTextarea"
-            className="w-full h-40 p-2 border rounded"
-            value={blankReply}
-            onChange={handleBlankReplyChange}
-            onSelect={handleTextSelect}
-            placeholder="Write your reply here..."
-          />
-          
-        <button
-          onClick={() => handleSendReply(blankReply)}
-          className="mt-2 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-        >
-          Send Reply
-        </button>
-      </div>
-      )}
-      <div className="mt-5">
+      <div className="mt-10">
         <Link to="/" className="text-blue-500 hover:underline">
           Back to Inbox
         </Link>
@@ -688,7 +709,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         </div>
       )}
     </div>
-  );
+  );        
 };
 
 export default App;

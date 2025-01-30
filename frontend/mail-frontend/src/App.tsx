@@ -7,10 +7,36 @@ type ApiResponse = {
 };
 */
 
+interface ToggleSwitchProps {
+  isOn: boolean;
+  onToggle: () => void;
+  label: string;
+}
+
+const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ isOn, onToggle, label }) => (
+  <div className="flex items-center">
+    <span className="mr-2 text-sm">{label}</span>
+    <div
+      className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer ${
+        isOn ? 'bg-green-400' : 'bg-gray-300'
+      }`}
+      onClick={onToggle}
+    >
+      <div
+        className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ease-in-out ${
+          isOn ? 'translate-x-4' : ''
+        }`}
+      />
+    </div>
+  </div>
+);
+
 function App() {
   //const [data, setData] = useState<ApiResponse | null>(null);
 
   // the categories should correspond to what the nurse has to do in response to the patient query and the urgency
+
+  const [showAIFeatures, setShowAIFeatures] = useState<boolean>(true);
 
   const dummyData = [
     { 
@@ -147,6 +173,9 @@ function App() {
       <div className="min-h-screen flex flex-col bg-gray-50">
       <header className="bg-gray-200 text-gray-800 p-3 flex justify-between items-center border-b fixed top-0 left-0 right-0 z-10">
         <h1 className="text-lg font-medium">Inbox Messaging System</h1>
+        <div className='flex items-center space-x-6'>
+          <ToggleSwitch isOn={showAIFeatures} onToggle={() => setShowAIFeatures(!showAIFeatures)} label="AI Features Mode 2" />
+        </div>
         <nav className="space-x-6">
           <Link to="/" className="text-gray-800 hover:text-blue-600">Inbox</Link>
           <Link to="/settings" className="text-gray-800 hover:text-blue-600">Settings</Link>
@@ -181,7 +210,7 @@ function App() {
           <main className="w-5/6 bg-white overflow-auto">
             <Routes>
               <Route path="/" element={<Inbox dummyData={dummyData} />} />
-              <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} />} />
+              <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} showAIFeatures={showAIFeatures}/>} />
             </Routes>
           </main>
         </div>
@@ -301,6 +330,7 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
 
 type MessageDetailProps = {
   dummyData: InboxEntry[];
+  showAIFeatures: boolean;
 };
 
 type EntryState = {
@@ -312,8 +342,16 @@ type EntryState = {
 
 type Rating = number; 
 type Feedback = string;
+type Instruction = string;
 
-const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
+interface AIEditOptions {
+  grammar: boolean;
+  empathy: boolean;
+  clarity: boolean;
+  professionalism: boolean;
+}
+
+const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures }) => {
   const { mrn } = useParams();
   const entryData = dummyData.find((item) => item.mrn === mrn);
 
@@ -337,6 +375,51 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [showBlankReplyForm, setShowBlankReplyForm] = useState(false);
 
   const [selectedText, setSelectedText] = useState({ start: 0, end: 0 });
+
+  const [showInstructionsModal, setShowInstructionsModal] = useState<boolean>(false);
+  const [customInstruction, setCustomInstruction] = useState<string>("");
+  const [selectedInstructions, setSelectedInstructions] = useState<Instruction[]>([]);
+
+  const [showAIEditModal, setShowAIEditModal] = useState<boolean>(false);
+  const [aiEditOptions, setAIEditOptions] = useState<AIEditOptions>({
+    grammar: true,
+    empathy: true,
+    clarity: true,
+    professionalism: true
+  });
+
+  const handleAIEditOptionChange = (option: keyof AIEditOptions): void => {
+    setAIEditOptions(prev => ({...prev, [option]: !prev[option]}));  //toggle
+  };
+
+  const handleAIEditSubmit = (): void => {
+    console.log("todo endpoint:", aiEditOptions);
+    setShowAIEditModal(false);
+  };
+
+  const instructionOptions = [
+    "Acknowledge the patient's emotions.",
+    "Use compassionate language.",
+    "Validate the patient's concerns.",
+    "Provide reassurance when appropriate.",
+  ];
+
+  const handleAddInstruction = (instruction: Instruction): void => {
+    if (!selectedInstructions.includes(instruction)) {
+      setSelectedInstructions([...selectedInstructions, instruction]);
+    }
+  };
+
+  const handleRemoveInstruction = (instruction: Instruction): void => {
+    setSelectedInstructions(selectedInstructions.filter((item) => item !== instruction));
+  };
+
+  const handleCustomInstructionAdd = (): void => {
+    if (customInstruction.trim() && !selectedInstructions.includes(customInstruction)) {
+      setSelectedInstructions([...selectedInstructions, customInstruction]);
+      setCustomInstruction("");
+    }
+  };
 
   const handleTabClick = (index: number) => {
     setActiveTab(index);
@@ -425,59 +508,15 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setBlankReply(e.target.value);
   };
 
-  const handleBoldClick = () => {
-    setIsBold(!isBold);
-  };
-
-  const handleUnderlineClick = () => {
-    setIsUnderline(!isUnderline);
-  };
-
   const handleTextSelect = () => {
     const textarea = document.getElementById('blankReplyTextarea') as HTMLTextAreaElement;
     setSelectedText({ start: textarea.selectionStart, end: textarea.selectionEnd });
   };
 
-  const applyFormatting = (format: 'bold' | 'underline') => {
-    if (selectedText.start === selectedText.end) return;
-  
-    const before = blankReply.substring(0, selectedText.start);
-    const selected = blankReply.substring(selectedText.start, selectedText.end);
-    const after = blankReply.substring(selectedText.end);
-  
-    const formattedText = format === 'bold' ? `<b>${selected}</b>` : `<u>${selected}</u>`;
-    setBlankReply(before + formattedText + after);
-  };
 
   if (!entryData) {
     return <div className="p-6 text-gray-700">Message not found.</div>;
   }
-
-  /*
-  for testing:
-
-  <div className="mb-2">
-              <button
-              onClick={() => applyFormatting('bold')}
-              className="mr-2 px-2 py-1 rounded bg-gray-200 hover:bg-blue-500 hover:text-white"
-            >
-              B
-            </button>
-            <button
-              onClick={() => applyFormatting('underline')}
-              className="px-2 py-1 rounded bg-gray-200 hover:bg-blue-500 hover:text-white"
-            >
-              U
-            </button>
-    </div>
-
-  dont want to dangerouslysethtml so leaving out for now
-
-  <div className="mt-2 text-sm text-gray-600">
-        Preview:
-        <div className="p-2 border rounded mt-1 bg-gray-50" dangerouslySetInnerHTML={{ __html: blankReply }} />
-        </div>
-  */
 
   return (
     <div className="p-6">
@@ -520,30 +559,110 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       </div>
       <div className="mb-4 mt-4">
         <label className="font-semibold text-gray-600">Categories:</label>
-        <div className="mt-2">
-          {entryData.categories.map((category, index) => {
-            let colorClass = 'bg-blue-100 text-blue-800';
-            
-            if (category === 'High Urgency') {
-              colorClass = 'bg-red-500 text-white';
-            } else if (category === 'Medium Urgency') {
-              colorClass = 'bg-orange-500 text-white';
-            } else if (category === 'Low Urgency') {
-              colorClass = 'bg-yellow-500 text-black';
-            }
-            return (
-              <span
-                key={index}
-                className={`inline-block ${colorClass} text-xs font-medium mr-2 px-2 py-1 rounded-full mb-2`}
-              >
-                {category}
-              </span>
-            );
-          })}
+        <div className='flex justify-between items-start'>
+          <div className="mt-2 flex flex-wrap">
+            {entryData.categories.map((category, index) => {
+              let colorClass = 'bg-blue-100 text-blue-800';
+              
+              if (category === 'High Urgency') {
+                colorClass = 'bg-red-500 text-white';
+              } else if (category === 'Medium Urgency') {
+                colorClass = 'bg-orange-500 text-white';
+              } else if (category === 'Low Urgency') {
+                colorClass = 'bg-yellow-500 text-black';
+              }
+              return (
+                <span
+                  key={index}
+                  className={`inline-block ${colorClass} text-xs font-medium mr-2 px-2 py-1 rounded-full mb-2`}
+                >
+                  {category}
+                </span>
+              );
+            })}
+          </div>
+          {showAIFeatures && (
+            <button
+              onClick={() => setShowInstructionsModal(true)}
+              className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mt-2"
+            >
+              Provide Instructions
+            </button>
+          )}
         </div>
+  
+        {showInstructionsModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
+            <div className="bg-white p-6 rounded shadow-lg w-96">
+              <h2 className="text-lg font-bold mb-4">Set AI Instructions</h2>
+              <div className='h-48 overflow-y-auto mb-4'>
+                <ul className="mb-4">
+                  {instructionOptions.map((instruction, index) => (
+                    <li key={index} className="flex justify-between items-center py-1">
+                      <span>{instruction}</span>
+                      <button
+                        onClick={() => handleAddInstruction(instruction)}
+                        className="ml-2 bg-green-500 text-white px-2 py-1 rounded"
+                      >
+                        +
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <textarea
+                className="w-full p-2 border rounded"
+                placeholder="Add your own instruction..."
+                value={customInstruction}
+                onChange={(e) => setCustomInstruction(e.target.value)}
+              />
+              <button
+                onClick={handleCustomInstructionAdd}
+                className="mt-2 px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+              >
+                Add Custom
+              </button>
+              <div className="mt-4">
+                <h3 className="text-md font-semibold">Selected Instructions:</h3>
+                <div className='h-32 overflow-y-auto' >
+                  <ul>
+                    {selectedInstructions.map((inst, index) => (
+                      <li key={index} className="flex justify-between items-center py-1">
+                        <span>{inst}</span>
+                        <button
+                          onClick={() => handleRemoveInstruction(inst)}
+                          className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
+                        >
+                          x
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowInstructionsModal(false)}
+                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       <div className="mt-6 bg-white border rounded shadow">
-        <h3 className="font-semibold text-gray-600 px-4 pt-4">Generated Replies: (Click to Edit)</h3>
+
+      <div className="flex justify-between items-center px-4 pt-4">
+        <h3 className="font-semibold text-gray-600">Generated Replies: (Click to Edit)</h3>
+        {showAIFeatures && (
+          <button
+            onClick={() => setShowAIEditModal(true)}
+            className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+          >
+            AI Edit
+        </button>
+        )}
+      </div>        
         <div className="flex border-b">
           {entry.aiReplies.map((reply, index) => (
             <button
@@ -591,9 +710,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
                   Regenerate
                 </button>
               </div>
+              <div className="relative mt-3">
               <button
                 onClick={() => handleRateButtonClick(activeTab)}
-                className="mt-3 inline-flex items-center text-black py-1 cursor-pointer"
+                className="inline-flex items-center text-black py-1 cursor-pointer"
               >
                 Rate this Reply
                 <span
@@ -602,6 +722,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
                   ▼
                 </span>
               </button>
+            </div>
               {showRating[activeTab] && (
                 <>
                   <div className="mt-3">
@@ -708,8 +829,43 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           </div>
         </div>
       )}
+
+      {showAIEditModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded shadow-lg w-80">
+              <h2 className="text-lg font-bold mb-4">AI Edit Options</h2>
+              <div className="space-y-2">
+                <label className="flex items-center">
+                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.grammar} onChange={() => handleAIEditOptionChange('grammar')} />
+                  <span className="ml-2">Grammar</span>
+                </label>
+                <label className="flex items-center">
+                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.empathy} onChange={() => handleAIEditOptionChange('empathy')} />
+                  <span className="ml-2">Empathy</span>
+                </label>
+                <label className="flex items-center">
+                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.clarity} onChange={() => handleAIEditOptionChange('clarity')} />
+                  <span className="ml-2">Clarity</span>
+                </label>
+                <label className="flex items-center">
+                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.professionalism} onChange={() => handleAIEditOptionChange('professionalism')} />
+                  <span className="ml-2">Professionalism</span>
+                </label>
+              </div>
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={handleAIEditSubmit}
+                  className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+                >
+                  Apply Edits
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
-  );        
+  );
+      
 };
 
 export default App;

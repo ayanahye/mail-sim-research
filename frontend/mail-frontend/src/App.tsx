@@ -314,6 +314,13 @@ type Rating = number;
 type Feedback = string;
 type Instruction = string;
 
+interface AIEditOptions {
+  grammar: boolean;
+  empathy: boolean;
+  clarity: boolean;
+  professionalism: boolean;
+}
+
 const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const { mrn } = useParams();
   const entryData = dummyData.find((item) => item.mrn === mrn);
@@ -342,6 +349,23 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [showInstructionsModal, setShowInstructionsModal] = useState<boolean>(false);
   const [customInstruction, setCustomInstruction] = useState<string>("");
   const [selectedInstructions, setSelectedInstructions] = useState<Instruction[]>([]);
+
+  const [showAIEditModal, setShowAIEditModal] = useState<boolean>(false);
+  const [aiEditOptions, setAIEditOptions] = useState<AIEditOptions>({
+    grammar: true,
+    empathy: true,
+    clarity: true,
+    professionalism: true
+  });
+
+  const handleAIEditOptionChange = (option: keyof AIEditOptions): void => {
+    setAIEditOptions(prev => ({...prev, [option]: !prev[option]}));  //toggle
+  };
+
+  const handleAIEditSubmit = (): void => {
+    console.log("todo endpoint:", aiEditOptions);
+    setShowAIEditModal(false);
+  };
 
   const instructionOptions = [
     "Acknowledge the patient's emotions.",
@@ -595,7 +619,16 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         )}
       </div>
       <div className="mt-6 bg-white border rounded shadow">
-        <h3 className="font-semibold text-gray-600 px-4 pt-4">Generated Replies: (Click to Edit)</h3>
+
+      <div className="flex justify-between items-center px-4 pt-4">
+        <h3 className="font-semibold text-gray-600">Generated Replies: (Click to Edit)</h3>
+        <button
+          onClick={() => setShowAIEditModal(true)}
+          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+        >
+          AI Edit
+        </button>
+      </div>        
         <div className="flex border-b">
           {entry.aiReplies.map((reply, index) => (
             <button
@@ -762,6 +795,40 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           </div>
         </div>
       )}
+
+      {showAIEditModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded shadow-lg w-80">
+              <h2 className="text-lg font-bold mb-4">AI Edit Options</h2>
+              <div className="space-y-2">
+                <label className="flex items-center">
+                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.grammar} onChange={() => handleAIEditOptionChange('grammar')} />
+                  <span className="ml-2">Grammar</span>
+                </label>
+                <label className="flex items-center">
+                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.empathy} onChange={() => handleAIEditOptionChange('empathy')} />
+                  <span className="ml-2">Empathy</span>
+                </label>
+                <label className="flex items-center">
+                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.clarity} onChange={() => handleAIEditOptionChange('clarity')} />
+                  <span className="ml-2">Clarity</span>
+                </label>
+                <label className="flex items-center">
+                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.professionalism} onChange={() => handleAIEditOptionChange('professionalism')} />
+                  <span className="ml-2">Professionalism</span>
+                </label>
+              </div>
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={handleAIEditSubmit}
+                  className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+                >
+                  Apply Edits
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   );
       

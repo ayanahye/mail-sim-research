@@ -7,10 +7,36 @@ type ApiResponse = {
 };
 */
 
+interface ToggleSwitchProps {
+  isOn: boolean;
+  onToggle: () => void;
+  label: string;
+}
+
+const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ isOn, onToggle, label }) => (
+  <div className="flex items-center">
+    <span className="mr-2 text-sm">{label}</span>
+    <div
+      className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer ${
+        isOn ? 'bg-green-400' : 'bg-gray-300'
+      }`}
+      onClick={onToggle}
+    >
+      <div
+        className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ease-in-out ${
+          isOn ? 'translate-x-4' : ''
+        }`}
+      />
+    </div>
+  </div>
+);
+
 function App() {
   //const [data, setData] = useState<ApiResponse | null>(null);
 
   // the categories should correspond to what the nurse has to do in response to the patient query and the urgency
+
+  const [showAIFeatures, setShowAIFeatures] = useState<boolean>(true);
 
   const dummyData = [
     { 
@@ -147,6 +173,9 @@ function App() {
       <div className="min-h-screen flex flex-col bg-gray-50">
       <header className="bg-gray-200 text-gray-800 p-3 flex justify-between items-center border-b fixed top-0 left-0 right-0 z-10">
         <h1 className="text-lg font-medium">Inbox Messaging System</h1>
+        <div className='flex items-center space-x-6'>
+          <ToggleSwitch isOn={showAIFeatures} onToggle={() => setShowAIFeatures(!showAIFeatures)} label="AI Features Mode 2" />
+        </div>
         <nav className="space-x-6">
           <Link to="/" className="text-gray-800 hover:text-blue-600">Inbox</Link>
           <Link to="/settings" className="text-gray-800 hover:text-blue-600">Settings</Link>
@@ -181,7 +210,7 @@ function App() {
           <main className="w-5/6 bg-white overflow-auto">
             <Routes>
               <Route path="/" element={<Inbox dummyData={dummyData} />} />
-              <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} />} />
+              <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} showAIFeatures={showAIFeatures}/>} />
             </Routes>
           </main>
         </div>
@@ -301,6 +330,7 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
 
 type MessageDetailProps = {
   dummyData: InboxEntry[];
+  showAIFeatures: boolean;
 };
 
 type EntryState = {
@@ -321,7 +351,7 @@ interface AIEditOptions {
   professionalism: boolean;
 }
 
-const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
+const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures }) => {
   const { mrn } = useParams();
   const entryData = dummyData.find((item) => item.mrn === mrn);
 
@@ -551,12 +581,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
               );
             })}
           </div>
-          <button
-            onClick={() => setShowInstructionsModal(true)}
-            className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mt-2"
-          >
-            Provide Instructions
-          </button>
+          {showAIFeatures && (
+            <button
+              onClick={() => setShowInstructionsModal(true)}
+              className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mt-2"
+            >
+              Provide Instructions
+            </button>
+          )}
         </div>
   
         {showInstructionsModal && (
@@ -622,12 +654,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
       <div className="flex justify-between items-center px-4 pt-4">
         <h3 className="font-semibold text-gray-600">Generated Replies: (Click to Edit)</h3>
-        <button
-          onClick={() => setShowAIEditModal(true)}
-          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
-        >
-          AI Edit
+        {showAIFeatures && (
+          <button
+            onClick={() => setShowAIEditModal(true)}
+            className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+          >
+            AI Edit
         </button>
+        )}
       </div>        
         <div className="flex border-b">
           {entry.aiReplies.map((reply, index) => (

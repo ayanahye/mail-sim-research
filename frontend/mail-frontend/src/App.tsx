@@ -515,9 +515,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
   };
 
   const handleGenerateReplyClick = () => {
-    // Your logic to generate AI reply
-    setGeneratedReply("Here is the generated reply"); // Set the generated reply
-    setGenerateClicked(true);  // Set generateClicked to true
+    setGeneratedReply("Here is the generated reply"); 
+    setGenerateClicked(true); 
   };
 
   if (!entryData) {
@@ -626,14 +625,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
             Provide Instructions
           </button>
           <button
-        onClick={() => generateClicked ? handleTabClick(-2) : null}
-        disabled={!generateClicked}
-        className={`px-4 py-2 font-medium text-sm focus:outline-none ${
-          activeTab === -2
-            ? "border-b-2 border-blue-500 text-blue-600"
-            : "text-gray-500 hover:text-gray-700"
-        } ${!generateClicked ? 'cursor-not-allowed opacity-50' : ''}`}
-      >
+            onClick={() => generateClicked ? handleTabClick(-2) : null}
+            disabled={!generateClicked}
+            className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+              activeTab === -2
+                ? "border-b-2 border-blue-500 text-blue-600"
+                : "text-gray-500 hover:text-gray-700"
+            } ${!generateClicked ? 'cursor-not-allowed opacity-50' : ''}`}
+          >
         See Generated Reply
       </button>
         </>
@@ -854,11 +853,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
             className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
           >
             Clear
-          </button>
-          <button
-            className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-          >
-            Regenerate
           </button>
         </div>
       </div>

@@ -351,6 +351,8 @@ interface AIEditOptions {
   professionalism: boolean;
 }
 
+// logic to implement geenrated rpely function differ for both modes todo--integration not yet started
+
 const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures }) => {
   const { mrn } = useParams();
   const entryData = dummyData.find((item) => item.mrn === mrn);

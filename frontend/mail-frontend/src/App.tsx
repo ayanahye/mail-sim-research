@@ -376,9 +376,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
 
   const [selectedText, setSelectedText] = useState({ start: 0, end: 0 });
 
-  const [showInstructionsModal, setShowInstructionsModal] = useState<boolean>(false);
   const [customInstruction, setCustomInstruction] = useState<string>("");
   const [selectedInstructions, setSelectedInstructions] = useState<Instruction[]>([]);
+
+  // updated one
 
   const [showAIEditModal, setShowAIEditModal] = useState<boolean>(false);
   const [aiEditOptions, setAIEditOptions] = useState<AIEditOptions>({
@@ -387,6 +388,12 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
     clarity: true,
     professionalism: true
   });
+  const [instructionOptions, setInstructionOptions] = useState([
+    "Provide updates on the status of tests or results.",
+    "Follow up on referrals or consultations with other departments.",
+    "Clarify any next steps or actions for the patient.",
+    "Confirm appointment details or reschedule if necessary."
+  ]);  
 
   const handleAIEditOptionChange = (option: keyof AIEditOptions): void => {
     setAIEditOptions(prev => ({...prev, [option]: !prev[option]}));  //toggle
@@ -397,30 +404,22 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
     setShowAIEditModal(false);
   };
 
-  const instructionOptions = [
-    "Acknowledge the patient's emotions.",
-    "Use compassionate language.",
-    "Validate the patient's concerns.",
-    "Provide reassurance when appropriate.",
-  ];
-
-  const handleAddInstruction = (instruction: Instruction): void => {
-    if (!selectedInstructions.includes(instruction)) {
-      setSelectedInstructions([...selectedInstructions, instruction]);
-    }
-  };
-
-  const handleRemoveInstruction = (instruction: Instruction): void => {
-    setSelectedInstructions(selectedInstructions.filter((item) => item !== instruction));
-  };
-
   const handleCustomInstructionAdd = (): void => {
     if (customInstruction.trim() && !selectedInstructions.includes(customInstruction)) {
-      setSelectedInstructions([...selectedInstructions, customInstruction]);
-      setCustomInstruction("");
+      setSelectedInstructions((prev) => [...prev, customInstruction]);
+      setInstructionOptions((prev) => [...prev, customInstruction]);
+      setCustomInstruction(""); 
     }
   };
-
+  
+  const handleInstructionToggle = (instruction: string): void => {
+    setSelectedInstructions(prev =>
+      prev.includes(instruction)
+        ? prev.filter(item => item !== instruction) 
+        : [...prev, instruction] 
+    );
+  };  
+  
   const handleTabClick = (index: number) => {
     setActiveTab(index);
     if (index === entry.aiReplies.length) {
@@ -581,226 +580,266 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
               );
             })}
           </div>
-          {showAIFeatures && (
-            <button
-              onClick={() => setShowInstructionsModal(true)}
-              className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mt-2"
-            >
-              Provide Instructions
-            </button>
-          )}
         </div>
-  
-        {showInstructionsModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
-            <div className="bg-white p-6 rounded shadow-lg w-96">
-              <h2 className="text-lg font-bold mb-4">Set AI Instructions</h2>
-              <div className='h-48 overflow-y-auto mb-4'>
-                <ul className="mb-4">
-                  {instructionOptions.map((instruction, index) => (
-                    <li key={index} className="flex justify-between items-center py-1">
-                      <span>{instruction}</span>
-                      <button
-                        onClick={() => handleAddInstruction(instruction)}
-                        className="ml-2 bg-green-500 text-white px-2 py-1 rounded"
-                      >
-                        +
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <textarea
-                className="w-full p-2 border rounded"
-                placeholder="Add your own instruction..."
-                value={customInstruction}
-                onChange={(e) => setCustomInstruction(e.target.value)}
-              />
-              <button
-                onClick={handleCustomInstructionAdd}
-                className="mt-2 px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-              >
-                Add Custom
-              </button>
-              <div className="mt-4">
-                <h3 className="text-md font-semibold">Selected Instructions:</h3>
-                <div className='h-32 overflow-y-auto' >
-                  <ul>
-                    {selectedInstructions.map((inst, index) => (
-                      <li key={index} className="flex justify-between items-center py-1">
-                        <span>{inst}</span>
-                        <button
-                          onClick={() => handleRemoveInstruction(inst)}
-                          className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
-                        >
-                          x
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowInstructionsModal(false)}
-                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
-                Done
-              </button>
-            </div>
-          </div>
-        )}
       </div>
       <div className="mt-6 bg-white border rounded shadow">
 
       <div className="flex justify-between items-center px-4 pt-4">
-        <h3 className="font-semibold text-gray-600">Generated Replies: (Click to Edit)</h3>
+        <h3 className="font-semibold text-gray-600">Reply: (Click to Edit)</h3>
         {showAIFeatures && (
-          <button
-            onClick={() => setShowAIEditModal(true)}
-            className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
-          >
-            AI Edit
+        <button
+          onClick={() => setShowAIEditModal(true)}
+          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+        >
+          AI Edit
         </button>
-        )}
+      )}
       </div>        
-        <div className="flex border-b">
-          {entry.aiReplies.map((reply, index) => (
-            <button
-              key={index}
-              onClick={() => handleTabClick(index)}
-              className={`px-4 py-2 font-medium text-sm focus:outline-none ${
-                activeTab === index
-                  ? "border-b-2 border-blue-500 text-blue-600"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              {reply.label}
-            </button>
-          ))}
+      <div className="flex border-b">
+      {showAIFeatures ? (
+        <>
           <button
-            onClick={() => handleTabClick(entry.aiReplies.length)}
+            onClick={() => handleTabClick(0)}
             className={`px-4 py-2 font-medium text-sm focus:outline-none ${
-              activeTab === entry.aiReplies.length
-                ? "border-b-2 border-red-600 text-red-600"
+              activeTab === 0
+                ? "border-b-2 border-blue-500 text-blue-600"
                 : "text-gray-500 hover:text-gray-700"
             }`}
           >
             Start Blank
           </button>
+          <button
+            onClick={() => handleTabClick(-1)}
+            className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+              activeTab === -1
+                ? "border-b-2 border-red-600 text-red-600"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            Provide Instructions
+          </button>
+        </>
+      ) : (
+        entry.aiReplies.map((reply, index) => (
+          <button
+            key={index}
+            onClick={() => handleTabClick(index)}
+            className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+              activeTab === index
+                ? "border-b-2 border-blue-500 text-blue-600"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            {reply.label}
+          </button>
+        ))
+      )}
+      {!showAIFeatures && (
+        <button
+          onClick={() => handleTabClick(entry.aiReplies.length)}
+          className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+            activeTab === entry.aiReplies.length
+              ? "border-b-2 border-red-600 text-red-600"
+              : "text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          Start Blank
+        </button>
+        
+      )}
+    </div>
+    <div className="p-4">
+      {showAIFeatures && activeTab === 0 && (
+        <div className="bg-white p-4 border rounded">
+          <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
+
+          <textarea
+            id="blankReplyTextarea"
+            className="w-full h-40 p-2 border rounded"
+            value={blankReply}
+            onChange={handleBlankReplyChange}
+            onSelect={handleTextSelect}
+            placeholder="Write your reply here..."
+          />
+
+          <div className="mt-2 flex gap-2">
+            <button
+              onClick={() => handleSendReply(blankReply)}
+              className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+            >
+              Send Reply
+            </button>
+            <button
+              onClick={handleStartBlank}
+              className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
+            >
+              Clear
+            </button>
+            <button
+              className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+            >
+              Regenerate
+            </button>
+          </div>
         </div>
-  
-        <div className="p-4">
-          {activeTab < entry.aiReplies.length && (
-            <>
-              <textarea
-                className="w-full h-40 p-2 border rounded mt-1 bg-gray-50"
-                value={entry.aiReplies[activeTab].content}
-                onChange={(e) => handleAIReplyChange(activeTab, e.target.value)}
+      )}
+      {showAIFeatures && activeTab === -1 && (
+      <div className="bg-white p-4 border rounded">
+        <h3 className="font-semibold text-gray-600 mb-2">Set AI Instructions</h3>
+        <div
+          className="space-y-2"
+          style={{
+            maxHeight: '100px',
+            overflowY: 'auto', 
+          }}
+        >
+          {instructionOptions.map((instruction, index) => (
+            <label key={index} className="flex items-center">
+              <input
+                type="checkbox"
+                className="form-checkbox"
+                checked={selectedInstructions.includes(instruction)}
+                onChange={() => handleInstructionToggle(instruction)}
               />
-              <div className="flex gap-2 mt-2">
-                <button
-                  onClick={() => handleSendReply(entry.aiReplies[activeTab].content, true)}
-                  className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                >
-                  Send Reply
-                </button>
-                <button
-                  className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-                >
-                  Regenerate
-                </button>
-              </div>
-              <div className="relative mt-3">
-              <button
-                onClick={() => handleRateButtonClick(activeTab)}
-                className="inline-flex items-center text-black py-1 cursor-pointer"
+              <span className="ml-2">{instruction}</span>
+            </label>
+          ))}
+        </div>
+        <textarea
+          className="w-full p-2 border rounded mt-4"
+          placeholder="Add your own instruction..."
+          value={customInstruction}
+          onChange={(e) => setCustomInstruction(e.target.value)}
+        />
+        <div className="flex gap-2 mt-2">
+          <button
+            onClick={handleCustomInstructionAdd}
+            className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+          >
+            Add Custom
+          </button>
+          <button
+            onClick={() => handleTabClick(0)}
+            className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+      )}
+      {!showAIFeatures && activeTab < entry.aiReplies.length && (
+        <>
+          <textarea
+            className="w-full h-40 p-2 border rounded mt-1 bg-gray-50"
+            value={entry.aiReplies[activeTab].content}
+            onChange={(e) => handleAIReplyChange(activeTab, e.target.value)}
+          />
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={() => handleSendReply(entry.aiReplies[activeTab].content, true)}
+              className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+            >
+              Send Reply
+            </button>
+            <button
+              className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+            >
+              Regenerate
+            </button>
+          </div>
+          <div className="relative mt-3">
+            <button
+              onClick={() => handleRateButtonClick(activeTab)}
+              className="inline-flex items-center text-black py-1 cursor-pointer"
+            >
+              Rate this Reply
+              <span
+                className={`ml-2 transform ${showRating[activeTab] ? 'rotate-180' : 'rotate-0'} transition-transform`}
               >
-                Rate this Reply
-                <span
-                  className={`ml-2 transform ${showRating[activeTab] ? 'rotate-180' : 'rotate-0'} transition-transform`}
-                >
-                  ▼
-                </span>
-              </button>
-            </div>
-              {showRating[activeTab] && (
-                <>
-                  <div className="mt-3">
-                    <label className="text-sm font-medium text-gray-700">Rating:</label>
-                    <div className="flex gap-1 mt-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          onClick={() => handleRatingChange(activeTab, star)}
-                          className={`text-xl ${ratings[activeTab] >= star ? "text-yellow-500" : "text-gray-300"}`}
-                        >
-                          ★
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="mt-3">
-                    <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
-                    <textarea
-                      className="w-full p-2 border rounded mt-1 bg-gray-50"
-                      value={feedback[activeTab]}
-                      onChange={(e) => handleFeedbackChange(activeTab, e.target.value)}
-                      placeholder="Optional: Share more thoughts..."
-                    />
-                  </div>
-                  <div className="mt-3">
+                ▼
+              </span>
+            </button>
+          </div>
+          {showRating[activeTab] && (
+            <>
+              <div className="mt-3">
+                <label className="text-sm font-medium text-gray-700">Rating:</label>
+                <div className="flex gap-1 mt-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
                     <button
-                      onClick={handleSubmitRating}
-                      className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                      key={star}
+                      onClick={() => handleRatingChange(activeTab, star)}
+                      className={`text-xl ${ratings[activeTab] >= star ? "text-yellow-500" : "text-gray-300"}`}
                     >
-                      Submit
+                      ★
                     </button>
-                  </div>
-                </>
-              )}
-            </>
-          )}
-          {activeTab === entry.aiReplies.length && (
-            <div className="bg-white p-4 border rounded">
-              <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
-              
-              <textarea
-                id="blankReplyTextarea"
-                className="w-full h-40 p-2 border rounded"
-                value={blankReply}
-                onChange={handleBlankReplyChange}
-                onSelect={handleTextSelect}
-                placeholder="Write your reply here..."
-              />
-              
-              <div className="mt-2 flex gap-2">
+                  ))}
+                </div>
+              </div>
+              <div className="mt-3">
+                <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
+                <textarea
+                  className="w-full p-2 border rounded mt-1 bg-gray-50"
+                  value={feedback[activeTab]}
+                  onChange={(e) => handleFeedbackChange(activeTab, e.target.value)}
+                  placeholder="Optional: Share more thoughts..."
+                />
+              </div>
+              <div className="mt-3">
                 <button
-                  onClick={() => handleSendReply(blankReply)}
+                  onClick={handleSubmitRating}
                   className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
                 >
-                  Send Reply
-                </button>
-                <button
-                  onClick={handleStartBlank}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
-                >
-                  Clear
-                </button>
-                <button
-                  className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-                >
-                  Regenerate
+                  Submit
                 </button>
               </div>
-            </div>
+            </>
           )}
+        </>
+      )}
+      {!showAIFeatures && activeTab==3 && (
+        <div className="bg-white p-4 border rounded">
+        <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
+
+        <textarea
+          id="blankReplyTextarea"
+          className="w-full h-40 p-2 border rounded"
+          value={blankReply}
+          onChange={handleBlankReplyChange}
+          onSelect={handleTextSelect}
+          placeholder="Write your reply here..."
+        />
+
+        <div className="mt-2 flex gap-2">
+          <button
+            onClick={() => handleSendReply(blankReply)}
+            className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+          >
+            Send Reply
+          </button>
+          <button
+            onClick={handleStartBlank}
+            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
+          >
+            Clear
+          </button>
+          <button
+            className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+          >
+            Regenerate
+          </button>
         </div>
       </div>
-      <div className="mt-10">
-        <Link to="/" className="text-blue-500 hover:underline">
-          Back to Inbox
-        </Link>
-      </div>
+      )}
+    </div>
+    </div>
+        <div className="mt-10">
+          <Link to="/" className="text-blue-500 hover:underline">
+            Back to Inbox
+          </Link>
+        </div>
+        <div className="flex border-b mt-6">
+    </div>
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded shadow-lg">
@@ -829,7 +868,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
           </div>
         </div>
       )}
-
       {showAIEditModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded shadow-lg w-80">
@@ -864,8 +902,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
           </div>
         )}
     </div>
-  );
-      
+  ); 
 };
 
 export default App;

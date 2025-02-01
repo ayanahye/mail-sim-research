@@ -376,12 +376,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
 
   const [selectedText, setSelectedText] = useState({ start: 0, end: 0 });
 
-  const [showInstructionsModal, setShowInstructionsModal] = useState<boolean>(false);
   const [customInstruction, setCustomInstruction] = useState<string>("");
   const [selectedInstructions, setSelectedInstructions] = useState<Instruction[]>([]);
 
   // updated one
-  const [selectedInstructionOptions, setSelectedInstructionOptions] = useState<string[]>([]);
 
   const [showAIEditModal, setShowAIEditModal] = useState<boolean>(false);
   const [aiEditOptions, setAIEditOptions] = useState<AIEditOptions>({
@@ -390,6 +388,12 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
     clarity: true,
     professionalism: true
   });
+  const [instructionOptions, setInstructionOptions] = useState([
+    "Provide updates on the status of tests or results.",
+    "Follow up on referrals or consultations with other departments.",
+    "Clarify any next steps or actions for the patient.",
+    "Confirm appointment details or reschedule if necessary."
+  ]);  
 
   const handleAIEditOptionChange = (option: keyof AIEditOptions): void => {
     setAIEditOptions(prev => ({...prev, [option]: !prev[option]}));  //toggle
@@ -400,43 +404,22 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
     setShowAIEditModal(false);
   };
 
-  const instructionOptions = [
-    "Acknowledge the patient's emotions.",
-    "Use compassionate language.",
-    "Validate the patient's concerns.",
-    "Provide reassurance when appropriate.",
-  ];
-
-
-  const handleAddInstruction = (instruction: Instruction): void => {
-    if (!selectedInstructions.includes(instruction)) {
-      setSelectedInstructions([...selectedInstructions, instruction]);
-    }
-  };
-
-
-  /*
-  const handleRemoveInstruction = (instruction: Instruction): void => {
-    setSelectedInstructions(selectedInstructions.filter((item) => item !== instruction));
-  };
-  */
-
-
-
   const handleCustomInstructionAdd = (): void => {
     if (customInstruction.trim() && !selectedInstructions.includes(customInstruction)) {
-      setSelectedInstructions([...selectedInstructions, customInstruction]);
-      setCustomInstruction("");
+      setSelectedInstructions((prev) => [...prev, customInstruction]);
+      setInstructionOptions((prev) => [...prev, customInstruction]);
+      setCustomInstruction(""); 
     }
   };
-
-  const handleInstructionOptionChange = (option: string): void => {
-    setSelectedInstructionOptions((prev) =>
-      prev.includes(option) ? prev.filter((item) => item !== option) : [...prev, option]
-    );
-  };
   
-
+  const handleInstructionToggle = (instruction: string): void => {
+    setSelectedInstructions(prev =>
+      prev.includes(instruction)
+        ? prev.filter(item => item !== instruction) 
+        : [...prev, instruction] 
+    );
+  };  
+  
   const handleTabClick = (index: number) => {
     setActiveTab(index);
     if (index === entry.aiReplies.length) {
@@ -598,43 +581,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
             })}
           </div>
         </div>
-  
-        {showInstructionsModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg w-96">
-            <h2 className="text-lg font-bold mb-4">Set AI Instructions</h2>
-            <div className='space-y-2'>
-              {instructionOptions.map((instruction, index) => (
-                <label key={index} className="flex items-center">
-                  <input type="checkbox" className="form-checkbox" checked={selectedInstructionOptions.includes(instruction)} onChange={() => handleInstructionOptionChange(instruction)} />
-                  <span className="ml-2">{instruction}</span>
-                </label>
-              ))}
-            </div>
-            <textarea
-              className="w-full p-2 border rounded mt-4"
-              placeholder="Add your own instruction..."
-              value={customInstruction}
-              onChange={(e) => setCustomInstruction(e.target.value)}
-            />
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={handleCustomInstructionAdd}
-                className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-              >
-                Add Custom
-              </button>
-              <button
-                onClick={() => setShowInstructionsModal(false)}
-                className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                Done
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       </div>
       <div className="mt-6 bg-white border rounded shadow">
 
@@ -699,9 +645,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
         >
           Start Blank
         </button>
+        
       )}
     </div>
-
     <div className="p-4">
       {showAIFeatures && activeTab === 0 && (
         <div className="bg-white p-4 border rounded">
@@ -738,38 +684,49 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
         </div>
       )}
       {showAIFeatures && activeTab === -1 && (
-    <div className="bg-white p-4 border rounded">
-      <h3 className="font-semibold text-gray-600 mb-2">Set AI Instructions</h3>
-      <div className='space-y-2'>
-        {instructionOptions.map((instruction, index) => (
-          <label key={index} className="flex items-center">
-            <input type="checkbox" className="form-checkbox" checked={selectedInstructions.includes(instruction)} onChange={() => handleAddInstruction(instruction)} />
-            <span className="ml-2">{instruction}</span>
-          </label>
-        ))}
-    </div>
-    <textarea
-      className="w-full p-2 border rounded mt-4"
-      placeholder="Add your own instruction..."
-      value={customInstruction}
-      onChange={(e) => setCustomInstruction(e.target.value)}
-    />
-    <div className="flex gap-2 mt-2">
-      <button
-        onClick={handleCustomInstructionAdd}
-        className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-      >
-        Add Custom
-      </button>
-      <button
-        onClick={() => handleTabClick(0)}
-        className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Done
-      </button>
-    </div>
-  </div>
-    )}
+      <div className="bg-white p-4 border rounded">
+        <h3 className="font-semibold text-gray-600 mb-2">Set AI Instructions</h3>
+        <div
+          className="space-y-2"
+          style={{
+            maxHeight: '100px',
+            overflowY: 'auto', 
+          }}
+        >
+          {instructionOptions.map((instruction, index) => (
+            <label key={index} className="flex items-center">
+              <input
+                type="checkbox"
+                className="form-checkbox"
+                checked={selectedInstructions.includes(instruction)}
+                onChange={() => handleInstructionToggle(instruction)}
+              />
+              <span className="ml-2">{instruction}</span>
+            </label>
+          ))}
+        </div>
+        <textarea
+          className="w-full p-2 border rounded mt-4"
+          placeholder="Add your own instruction..."
+          value={customInstruction}
+          onChange={(e) => setCustomInstruction(e.target.value)}
+        />
+        <div className="flex gap-2 mt-2">
+          <button
+            onClick={handleCustomInstructionAdd}
+            className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+          >
+            Add Custom
+          </button>
+          <button
+            onClick={() => handleTabClick(0)}
+            className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+      )}
       {!showAIFeatures && activeTab < entry.aiReplies.length && (
         <>
           <textarea
@@ -840,7 +797,40 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
           )}
         </>
       )}
-      
+      {!showAIFeatures && activeTab==3 && (
+        <div className="bg-white p-4 border rounded">
+        <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
+
+        <textarea
+          id="blankReplyTextarea"
+          className="w-full h-40 p-2 border rounded"
+          value={blankReply}
+          onChange={handleBlankReplyChange}
+          onSelect={handleTextSelect}
+          placeholder="Write your reply here..."
+        />
+
+        <div className="mt-2 flex gap-2">
+          <button
+            onClick={() => handleSendReply(blankReply)}
+            className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+          >
+            Send Reply
+          </button>
+          <button
+            onClick={handleStartBlank}
+            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
+          >
+            Clear
+          </button>
+          <button
+            className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+          >
+            Regenerate
+          </button>
+        </div>
+      </div>
+      )}
     </div>
     </div>
         <div className="mt-10">
@@ -878,7 +868,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
           </div>
         </div>
       )}
-
       {showAIEditModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded shadow-lg w-80">
@@ -913,8 +902,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
           </div>
         )}
     </div>
-  );
-      
+  ); 
 };
 
 export default App;

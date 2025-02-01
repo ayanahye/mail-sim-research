@@ -373,11 +373,13 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
   const [isBold, setIsBold] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
   const [showBlankReplyForm, setShowBlankReplyForm] = useState(false);
+  const [generateClicked, setGenerateClicked] = useState<boolean>(false);
 
   const [selectedText, setSelectedText] = useState({ start: 0, end: 0 });
 
   const [customInstruction, setCustomInstruction] = useState<string>("");
   const [selectedInstructions, setSelectedInstructions] = useState<Instruction[]>([]);
+  const [generatedReply, setGeneratedReply] = useState<string>("");
 
   // updated one
 
@@ -512,6 +514,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
     setSelectedText({ start: textarea.selectionStart, end: textarea.selectionEnd });
   };
 
+  const handleGenerateReplyClick = () => {
+    // Your logic to generate AI reply
+    setGeneratedReply("Here is the generated reply"); // Set the generated reply
+    setGenerateClicked(true);  // Set generateClicked to true
+  };
 
   if (!entryData) {
     return <div className="p-6 text-gray-700">Message not found.</div>;
@@ -618,6 +625,17 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
           >
             Provide Instructions
           </button>
+          <button
+        onClick={() => generateClicked ? handleTabClick(-2) : null}
+        disabled={!generateClicked}
+        className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+          activeTab === -2
+            ? "border-b-2 border-blue-500 text-blue-600"
+            : "text-gray-500 hover:text-gray-700"
+        } ${!generateClicked ? 'cursor-not-allowed opacity-50' : ''}`}
+      >
+        See Generated Reply
+      </button>
         </>
       ) : (
         entry.aiReplies.map((reply, index) => (
@@ -675,15 +693,28 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
             >
               Clear
             </button>
-            <button
-              className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-            >
-              Regenerate
-            </button>
           </div>
         </div>
       )}
-      {showAIFeatures && activeTab === -1 && (
+
+      {showAIFeatures && activeTab === -2 && generateClicked && (
+        <div className="bg-white p-4 border rounded">
+          <h3 className="font-semibold text-gray-600 mb-2">Generated AI Reply</h3>
+          <textarea
+            className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
+            value={generatedReply} 
+            onChange={(e) => handleAIReplyChange(-2, e.target.value)} 
+            readOnly 
+          />
+            <button
+              className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-gray-600"
+            >
+              Regenerate
+            </button>
+        </div>
+      )}
+
+      {showAIFeatures && (activeTab === -1) && (
       <div className="bg-white p-4 border rounded">
         <h3 className="font-semibold text-gray-600 mb-2">Set AI Instructions</h3>
         <div
@@ -719,11 +750,12 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
             Add Custom
           </button>
           <button
-            onClick={() => handleTabClick(0)}
+            onClick={handleGenerateReplyClick}
             className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Done
+            Generate AI Reply
           </button>
+          
         </div>
       </div>
       )}

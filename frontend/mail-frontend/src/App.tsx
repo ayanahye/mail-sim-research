@@ -712,6 +712,54 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
             >
               Regenerate
             </button>
+            <div className="relative mt-3">
+            <button
+              onClick={() => handleRateButtonClick(activeTab)}
+              className="inline-flex items-center text-black py-1 cursor-pointer"
+            >
+              Rate this Reply
+              <span
+                className={`ml-2 transform ${showRating[activeTab] ? 'rotate-180' : 'rotate-0'} transition-transform`}
+              >
+                ▼
+              </span>
+            </button>
+          </div>
+          {showRating[activeTab] && (
+            <>
+              <div className="mt-3">
+                <label className="text-sm font-medium text-gray-700">Rating:</label>
+                <div className="flex gap-1 mt-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => handleRatingChange(activeTab, star)}
+                      className={`text-xl ${ratings[activeTab] >= star ? "text-yellow-500" : "text-gray-300"}`}
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-3">
+                <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
+                <textarea
+                  className="w-full p-2 border rounded mt-1 bg-gray-50"
+                  value={feedback[activeTab]}
+                  onChange={(e) => handleFeedbackChange(activeTab, e.target.value)}
+                  placeholder="Optional: Share more thoughts..."
+                />
+              </div>
+              <div className="mt-3">
+                <button
+                  onClick={handleSubmitRating}
+                  className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                >
+                  Submit
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
 

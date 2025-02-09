@@ -408,13 +408,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
     setShowAIEditModal(false);
   };
 
-  const handleCustomInstructionAdd = (): void => {
-    if (customInstruction.trim() && !selectedInstructions.includes(customInstruction)) {
-      setSelectedInstructions((prev) => [...prev, customInstruction]);
-      setInstructionOptions((prev) => [...prev, customInstruction]);
-      setCustomInstruction(""); 
-    }
-  };
   
   const handleInstructionToggle = (instruction: string): void => {
     setSelectedInstructions(prev =>
@@ -519,6 +512,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
   const handleGenerateReplyClick = () => {
     setGeneratedReply("Here is the generated reply"); 
     setGenerateClicked(true); 
+    if (customInstruction.trim() && !selectedInstructions.includes(customInstruction)) {
+      setSelectedInstructions((prev) => [...prev, customInstruction]);
+      setInstructionOptions((prev) => [...prev, customInstruction]);
+      setCustomInstruction(""); 
+    }
   };
 
   if (!entryData) {
@@ -594,14 +592,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
 
       <div className="flex justify-between items-center px-4 pt-4">
         <h3 className="font-semibold text-gray-600">Reply: (Click to Edit)</h3>
-        {showAIFeatures && (
-        <button
-          onClick={() => setShowAIEditModal(true)}
-          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
-        >
-          AI Edit
-        </button>
-      )}
       </div>        
       <div className="flex border-b">
       {showAIFeatures ? (
@@ -693,6 +683,12 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
               className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
             >
               Clear
+            </button>
+            <button
+              onClick={() => setShowAIEditModal(true)}
+              className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+            >
+              AI Edit
             </button>
           </div>
         </div>
@@ -793,18 +789,19 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
         />
         <div className="flex gap-2 mt-2">
           <button
-            onClick={handleCustomInstructionAdd}
-            className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-          >
-            Add Custom
-          </button>
-          <button
             onClick={handleGenerateReplyClick}
             className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Generate AI Reply
           </button>
-          
+          {showAIFeatures && (
+            <button
+              onClick={() => setShowAIEditModal(true)}
+              className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+            >
+              AI Edit
+            </button>
+          )}
         </div>
       </div>
       )}

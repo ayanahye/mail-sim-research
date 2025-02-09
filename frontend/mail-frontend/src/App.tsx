@@ -512,6 +512,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
   const handleGenerateReplyClick = () => {
     setGeneratedReply("Here is the generated reply"); 
     setGenerateClicked(true); 
+    handleTabClick(-2);
     if (customInstruction.trim() && !selectedInstructions.includes(customInstruction)) {
       setSelectedInstructions((prev) => [...prev, customInstruction]);
       setInstructionOptions((prev) => [...prev, customInstruction]);
@@ -708,6 +709,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
             >
               Regenerate
             </button>
+            {showAIFeatures && (
+            <button
+              onClick={() => setShowAIEditModal(true)}
+              className="bg-purple-600 text-white px-3 py-1 ml-2 rounded hover:bg-purple-700"
+            >
+              AI Edit
+            </button>
+          )}
             <div className="relative mt-3">
             <button
               onClick={() => handleRateButtonClick(activeTab)}
@@ -824,6 +833,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
             >
               Regenerate
             </button>
+            
           </div>
           <div className="relative mt-3">
             <button

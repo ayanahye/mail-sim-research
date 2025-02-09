@@ -836,7 +836,13 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             readOnly 
           />
             <button
-              className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-gray-600"
+              onClick={() => handleSendReply(blankReply)}
+              className="bg-blue-600 text-white px-4 py-1 mr-2 rounded hover:bg-blue-700"
+            >
+              Send Reply
+            </button>
+            <button
+              className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
             >
               Regenerate
             </button>
@@ -847,6 +853,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             >
               AI Edit
             </button>
+
           )}
             <div className="relative mt-3">
             <button

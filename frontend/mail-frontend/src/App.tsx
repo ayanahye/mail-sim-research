@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 
 /*
@@ -12,6 +12,35 @@ interface ToggleSwitchProps {
   onToggle: () => void;
   label: string;
 }
+
+interface TabContextValue {
+  activeTab: number;
+  setActiveTab: (tab: number) => void;
+  showAIFeatures: boolean;
+  setShowAIFeatures: (show: boolean) => void
+}
+
+const TabContext = createContext<TabContextValue | null>(null);
+
+const useTabContext = () => {
+  const context = useContext(TabContext);
+  if (!context) {
+    throw new Error('TabContext is not provided');
+  }
+  return context;
+};
+
+
+const TabProvider = ({ children }: { children: React.ReactNode }) => {
+  const [activeTab, setActiveTab] = useState(0);
+  const [showAIFeatures, setShowAIFeatures] = useState(true);
+
+  return (
+    <TabContext.Provider value={{ activeTab, setActiveTab, showAIFeatures, setShowAIFeatures }}>
+      {children}
+    </TabContext.Provider>
+  );
+};
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ isOn, onToggle, label }) => (
   <div className="flex items-center">
@@ -169,18 +198,32 @@ function App() {
   
 // notes:
   return (
+    <TabProvider>
     <Router>
       <div className="min-h-screen flex flex-col bg-gray-50">
-      <header className="bg-gray-200 text-gray-800 p-3 flex justify-between items-center border-b fixed top-0 left-0 right-0 z-10">
-        <h1 className="text-lg font-medium">Inbox Messaging System</h1>
-        <div className='flex items-center space-x-6'>
-          <ToggleSwitch isOn={showAIFeatures} onToggle={() => setShowAIFeatures(!showAIFeatures)} label="AI Features Mode 2" />
-        </div>
-        <nav className="space-x-6">
-          <Link to="/" className="text-gray-800 hover:text-blue-600">Inbox</Link>
-          <Link to="/settings" className="text-gray-800 hover:text-blue-600">Settings</Link>
-        </nav>
-      </header>
+        <header className="bg-gray-200 text-gray-800 p-3 flex justify-between items-center border-b fixed top-0 left-0 right-0 z-10">
+          <h1 className="text-lg font-medium">Inbox Messaging System</h1>
+          <div className='flex items-center space-x-6'>
+            <TabContext.Consumer>
+              {context => (
+                <ToggleSwitch 
+                  isOn={context?.showAIFeatures ?? false} 
+                  onToggle={() => {
+                    if (context?.showAIFeatures) {
+                      context.setActiveTab(0);
+                    }
+                    context?.setShowAIFeatures(!context.showAIFeatures);
+                  }} 
+                  label="AI Features Mode 2" 
+                />
+              )}
+            </TabContext.Consumer>
+          </div>
+          <nav className="space-x-6">
+            <Link to="/" className="text-gray-800 hover:text-blue-600">Inbox</Link>
+            <Link to="/settings" className="text-gray-800 hover:text-blue-600">Settings</Link>
+          </nav>
+        </header>
         <div className="flex flex-1 pt-12">
           <aside className="w-1/6 bg-gray-100 border-r">
             <div className="bg-blue-200 border-b p-3 text-center font-semibold">Categories</div>
@@ -210,12 +253,13 @@ function App() {
           <main className="w-5/6 bg-white overflow-auto">
             <Routes>
               <Route path="/" element={<Inbox dummyData={dummyData} />} />
-              <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} showAIFeatures={showAIFeatures}/>} />
+              <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} />} />
             </Routes>
           </main>
         </div>
       </div>
     </Router>
+  </TabProvider>
   );
 }
 
@@ -330,7 +374,7 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
 
 type MessageDetailProps = {
   dummyData: InboxEntry[];
-  showAIFeatures: boolean;
+  //showAIFeatures: boolean;
 };
 
 type EntryState = {
@@ -353,9 +397,11 @@ interface AIEditOptions {
 
 // logic to implement geenrated rpely function differ for both modes todo--integration not yet started
 
-const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures }) => {
+const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const { mrn } = useParams();
   const entryData = dummyData.find((item) => item.mrn === mrn);
+
+  const { activeTab, setActiveTab, showAIFeatures, setShowAIFeatures } = useTabContext();
 
   const [entry, setEntry] = useState<EntryState>({
     to: entryData ? `${entryData.firstName} ${entryData.lastName}` : "",
@@ -369,7 +415,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [showRating, setShowRating] = useState<{ [key: number]: boolean }>({});
-  const [activeTab, setActiveTab] = useState<number>(0);
+  //const [activeTab, setActiveTab] = useState<number>(0);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [blankReply, setBlankReply] = useState("");
   const [isBold, setIsBold] = useState(false);
@@ -463,7 +509,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
   
   
   const handleTabClick = (index: number, e?: React.MouseEvent<HTMLButtonElement>) => {
-    if (!showAIFeatures && index !== activeTab && (index != 4 && activeTab != 4)) {
+    if (!showAIFeatures && index !== activeTab && (index != 3 && activeTab != 3)) {
       if (e?.ctrlKey) {
         handleSplitView(index);
       }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 
 /*
@@ -392,6 +392,12 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
     clarity: true,
     professionalism: true
   });
+
+  const [cmdPressed, setCmdPressed] = useState(false);
+  
+  const [splitViewTab, setSplitViewTab] = useState<number | null>(null);
+  const [showSplitView, setShowSplitView] = useState(false);
+
   const [instructionOptions, setInstructionOptions] = useState([
     "Provide updates on the status of tests or results.",
     "Follow up on referrals or consultations with other departments.",
@@ -416,13 +422,62 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
         : [...prev, instruction] 
     );
   };  
+
+  const handleSplitView = (index: number) => {
+    setSplitViewTab(index);
+    setShowSplitView(true);
+  };
+
+  const SplitViewPopup = () => {
+    if (!showSplitView) return null;
   
-  const handleTabClick = (index: number) => {
-    setActiveTab(index);
-    if (index === entry.aiReplies.length) {
-      setShowBlankReplyForm(true);
+    const currentTabContent = entry.aiReplies[activeTab].content;
+    const selectedTabContent = entry.aiReplies[splitViewTab as number].content;
+  
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white p-6 rounded shadow-lg w-full max-w-4xl h-full max-h-screen overflow-y-auto">
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={() => setShowSplitView(false)}
+              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+            >
+              Close
+            </button>
+          </div>
+          <h2 className="text-lg font-bold mb-4">Compare Replies</h2>
+          <div className="flex flex-col md:flex-row">
+            <div className="w-full md:w-1/2">
+              <h3 className="text-sm font-bold mb-2">{entry.aiReplies[activeTab].label}</h3>
+              <pre className="text-sm whitespace-pre-wrap mr-5">{currentTabContent}</pre>
+            </div>
+            <div className="w-full md:w-1/2">
+              <h3 className="text-sm font-bold mb-2">{entry.aiReplies[splitViewTab as number].label}</h3>
+              <pre className="text-sm whitespace-pre-wrap">{selectedTabContent}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+  
+  const handleTabClick = (index: number, e?: React.MouseEvent<HTMLButtonElement>) => {
+    if (!showAIFeatures && index !== activeTab && (index != 4 && activeTab != 4)) {
+      if (e?.ctrlKey) {
+        handleSplitView(index);
+      }
+      else {
+        setActiveTab(index);
+      }
     } else {
-      setShowBlankReplyForm(false);
+      setActiveTab(index);
+      if (index === entry.aiReplies.length) {
+        setShowBlankReplyForm(true);
+      } else {
+        setShowBlankReplyForm(false);
+      }
+      setShowSplitView(false); 
     }
   };
 
@@ -520,6 +575,32 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey) { 
+        setCmdPressed(true);
+      }
+    };
+  
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.ctrlKey) {
+        setCmdPressed(false);
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+  
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+  
+  
+  
+
+
   if (!entryData) {
     return <div className="p-6 text-gray-700">Message not found.</div>;
   }
@@ -591,9 +672,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
       </div>
       <div className="mt-6 bg-white border rounded shadow">
 
-      <div className="flex justify-between items-center px-4 pt-4">
+      <div className="items-center px-4 pt-4">
         <h3 className="font-semibold text-gray-600">Reply: (Click to Edit)</h3>
-      </div>        
+        {!showAIFeatures && <small className="text-xs text-red-500">Ctrl+Click to compare replies</small>}
+      </div>
+
       <div className="flex border-b">
       {showAIFeatures ? (
         <>
@@ -626,14 +709,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
                 : "text-gray-500 hover:text-gray-700"
             } ${!generateClicked ? 'cursor-not-allowed opacity-50' : ''}`}
           >
-        See Generated Reply
-      </button>
+            See Generated Reply
+          </button>
         </>
       ) : (
         entry.aiReplies.map((reply, index) => (
           <button
             key={index}
-            onClick={() => handleTabClick(index)}
+            onClick={(e) => handleTabClick(index, e)}
             className={`px-4 py-2 font-medium text-sm focus:outline-none ${
               activeTab === index
                 ? "border-b-2 border-blue-500 text-blue-600"
@@ -644,6 +727,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
           </button>
         ))
       )}
+      <SplitViewPopup />
       {!showAIFeatures && (
         <button
           onClick={() => handleTabClick(entry.aiReplies.length)}
@@ -657,12 +741,13 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, showAIFeatures
         </button>
         
       )}
+      
     </div>
     <div className="p-4">
       {showAIFeatures && activeTab === 0 && (
         <div className="bg-white p-4 border rounded">
           <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
-
+          
           <textarea
             id="blankReplyTextarea"
             className="w-full h-40 p-2 border rounded"

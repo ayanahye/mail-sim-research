@@ -474,12 +474,17 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setShowSplitView(true);
   };
 
-  const SplitViewPopup = () => {
+  const SplitViewPopup: React.FC = () => {
     if (!showSplitView) return null;
-  
+
     const currentTabContent = entry.aiReplies[activeTab].content;
     const selectedTabContent = entry.aiReplies[splitViewTab as number].content;
-  
+
+    const handleTabClick = (tabIndex: number) => {
+      setActiveTab(tabIndex); 
+      setShowSplitView(false); 
+    };
+
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div className="bg-white p-6 rounded shadow-lg w-full max-w-4xl h-full max-h-screen overflow-y-auto">
@@ -494,12 +499,22 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           <h2 className="text-lg font-bold mb-4">Compare Replies</h2>
           <div className="flex flex-col md:flex-row">
             <div className="w-full md:w-1/2">
-              <h3 className="text-sm font-bold mb-2">{entry.aiReplies[activeTab].label}</h3>
-              <pre className="text-sm whitespace-pre-wrap mr-5">{currentTabContent}</pre>
+              <button
+                onClick={() => handleTabClick(activeTab)}
+                className="text-sm font-bold mb-2 w-full text-left py-2 px-2 bg-transparent hover:bg-gray-200 rounded focus:outline-none cursor-pointer"
+              >
+                {entry.aiReplies[activeTab].label}
+              </button>
+              <pre className="text-sm whitespace-pre-wrap px-2 mr-5">{currentTabContent}</pre>
             </div>
             <div className="w-full md:w-1/2">
-              <h3 className="text-sm font-bold mb-2">{entry.aiReplies[splitViewTab as number].label}</h3>
-              <pre className="text-sm whitespace-pre-wrap">{selectedTabContent}</pre>
+              <button
+                onClick={() => handleTabClick(splitViewTab as number)}
+                className="text-sm font-bold mb-2 text-left w-full py-2 px-2 bg-transparent hover:bg-gray-200 rounded focus:outline-none cursor-pointer"
+              >
+                {entry.aiReplies[splitViewTab as number].label}
+              </button>
+              <pre className="text-sm whitespace-pre-wrap px-2">{selectedTabContent}</pre>
             </div>
           </div>
         </div>
@@ -971,7 +986,12 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             >
               Regenerate
             </button>
-            
+            <button
+              onClick={() => setShowAIEditModal(true)}
+              className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+            >
+              AI Edit
+            </button>
           </div>
           <div className="relative mt-3">
             <button

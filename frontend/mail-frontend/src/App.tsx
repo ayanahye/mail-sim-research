@@ -81,15 +81,24 @@ function App() {
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "Dear John,\n\nI’m truly sorry to hear how this delay has been impacting you. I completely understand how stressful it is to wait for important results. Please know that we’re prioritizing your case, and I’ll personally ensure you’re updated as soon as we have any information. Thank you for your patience during this difficult time.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Dear John,\n\nI’m truly sorry to hear how this delay has been impacting you. I completely understand how stressful it is to wait for important results. Please know that we’re prioritizing your case, and I’ll personally ensure you’re updated as soon as we have any information. Thank you for your patience during this difficult time.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Dear John,\n\nI truly understand the stress and anxiety you must be feeling as you await your results. Please know that your concerns are being heard, and we are prioritizing your case. We are actively working to provide you with the information you need, and I will ensure you’re promptly updated. Thank you for your patience and understanding during this challenging time.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          }
         },
         { 
           label: "Direct Reply", 
-          content: "Hi John,\n\nYour lab results are still being processed. I completely understand the urgency, and I’ll notify you immediately once they are ready. Please rest assured that we’re working to get this resolved for you as quickly as possible.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Hi John,\n\nYour lab results are still being processed. I completely understand the urgency, and I’ll notify you immediately once they are ready. Please rest assured that we’re working to get this resolved for you as quickly as possible.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Hi John,\n\nI completely understand how important these results are to you, and I sincerely apologize for the delay. Rest assured, I am actively following up on your case and will notify you as soon as the results are available. Your patience is greatly appreciated.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          }
         },
         { 
           label: "Reassurance Reply", 
-          content: "Hello John,\n\nI understand how frustrating this wait must be, and I want to reassure you that your results are a priority for us. We’re actively monitoring the situation and will reach out as soon as the information is available. You are in good hands, and I appreciate your patience.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Hello John,\n\nI understand how frustrating this wait must be, and I want to reassure you that your results are a priority for us. We’re actively monitoring the situation and will reach out as soon as the information is available. You are in good hands, and I appreciate your patience.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Hello John,\n\nI truly understand how stressful this waiting period is, and I want to assure you that we’re doing everything we can to prioritize your results. We’re actively monitoring the situation and will be in touch as soon as we have more information. Your patience and trust mean a great deal to us.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          }
         }
       ]
     },
@@ -106,15 +115,24 @@ function App() {
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "Dear Jane,\n\nI’m so sorry for the distress and inconvenience this has caused. I completely understand how important your medication is and how frustrating delays can be. I’m looking into this immediately and will ensure it is resolved as quickly as possible. Your trust is very important to us, and we’ll do everything we can to make this right.\n\nSincerely,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          content: "Dear Jane,\n\nI’m so sorry for the distress and inconvenience this has caused. I completely understand how important your medication is and how frustrating delays can be. I’m looking into this immediately and will ensure it is resolved as quickly as possible. Your trust is very important to us, and we’ll do everything we can to make this right.\n\nSincerely,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*",
+          AIEdits: {
+            content: "Dear Jane,\n\nI’m truly sorry to hear about the distress you’re experiencing. I understand how critical this medication is for you, and I deeply regret the inconvenience this delay has caused. I am personally addressing this issue and will ensure that it’s resolved promptly. Your well-being and trust are our top priority, and we’re committed to making this right.\n\nSincerely,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          }
         },
         { 
           label: "Direct Reply", 
-          content: "Hi Jane,\n\nI understand how critical your medication is, and I apologize for the delay. I’ve already reached out to the pharmacy and will follow up with you as soon as I have an update. Thank you for bringing this to my attention.\n\nBest regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          content: "Hi Jane,\n\nI understand how critical your medication is, and I apologize for the delay. I’ve already reached out to the pharmacy and will follow up with you as soon as I have an update. Thank you for bringing this to my attention.\n\nBest regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*",
+          AIEdits: {
+            content: "Hi Jane,\n\nI completely understand the urgency of this matter, and I sincerely apologize for the delay. I’ve reached out to the pharmacy and am closely following up to ensure the issue is resolved quickly. I will keep you informed with updates as soon as I have them. Thank you for your patience and understanding.\n\nBest regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          }
         },
         { 
           label: "Reassurance Reply", 
-          content: "Hello Jane,\n\nI completely understand your frustration and want to assure you that we’re working to resolve this issue as a top priority. I’m in contact with the pharmacy to ensure your medication is sent out immediately. Thank you for your patience as we address this.\n\nKind regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          content: "Hello Jane,\n\nI completely understand your frustration and want to assure you that we’re working to resolve this issue as a top priority. I’m in contact with the pharmacy to ensure your medication is sent out immediately. Thank you for your patience as we address this.\n\nKind regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*",
+          AIEdits: {
+            content: "Hello Jane,\n\nI understand how distressing this situation is, and I want to assure you that it’s being prioritized. I’m actively working with the pharmacy to ensure your medication is sent to you as soon as possible. Your patience and trust are greatly appreciated as we resolve this.\n\nKind regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          }
         }
       ]
     },
@@ -131,40 +149,24 @@ function App() {
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "Hi Charlie,\n\nI’m so sorry for the anxiety this is causing you. It’s absolutely understandable to feel this way, and I want to reassure you that your case is important to us. I’m reviewing your file now and will provide you with an update as soon as I have more information. You are not being forgotten.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Hi Charlie,\n\nI’m so sorry for the anxiety this is causing you. It’s absolutely understandable to feel this way, and I want to reassure you that your case is important to us. I’m reviewing your file now and will provide you with an update as soon as I have more information. You are not being forgotten.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Hi Charlie,\n\nI completely understand the anxiety you must be feeling, and I want to assure you that you are not being forgotten. Your concerns are very important to us. I’m reviewing your file now and will provide you with an update as soon as possible. Please know that we’re here for you during this challenging time.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          }
         },
         { 
           label: "Direct Reply", 
-          content: "Hello Charlie,\n\nI understand your concerns. Your condition is being monitored closely, and I’ll notify you as soon as there are any updates. Thank you for your patience while we work through this.\n\nSincerely,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Hi Charlie,\n\nI’m so sorry for the delay in communication. We are currently reviewing your case and will provide you with an update as soon as possible. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Hi Charlie,\n\nI completely understand your frustration, and I sincerely apologize for the lack of communication. We are currently reviewing your case and will update you as soon as we have more information. Thank you for your continued patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          }
         },
         { 
           label: "Reassurance Reply", 
-          content: "Dear Charlie,\n\nI completely understand how stressful waiting can be. Please know that we’re actively working on your case, and I’ll ensure you receive updates as soon as we have them. You’re in good hands, and we’re here to support you.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
-        }
-      ]
-    },
-    { 
-      mrn: "456789", 
-      lastName: "Johnson", 
-      firstName: "Emily", 
-      dob: "04/04/1995", 
-      subject: "Image Upload", 
-      dateReceived: "12/15/2024", 
-      fromUser: "Patient", 
-      message: "I tried to follow the instructions for uploading the images, but the process was so confusing and frustrating that I’m not even sure I did it correctly. I feel like I wasted hours trying to figure it out, and now I’m worried that I’ve made a mistake that could delay my care. This whole experience has been overwhelming and stressful. I don’t understand why something so important has to be so difficult. I need help making sure everything is correct because I can’t afford for there to be any delays. This has been such a frustrating experience, and I just want to know that someone is there to help me.",
-      categories: ["Image Upload Assistance", "Medium Urgency", "Clarification Needed"],
-      aiReplies: [
-        { 
-          label: "Empathetic Reply", 
-          content: "Dear Emily,\n\nI’m so sorry to hear that the process was confusing. I completely understand how important it is to ensure your images are uploaded correctly. Let’s work together to verify everything and make sure there are no delays in your care. I’m here to help.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
-        },
-        { 
-          label: "Direct Reply", 
-          content: "Hi Emily,\n\nI’ve reviewed your upload, and everything seems to be in order. If you’d like, I can guide you through the steps again to make sure there are no issues. Let me know how I can assist you further.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
-        },
-        { 
-          label: "Reassurance Reply", 
-          content: "Hello Emily,\n\nI want to assure you that your images have been received and uploaded successfully. If you have any concerns or would like assistance, please don’t hesitate to reach out. I’m happy to help.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Hello Charlie,\n\nI know it’s been tough, and I want to assure you that we’re on top of your case. I’m actively reviewing your situation and will update you soon. We value your trust and appreciate your patience.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Hello Charlie,\n\nI truly understand how stressful this situation is, and I want to reassure you that we’re reviewing your case carefully. You are not being overlooked, and we’re working to provide you with the information you need. Thank you for your patience during this time.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          }
         }
       ]
     },
@@ -181,19 +183,29 @@ function App() {
       aiReplies: [
         { 
           label: "Empathetic Reply", 
-          content: "Dear Chris,\n\nI understand how stressful it can be to wait for confirmation. Thank you for letting me know. I’ll review your documents immediately and confirm everything for you. Please don’t worry—we’ll make sure everything is in order.\n\nSincerely,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Dear Chris,\n\nI understand how stressful it can be to wait for confirmation. Thank you for letting me know. I’ll review your documents immediately and confirm everything for you. Please don’t worry—we’ll make sure everything is in order.\n\nSincerely,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Some edited content here"
+          }
         },
         { 
           label: "Direct Reply", 
-          content: "Hi Chris,\n\nYour documents have been received and are currently under review. I’ll notify you as soon as everything is processed. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Hi Chris,\n\nYour documents have been received and are currently under review. I’ll notify you as soon as everything is processed. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Some edited content here"
+          }
         },
         { 
           label: "Reassurance Reply", 
-          content: "Hello Chris,\n\nI want to let you know that your documents have been received and everything looks great. You’ll hear from us soon regarding the next steps. Thank you for keeping us updated.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          content: "Hello Chris,\n\nI want to let you know that your documents have been received and everything looks great. You’ll hear from us soon regarding the next steps. Thank you for keeping us updated.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Some edited content here"
+          }
         }
       ]
     }
-  ];  
+  ];
+  
   
   
 // notes:
@@ -263,10 +275,17 @@ function App() {
   );
 }
 
+type AIEdits = {
+  content: string;
+};
+
 type AIReply = {
   label: string;
   content: string;
+  AIEdits: AIEdits;
 };
+
+
 
 type InboxEntry = {
   mrn: string;
@@ -429,6 +448,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [selectedInstructions, setSelectedInstructions] = useState<Instruction[]>([]);
   const [generatedReply, setGeneratedReply] = useState<string>("");
 
+  const [editedReply, setEditedReply] = useState<string>(entry.aiReplies[activeTab]?.content || "");
+  const [aiEditedContent, setAiEditedContent] = useState<string>("");
+
+
   // updated one
 
   const [showAIEditModal, setShowAIEditModal] = useState<boolean>(false);
@@ -456,7 +479,19 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   };
 
   const handleAIEditSubmit = (): void => {
-    console.log("todo endpoint:", aiEditOptions);
+    const aiEditsContent = entry.aiReplies[activeTab].AIEdits.content;
+    
+    const updatedReplies = [...entry.aiReplies];
+    updatedReplies[activeTab] = {
+      ...updatedReplies[activeTab],
+      content: aiEditsContent 
+    };
+  
+    setEntry((prevState) => ({
+      ...prevState,
+      aiReplies: updatedReplies
+    }));
+  
     setShowAIEditModal(false);
   };
 
@@ -475,52 +510,56 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   };
 
   const SplitViewPopup: React.FC = () => {
-    if (!showSplitView) return null;
+  if (!showSplitView) return null;
 
-    const currentTabContent = entry.aiReplies[activeTab].content;
-    const selectedTabContent = entry.aiReplies[splitViewTab as number].content;
+  const currentTabContent = entry.aiReplies[activeTab].content;
+  const selectedTabContent = entry.aiReplies[splitViewTab as number].content;
 
-    const handleTabClick = (tabIndex: number) => {
-      setActiveTab(tabIndex); 
-      setShowSplitView(false); 
-    };
+  const handleTabClick = (tabIndex: number) => {
+    setActiveTab(tabIndex);
+    setShowSplitView(false);
+  };
 
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-        <div className="bg-white p-6 rounded shadow-lg w-full max-w-4xl h-full max-h-screen overflow-y-auto">
-          <div className="flex justify-end mb-4">
-            <button
-              onClick={() => setShowSplitView(false)}
-              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-            >
-              Close
-            </button>
+
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded shadow-lg w-full max-w-4xl h-full max-h-screen overflow-y-auto">
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={() => setShowSplitView(false)}
+            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+          >
+            Close
+          </button>
+        </div>
+        <h2 className="text-lg font-bold mb-4">Compare Replies</h2>
+        <div className="flex flex-col md:flex-row">
+          <div className="w-full md:w-1/2">
+          <button
+            onClick={() => handleTabClick(activeTab)}
+            className="text-sm font-bold mb-2 text-left w-full py-2 px-4 bg-blue-200 hover:bg-blue-300 focus:ring-2 focus:ring-blue-500 focus:outline-none rounded cursor-pointer border border-blue-500"
+          >
+            {entry.aiReplies[activeTab].label}
+          </button>
+
+            <pre className="text-sm whitespace-pre-wrap mr-5 px-2">{currentTabContent}</pre>
           </div>
-          <h2 className="text-lg font-bold mb-4">Compare Replies</h2>
-          <div className="flex flex-col md:flex-row">
-            <div className="w-full md:w-1/2">
-              <button
-                onClick={() => handleTabClick(activeTab)}
-                className="text-sm font-bold mb-2 w-full text-left py-2 px-2 bg-transparent hover:bg-gray-200 rounded focus:outline-none cursor-pointer"
-              >
-                {entry.aiReplies[activeTab].label}
-              </button>
-              <pre className="text-sm whitespace-pre-wrap px-2 mr-5">{currentTabContent}</pre>
-            </div>
-            <div className="w-full md:w-1/2">
-              <button
-                onClick={() => handleTabClick(splitViewTab as number)}
-                className="text-sm font-bold mb-2 text-left w-full py-2 px-2 bg-transparent hover:bg-gray-200 rounded focus:outline-none cursor-pointer"
-              >
-                {entry.aiReplies[splitViewTab as number].label}
-              </button>
-              <pre className="text-sm whitespace-pre-wrap px-2">{selectedTabContent}</pre>
-            </div>
+          <div className="w-full md:w-1/2">
+            <button
+              onClick={() => handleTabClick(splitViewTab as number)}
+              className="text-sm font-bold mb-2 text-left w-full py-2 px-4 bg-blue-200 hover:bg-blue-300 focus:ring-2 focus:ring-blue-500 focus:outline-none rounded cursor-pointer border border-blue-500"
+            >
+              {entry.aiReplies[splitViewTab as number].label}
+            </button>
+            <pre className="text-sm whitespace-pre-wrap px-2">{selectedTabContent}</pre>
           </div>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
+
   
   
   const handleTabClick = (index: number, e?: React.MouseEvent<HTMLButtonElement>) => {
@@ -970,9 +1009,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       {!showAIFeatures && activeTab < entry.aiReplies.length && (
         <>
           <textarea
-            className="w-full h-40 p-2 border rounded mt-1 bg-gray-50"
-            value={entry.aiReplies[activeTab].content}
+            className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
+            value={aiEditedContent || entry.aiReplies[activeTab]?.content}
             onChange={(e) => handleAIReplyChange(activeTab, e.target.value)}
+            readOnly={aiEditedContent ? true : false}
           />
           <div className="flex gap-2 mt-2">
             <button

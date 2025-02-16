@@ -742,14 +742,26 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       ...prevState,
       aiReplies: updatedReplies,
     }));
+    setIsAIEditButtonClicked(false);
     setShowDiff(false);
   };
   
 
   const handleRevert = () => {
-    setEditedText(originalText);
+    const updatedReplies = [...entry.aiReplies];
+    updatedReplies[activeTab] = {
+      ...updatedReplies[activeTab],
+      content: prevOriginalText,
+    };
+    setEntry((prevState) => ({
+      ...prevState,
+      aiReplies: updatedReplies,
+    }));
+    setEditedText(prevOriginalText);
+    setIsAIEditButtonClicked(false);
     setShowDiff(false);
   };
+  
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditedText(e.target.value);

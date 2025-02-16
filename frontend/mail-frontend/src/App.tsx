@@ -478,27 +478,30 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setAIEditOptions(prev => ({...prev, [option]: !prev[option]}));  //toggle
   };
 
+  // update but no fix
   const handleAIEditSubmit = (): void => {
-    
+
     if (!showAIFeatures) {
       const aiEditsContent = entry.aiReplies[activeTab].AIEdits.content;
-      
       const updatedReplies = [...entry.aiReplies];
+      
       updatedReplies[activeTab] = {
         ...updatedReplies[activeTab],
-        content: aiEditsContent 
+        content: aiEditsContent
       };
-    
+
       setEntry((prevState) => ({
         ...prevState,
         aiReplies: updatedReplies
       }));
-    
+
+      setEditedText(aiEditsContent); 
       setShowAIEditModal(false);
     } else {
       setShowAIEditModal(false);
     }
   };
+  
 
   
   const handleInstructionToggle = (instruction: string): void => {
@@ -703,48 +706,77 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   }, []);
   
   const [showDiff, setShowDiff] = useState(false);
-const [originalText, setOriginalText] = useState(entry.aiReplies[activeTab]?.content || "");
-const [editedText, setEditedText] = useState(entry.aiReplies[activeTab]?.AIEdits?.content || "");
+  const [originalText, setOriginalText] = useState(entry.aiReplies[activeTab]?.content || "");
+  const [editedText, setEditedText] = useState(entry.aiReplies[activeTab]?.AIEdits?.content || "");  
+  const [isAiEditClicked, setIsAiEditClicked] = useState(false);
 
-const editedTextWithSpaces = editedText.replace(/([.,!?;])/g, '$1 ');
+  const editedTextWithSpaces = editedText.replace(/([.,!?;])/g, '$1 ');
 
-const handleAccept = () => {
-  const updatedReplies = [...entry.aiReplies];
-  updatedReplies[activeTab] = {
-    ...updatedReplies[activeTab],
-    content: editedTextWithSpaces,
+  // fix
+  useEffect(() => {
+    setOriginalText(entry.aiReplies[activeTab]?.content || "");
+    setEditedText(entry.aiReplies[activeTab]?.AIEdits?.content || "");
+  }, [activeTab, entry.aiReplies]);
+
+  const handleAccept = () => {
+    const updatedReplies = [...entry.aiReplies];
+    updatedReplies[activeTab] = {
+      ...updatedReplies[activeTab],
+      content: editedTextWithSpaces,
+    };
+    setEntry((prevState) => ({
+      ...prevState,
+      aiReplies: updatedReplies,
+    }));
+    setShowDiff(false);
   };
-  setEntry((prevState) => ({
-    ...prevState,
-    aiReplies: updatedReplies,
-  }));
-  setShowDiff(false);
-};
 
-const handleRevert = () => {
-  setEditedText(originalText);
-  setShowDiff(false);
-};
+  const handleRevert = () => {
+    setEditedText(originalText);
+    setShowDiff(false);
+  };
 
-const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-  setEditedText(e.target.value);
-};
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditedText(e.target.value);
+  };
 
-const normalizeText = (text: string) => {
-  return text.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
-};
+  const normalizeText = (text: string) => {
+    return text.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
+  };
 
-const highlightDifferences = (original: string, edited: string) => {
-  const originalWords = original.trim().replace(/\s+/g, ' ').split(/\s+/);
-  const editedWords = edited.trim().replace(/\s+/g, ' ').split(/\s+/);
+  const highlightDifferences = (original: string, edited: string) => {
+    const originalWords = original.trim().replace(/\s+/g, ' ').split(/\s+/);
+    const editedWords = edited.trim().replace(/\s+/g, ' ').split(/\s+/);
 
-  const lcs = findLCS(originalWords, editedWords);
-  const diffResult: JSX.Element[] = [];
+    const lcs = findLCS(originalWords, editedWords);
+    const diffResult: JSX.Element[] = [];
 
-  let i = 0, j = 0; // Pointers for original and edited texts
+    let i = 0, j = 0; // need to store only 2
 
-  for (let k = 0; k < lcs.length; k++) {
-    while (i < originalWords.length && originalWords[i] !== lcs[k]) {
+    for (let k = 0; k < lcs.length; k++) {
+      while (i < originalWords.length && originalWords[i] !== lcs[k]) {
+        diffResult.push(
+          <span key={`delete-${i}`} style={{ textDecoration: "line-through", color: "red" }}>
+            {originalWords[i]}{" "}
+          </span>
+        );
+        i++;
+      }
+      while (j < editedWords.length && editedWords[j] !== lcs[k]) {
+        diffResult.push(
+          <span key={`insert-${j}`} style={{ backgroundColor: "yellow", textDecoration: "underline" }}>
+            {editedWords[j]}{" "}
+          </span>
+        );
+        j++;
+      }
+      diffResult.push(<span key={`word-${i}`} style={{ color: "black" }}>{lcs[k]} </span>);
+      i++;
+      j++;
+    }
+
+    // Handle remaining words --debug from prev version
+    while (i < originalWords.length) {
       diffResult.push(
         <span key={`delete-${i}`} style={{ textDecoration: "line-through", color: "red" }}>
           {originalWords[i]}{" "}
@@ -752,7 +784,7 @@ const highlightDifferences = (original: string, edited: string) => {
       );
       i++;
     }
-    while (j < editedWords.length && editedWords[j] !== lcs[k]) {
+    while (j < editedWords.length) {
       diffResult.push(
         <span key={`insert-${j}`} style={{ backgroundColor: "yellow", textDecoration: "underline" }}>
           {editedWords[j]}{" "}
@@ -760,87 +792,42 @@ const highlightDifferences = (original: string, edited: string) => {
       );
       j++;
     }
-    diffResult.push(<span key={`word-${i}`} style={{ color: "black" }}>{lcs[k]} </span>);
-    i++;
-    j++;
-  }
 
-  // Handle remaining words
-  while (i < originalWords.length) {
-    diffResult.push(
-      <span key={`delete-${i}`} style={{ textDecoration: "line-through", color: "red" }}>
-        {originalWords[i]}{" "}
-      </span>
-    );
-    i++;
-  }
-  while (j < editedWords.length) {
-    diffResult.push(
-      <span key={`insert-${j}`} style={{ backgroundColor: "yellow", textDecoration: "underline" }}>
-        {editedWords[j]}{" "}
-      </span>
-    );
-    j++;
-  }
+    return diffResult;
+  };
 
-  return diffResult;
-};
+  // Simplified LCS function  --debug
+  const findLCS = (arr1: string[], arr2: string[]) => {
+    const m = arr1.length;
+    const n = arr2.length;
+    const dp: number[][] = Array(m + 1).fill(0).map(() => Array(n + 1).fill(0));
 
-// Simplified LCS function
-const findLCS = (arr1: string[], arr2: string[]) => {
-  const m = arr1.length;
-  const n = arr2.length;
-  const dp: number[][] = Array(m + 1).fill(0).map(() => Array(n + 1).fill(0));
-
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      if (arr1[i - 1] === arr2[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1] + 1;
-      } else {
-        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (arr1[i - 1] === arr2[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1] + 1;
+        } else {
+          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        }
       }
     }
-  }
 
-  const lcs: string[] = [];
-  let i = m, j = n;
-  while (i > 0 && j > 0) {
-    if (arr1[i - 1] === arr2[j - 1]) {
-      lcs.push(arr1[i - 1]);
-      i--;
-      j--;
-    } else if (dp[i - 1][j] > dp[i][j - 1]) {
-      i--;
-    } else {
-      j--;
+    const lcs: string[] = [];
+    let i = m, j = n;
+    while (i > 0 && j > 0) {
+      if (arr1[i - 1] === arr2[j - 1]) {
+        lcs.push(arr1[i - 1]);
+        i--;
+        j--;
+      } else if (dp[i - 1][j] > dp[i][j - 1]) {
+        i--;
+      } else {
+        j--;
+      }
     }
-  }
 
-  return lcs.reverse();
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-  
-  
-  
+    return lcs.reverse();
+  };
   
 
   if (showDiff) {

@@ -467,6 +467,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [splitViewTab, setSplitViewTab] = useState<number | null>(null);
   const [showSplitView, setShowSplitView] = useState(false);
 
+  const [isAIEditButtonClicked, setIsAIEditButtonClicked] = useState(false);
+  // pre 
   const [instructionOptions, setInstructionOptions] = useState([
     "Provide updates on the status of tests or results.",
     "Follow up on referrals or consultations with other departments.",
@@ -706,6 +708,15 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   }, []);
   
   const [showDiff, setShowDiff] = useState(false);
+  const [prevOriginalText, setPrevOriginalText] = useState(
+    entryData?.aiReplies[0]?.content || ""
+  );
+
+  useEffect(() => {
+    setPrevOriginalText(entryData?.aiReplies[activeTab]?.content || "");
+  }, [activeTab, entryData]);
+  
+
   const [originalText, setOriginalText] = useState(entry.aiReplies[activeTab]?.content || "");
   const [editedText, setEditedText] = useState(entry.aiReplies[activeTab]?.AIEdits?.content || "");  
   const [isAiEditClicked, setIsAiEditClicked] = useState(false);
@@ -714,11 +725,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   // fix
   useEffect(() => {
+    // update here need to modify when doing actuall llm integration
+    //setOriginalText(entry.aiReplies[activeTab]?.content || "");
     setOriginalText(entry.aiReplies[activeTab]?.content || "");
     setEditedText(entry.aiReplies[activeTab]?.AIEdits?.content || "");
   }, [activeTab, entry.aiReplies]);
 
   const handleAccept = () => {
+    setPrevOriginalText(editedTextWithSpaces);
     const updatedReplies = [...entry.aiReplies];
     updatedReplies[activeTab] = {
       ...updatedReplies[activeTab],
@@ -730,6 +744,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     }));
     setShowDiff(false);
   };
+  
 
   const handleRevert = () => {
     setEditedText(originalText);
@@ -831,7 +846,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   
 
   if (showDiff) {
-    const highlightedText = highlightDifferences(originalText, editedTextWithSpaces);
+    const highlightedText = highlightDifferences(prevOriginalText, editedTextWithSpaces);
     return (
       <div className='px-2 mt-10'>
         <h3>Make Additional Changes:</h3>
@@ -1022,7 +1037,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
               Clear
             </button>
             <button
-              onClick={() => setShowAIEditModal(true)}
+              onClick={() => {
+                setShowAIEditModal(true);
+                setIsAIEditButtonClicked(true);
+              }}
               className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
             >
               AI Edit
@@ -1053,12 +1071,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             </button>
             {showAIFeatures && (
             <button
-              onClick={() => setShowAIEditModal(true)}
-              className="bg-purple-600 text-white px-3 py-1 ml-2 rounded hover:bg-purple-700"
-            >
-              AI Edit
-            </button>
-
+            onClick={() => {
+              setShowAIEditModal(true);
+              setIsAIEditButtonClicked(true);
+            }}
+            className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+          >
+            AI Edit
+          </button>          
           )}
             <div className="relative mt-3">
             <button
@@ -1148,18 +1168,25 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           </button>
           {showAIFeatures && (
             <button
-              onClick={() => setShowAIEditModal(true)}
-              className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
-            >
-              AI Edit
-            </button>
+            onClick={() => {
+              setShowAIEditModal(true);
+              setIsAIEditButtonClicked(true);
+            }}
+            className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+          >
+            AI Edit
+          </button>          
           )}
         </div>
       </div>
       )}
       {!showAIFeatures && activeTab < entry.aiReplies.length && (
         <>
-          <button onClick={() => setShowDiff(true)}>Show Diff</button>
+          {
+            isAIEditButtonClicked && (
+              <button onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+            )
+          }
           <textarea
             className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
             value={aiEditedContent || entry.aiReplies[activeTab]?.content}
@@ -1179,7 +1206,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
               Regenerate
             </button>
             <button
-              onClick={() => setShowAIEditModal(true)}
+              onClick={() => {
+                setShowAIEditModal(true);
+                setIsAIEditButtonClicked(true);
+              }}
               className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
             >
               AI Edit

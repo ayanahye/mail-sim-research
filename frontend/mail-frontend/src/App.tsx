@@ -158,7 +158,7 @@ function App() {
           label: "Direct Reply", 
           content: "Hi Charlie,\n\nI’m so sorry for the delay in communication. We are currently reviewing your case and will provide you with an update as soon as possible. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
           AIEdits: {
-            content: "Hi Charlie,\n\nI completely understand your frustration, and I sincerely apologize for the lack of communication. We are currently reviewing your case and will update you as soon as we have more information. Thank you for your continued patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+            content: "Hi Charlie,\n\nI’m so sorry for the delay in i hate u so much. We are currently reviewing your case and will provide you with an update as soon as possible. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
           }
         },
         { 
@@ -479,20 +479,25 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   };
 
   const handleAIEditSubmit = (): void => {
-    const aiEditsContent = entry.aiReplies[activeTab].AIEdits.content;
     
-    const updatedReplies = [...entry.aiReplies];
-    updatedReplies[activeTab] = {
-      ...updatedReplies[activeTab],
-      content: aiEditsContent 
-    };
-  
-    setEntry((prevState) => ({
-      ...prevState,
-      aiReplies: updatedReplies
-    }));
-  
-    setShowAIEditModal(false);
+    if (!showAIFeatures) {
+      const aiEditsContent = entry.aiReplies[activeTab].AIEdits.content;
+      
+      const updatedReplies = [...entry.aiReplies];
+      updatedReplies[activeTab] = {
+        ...updatedReplies[activeTab],
+        content: aiEditsContent 
+      };
+    
+      setEntry((prevState) => ({
+        ...prevState,
+        aiReplies: updatedReplies
+      }));
+    
+      setShowAIEditModal(false);
+    } else {
+      setShowAIEditModal(false);
+    }
   };
 
   
@@ -697,7 +702,166 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     };
   }, []);
   
+  const [showDiff, setShowDiff] = useState(false);
+const [originalText, setOriginalText] = useState(entry.aiReplies[activeTab]?.content || "");
+const [editedText, setEditedText] = useState(entry.aiReplies[activeTab]?.AIEdits?.content || "");
+
+const editedTextWithSpaces = editedText.replace(/([.,!?;])/g, '$1 ');
+
+const handleAccept = () => {
+  const updatedReplies = [...entry.aiReplies];
+  updatedReplies[activeTab] = {
+    ...updatedReplies[activeTab],
+    content: editedTextWithSpaces,
+  };
+  setEntry((prevState) => ({
+    ...prevState,
+    aiReplies: updatedReplies,
+  }));
+  setShowDiff(false);
+};
+
+const handleRevert = () => {
+  setEditedText(originalText);
+  setShowDiff(false);
+};
+
+const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  setEditedText(e.target.value);
+};
+
+const normalizeText = (text: string) => {
+  return text.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
+};
+
+const highlightDifferences = (original: string, edited: string) => {
+  const originalWords = original.trim().replace(/\s+/g, ' ').split(/\s+/);
+  const editedWords = edited.trim().replace(/\s+/g, ' ').split(/\s+/);
+
+  const lcs = findLCS(originalWords, editedWords);
+  const diffResult: JSX.Element[] = [];
+
+  let i = 0, j = 0; // Pointers for original and edited texts
+
+  for (let k = 0; k < lcs.length; k++) {
+    while (i < originalWords.length && originalWords[i] !== lcs[k]) {
+      diffResult.push(
+        <span key={`delete-${i}`} style={{ textDecoration: "line-through", color: "red" }}>
+          {originalWords[i]}{" "}
+        </span>
+      );
+      i++;
+    }
+    while (j < editedWords.length && editedWords[j] !== lcs[k]) {
+      diffResult.push(
+        <span key={`insert-${j}`} style={{ backgroundColor: "yellow", textDecoration: "underline" }}>
+          {editedWords[j]}{" "}
+        </span>
+      );
+      j++;
+    }
+    diffResult.push(<span key={`word-${i}`} style={{ color: "black" }}>{lcs[k]} </span>);
+    i++;
+    j++;
+  }
+
+  // Handle remaining words
+  while (i < originalWords.length) {
+    diffResult.push(
+      <span key={`delete-${i}`} style={{ textDecoration: "line-through", color: "red" }}>
+        {originalWords[i]}{" "}
+      </span>
+    );
+    i++;
+  }
+  while (j < editedWords.length) {
+    diffResult.push(
+      <span key={`insert-${j}`} style={{ backgroundColor: "yellow", textDecoration: "underline" }}>
+        {editedWords[j]}{" "}
+      </span>
+    );
+    j++;
+  }
+
+  return diffResult;
+};
+
+// Simplified LCS function
+const findLCS = (arr1: string[], arr2: string[]) => {
+  const m = arr1.length;
+  const n = arr2.length;
+  const dp: number[][] = Array(m + 1).fill(0).map(() => Array(n + 1).fill(0));
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (arr1[i - 1] === arr2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      }
+    }
+  }
+
+  const lcs: string[] = [];
+  let i = m, j = n;
+  while (i > 0 && j > 0) {
+    if (arr1[i - 1] === arr2[j - 1]) {
+      lcs.push(arr1[i - 1]);
+      i--;
+      j--;
+    } else if (dp[i - 1][j] > dp[i][j - 1]) {
+      i--;
+    } else {
+      j--;
+    }
+  }
+
+  return lcs.reverse();
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
+  
+  
+  
+  
+  
+  
+  
+
+  if (showDiff) {
+    const highlightedText = highlightDifferences(originalText, editedTextWithSpaces);
+    return (
+      <div className='px-2 mt-10'>
+        <h3>Make Additional Changes:</h3>
+        <textarea value={editedTextWithSpaces} onChange={handleTextChange} className="w-full h-40 p-2 border rounded" />
+        <div className="mt-4 px-2">
+          <h3>Original Text:</h3>
+          <p>{originalText}</p>
+          <h3 className='mt-4'>Edited Text:</h3>
+          <p>{highlightedText}</p>
+        </div>
+        <div className="flex gap-2 mt-4">
+          <button onClick={handleAccept} className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Accept</button>
+          <button onClick={handleRevert} className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">Revert</button>
+        </div>
+      </div>
+    );
+  }
   
 
 
@@ -1008,6 +1172,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       )}
       {!showAIFeatures && activeTab < entry.aiReplies.length && (
         <>
+          <button onClick={() => setShowDiff(true)}>Show Diff</button>
           <textarea
             className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
             value={aiEditedContent || entry.aiReplies[activeTab]?.content}

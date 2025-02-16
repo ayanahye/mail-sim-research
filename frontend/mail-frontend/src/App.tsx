@@ -865,7 +865,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <textarea value={editedTextWithSpaces} onChange={handleTextChange} className="w-full h-40 p-2 border rounded" />
         <div className="mt-4 px-2">
           <h3>Original Text:</h3>
-          <p>{originalText}</p>
+          <p>{prevOriginalText}</p>
           <h3 className='mt-4'>Edited Text:</h3>
           <p>{highlightedText}</p>
         </div>

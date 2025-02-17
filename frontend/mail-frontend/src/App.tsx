@@ -482,27 +482,42 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   // update but no fix
   const handleAIEditSubmit = (): void => {
+      if ((!showAIFeatures && (activeTab === 3)) || (showAIFeatures)) {
+        console.log("hello")
 
-    if (!showAIFeatures) {
-      const aiEditsContent = entry.aiReplies[activeTab].AIEdits.content;
-      const updatedReplies = [...entry.aiReplies];
-      
-      updatedReplies[activeTab] = {
-        ...updatedReplies[activeTab],
-        content: aiEditsContent
-      };
+        if (!(showAIFeatures && (activeTab != 0))) {
+          setPrevBlankReply(blankReply);
+        } else {
+          // change this to the edited reply
+          setPrevBlankReply(generatedReply);
+        }
 
-      setEntry((prevState) => ({
-        ...prevState,
-        aiReplies: updatedReplies
-      }));
-
-      setEditedText(aiEditsContent); 
+        setBlankReply("this is a test");
+        setGeneratedReply("this is a test");
+        setEditedText("this is a test");
+        //console.log('aiEditedContent:', aiEditedContent); 
+        //handleSendReply("this is a test");
+      } else if (!showAIFeatures && (activeTab < 3)) {
+        let contentToUpdate = entry.aiReplies[activeTab].AIEdits.content;
+        
+        const updatedReplies = [...entry.aiReplies];
+        
+        updatedReplies[activeTab] = {
+          ...updatedReplies[activeTab],
+          content: contentToUpdate
+        };
+  
+        setEntry((prevState) => ({
+          ...prevState,
+          aiReplies: updatedReplies
+        }));
+  
+        setEditedText(contentToUpdate); 
+      }
       setShowAIEditModal(false);
-    } else {
-      setShowAIEditModal(false);
-    }
+    
   };
+  
   
 
   
@@ -667,6 +682,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   const handleBlankReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBlankReply(e.target.value);
+    console.log('blankReply:', blankReply); 
+    console.log('e.target.value:', e.target.value);
   };
 
   const handleTextSelect = () => {
@@ -676,6 +693,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   const handleGenerateReplyClick = () => {
     setGeneratedReply("Here is the generated reply"); 
+    setPrevInstructionsReply("Here is the generated reply");
     setGenerateClicked(true); 
     handleTabClick(-2);
     if (customInstruction.trim() && !selectedInstructions.includes(customInstruction)) {
@@ -711,6 +729,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [prevOriginalText, setPrevOriginalText] = useState(
     entryData?.aiReplies[0]?.content || ""
   );
+  const [prevBlankReply, setPrevBlankReply] = useState("");
+  const [prevInstructionsReply, setPrevInstructionsReply] = useState("");
 
   useEffect(() => {
     setPrevOriginalText(entryData?.aiReplies[activeTab]?.content || "");
@@ -731,33 +751,65 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setEditedText(entry.aiReplies[activeTab]?.AIEdits?.content || "");
   }, [activeTab, entry.aiReplies]);
 
+  // prevInstructionsReply
+
   const handleAccept = () => {
-    setPrevOriginalText(editedTextWithSpaces);
-    const updatedReplies = [...entry.aiReplies];
-    updatedReplies[activeTab] = {
-      ...updatedReplies[activeTab],
-      content: editedTextWithSpaces,
-    };
-    setEntry((prevState) => ({
-      ...prevState,
-      aiReplies: updatedReplies,
-    }));
+    if ((!showAIFeatures && activeTab < 3) || (showAIFeatures && activeTab === 0)) {
+      if (showAIFeatures && activeTab === 0) {
+        setPrevBlankReply(editedTextWithSpaces);
+        setBlankReply(editedTextWithSpaces);
+      } else {
+        setPrevOriginalText(editedTextWithSpaces);
+        const updatedReplies = [...entry.aiReplies];
+        updatedReplies[activeTab] = {
+          ...updatedReplies[activeTab],
+          content: editedTextWithSpaces,
+        };
+        setEntry((prevState) => ({
+          ...prevState,
+          aiReplies: updatedReplies,
+        }));
+      }
+    } else if (showAIFeatures && activeTab > 0) {
+      setPrevOriginalText(editedTextWithSpaces);
+      setPrevInstructionsReply(editedTextWithSpaces)
+    } else {
+      setPrevBlankReply(editedTextWithSpaces);
+      setBlankReply(editedTextWithSpaces);
+    }
     setIsAIEditButtonClicked(false);
     setShowDiff(false);
   };
   
-
   const handleRevert = () => {
-    const updatedReplies = [...entry.aiReplies];
-    updatedReplies[activeTab] = {
-      ...updatedReplies[activeTab],
-      content: prevOriginalText,
-    };
-    setEntry((prevState) => ({
-      ...prevState,
-      aiReplies: updatedReplies,
-    }));
-    setEditedText(prevOriginalText);
+    console.log("here test 36363636")
+    console.log("act tab", activeTab);
+    if ((!showAIFeatures && activeTab < 3) || (showAIFeatures && activeTab == 0)) {
+      if (showAIFeatures && activeTab === 0) {
+        setBlankReply(prevBlankReply);
+        //setAiEditedContent(prevBlankReply);
+      } else {
+        const updatedReplies = [...entry.aiReplies];
+        updatedReplies[activeTab] = {
+          ...updatedReplies[activeTab],
+          content: prevOriginalText,
+        };
+        setEntry((prevState) => ({
+          ...prevState,
+          aiReplies: updatedReplies,
+        }));
+        setEditedText(prevOriginalText);
+      }
+    } else if (showAIFeatures && activeTab == -2) {
+      setPrevOriginalText(prevInstructionsReply);
+      setGeneratedReply(prevInstructionsReply)
+      setPrevInstructionsReply(prevInstructionsReply)
+      console.log("here", prevInstructionsReply)
+    } else {
+      console.log("test 3")
+      setBlankReply(prevBlankReply);
+      //setAiEditedContent(prevBlankReply);
+    }
     setIsAIEditButtonClicked(false);
     setShowDiff(false);
   };
@@ -773,6 +825,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   const highlightDifferences = (original: string, edited: string) => {
     const originalWords = original.trim().replace(/\s+/g, ' ').split(/\s+/);
+    console.log("originalword", originalWords);
+
     const editedWords = edited.trim().replace(/\s+/g, ' ').split(/\s+/);
 
     const lcs = findLCS(originalWords, editedWords);
@@ -858,24 +912,41 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   
 
   if (showDiff) {
-    const highlightedText = highlightDifferences(prevOriginalText, editedTextWithSpaces);
+    console.log("blank reply", blankReply)
+    let originalText = (!showAIFeatures && activeTab < 3) ? prevOriginalText : (showAIFeatures && activeTab > 0) ? prevInstructionsReply : prevBlankReply;
+    let editedText = editedTextWithSpaces;
+
+    console.log("test prev instructions", prevInstructionsReply)
+    const highlightedText = highlightDifferences(originalText, editedText);
+  
     return (
       <div className='px-2 mt-10'>
         <h3>Make Additional Changes:</h3>
-        <textarea value={editedTextWithSpaces} onChange={handleTextChange} className="w-full h-40 p-2 border rounded" />
+        <textarea value={editedText} onChange={(e) => {
+          if (activeTab < 3) {
+            handleTextChange(e);
+          } else {
+            setAiEditedContent(e.target.value);
+          }
+        }} className="w-full h-40 p-2 border rounded" />
         <div className="mt-4 px-2">
           <h3>Original Text:</h3>
-          <p>{prevOriginalText}</p>
+          <p>{originalText}</p>
           <h3 className='mt-4'>Edited Text:</h3>
           <p>{highlightedText}</p>
         </div>
         <div className="flex gap-2 mt-4">
-          <button onClick={handleAccept} className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Accept</button>
-          <button onClick={handleRevert} className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">Revert</button>
+
+            <>
+              <button onClick={handleAccept} className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Accept</button>
+              <button onClick={handleRevert} className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">Revert</button>
+            </>
+          
         </div>
       </div>
     );
   }
+  
   
 
 
@@ -1025,7 +1096,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       {showAIFeatures && activeTab === 0 && (
         <div className="bg-white p-4 border rounded">
           <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
-          
+          {isAIEditButtonClicked && (
+          <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+          )}
           <textarea
             id="blankReplyTextarea"
             className="w-full h-40 p-2 border rounded"
@@ -1064,6 +1137,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       {showAIFeatures && activeTab === -2 && generateClicked && (
         <div className="bg-white p-4 border rounded">
           <h3 className="font-semibold text-gray-600 mb-2">Generated AI Reply</h3>
+          {isAIEditButtonClicked && (
+          <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+          )}
           <textarea
             className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
             value={generatedReply} 
@@ -1071,7 +1147,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             readOnly 
           />
             <button
-              onClick={() => handleSendReply(blankReply)}
+              onClick={() => handleSendReply(generatedReply)}
               className="bg-blue-600 text-white px-4 py-1 mr-2 rounded hover:bg-blue-700"
             >
               Send Reply
@@ -1087,7 +1163,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
               setShowAIEditModal(true);
               setIsAIEditButtonClicked(true);
             }}
-            className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+            className="ml-2 bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
           >
             AI Edit
           </button>          
@@ -1178,17 +1254,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           >
             Generate AI Reply
           </button>
-          {showAIFeatures && (
-            <button
-            onClick={() => {
-              setShowAIEditModal(true);
-              setIsAIEditButtonClicked(true);
-            }}
-            className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
-          >
-            AI Edit
-          </button>          
-          )}
+          
         </div>
       </div>
       )}
@@ -1280,7 +1346,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       {!showAIFeatures && activeTab==3 && (
         <div className="bg-white p-4 border rounded">
         <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
-
+        {isAIEditButtonClicked && (
+          <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+        )}
         <textarea
           id="blankReplyTextarea"
           className="w-full h-40 p-2 border rounded"
@@ -1303,7 +1371,17 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           >
             Clear
           </button>
+          <button
+              onClick={() => {
+                setShowAIEditModal(true);
+                setIsAIEditButtonClicked(true);
+              }}
+              className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+            >
+              AI Edit
+            </button>
         </div>
+
       </div>
       )}
     </div>

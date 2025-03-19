@@ -64,8 +64,26 @@ function App() {
   //const [data, setData] = useState<ApiResponse | null>(null);
 
   // the categories should correspond to what the nurse has to do in response to the patient query and the urgency
+  const [inboxWidth, setInboxWidth] = useState(40); // 40% as default
 
   const [showAIFeatures, setShowAIFeatures] = useState<boolean>(true);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+  
+  const handleMouseMove = (e: MouseEvent) => {
+    const newWidth = (e.clientX / window.innerWidth) * 100;
+    setInboxWidth(Math.min(Math.max(newWidth, 20), 80)); 
+  };
+  
+  const handleMouseUp = () => {
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+  
+  // ugh this 
 
   const dummyData = [
     { 
@@ -246,6 +264,22 @@ return (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </button>
+            <div className='flex items-center space-x-6'>
+            <TabContext.Consumer>
+              {context => (
+                <ToggleSwitch 
+                  isOn={context?.showAIFeatures ?? false} 
+                  onToggle={() => {
+                    if (context?.showAIFeatures) {
+                      context.setActiveTab(0);
+                    }
+                    context?.setShowAIFeatures(!context.showAIFeatures);
+                  }} 
+                  label="AI Features Mode 2" 
+                />
+              )}
+            </TabContext.Consumer>
+          </div>
           </nav>
         </header>
         
@@ -266,11 +300,22 @@ return (
             </nav>
           </aside>
           
-          <main className="flex-1 bg-white overflow-auto flex">
-            <div className="w-2/5 border-r">
+          <main className="flex-1 bg-white overflow-hidden flex relative h-screen">
+            <div 
+              className="border-r overflow-y-auto"
+              style={{ width: `${inboxWidth}%`, height: '100%' }}
+            >
               <Inbox dummyData={dummyData} />
             </div>
-            <div className="w-3/5 p-4">
+            <div 
+              className="w-1 bg-gray-300 cursor-col-resize absolute h-full"
+              style={{ left: `${inboxWidth}%` }}
+              onMouseDown={handleMouseDown}
+            ></div>
+            <div 
+              className="overflow-y-auto"
+              style={{ width: `${100 - inboxWidth}%`, height: '100%' }}
+            >
               <Routes>
                 <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} />} />
               </Routes>
@@ -282,7 +327,6 @@ return (
   </TabProvider>
   );
 }
-
 
 type AIEdits = {
   content: string;
@@ -340,7 +384,7 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
 
   return (
     <div className="h-full overflow-auto">
-      <div className="sticky top-0 bg-white z-10 p-2 border-b flex items-center">
+      <div className="sticky top-0 bg-white p-2 border-b flex items-center mt-2">
         <input type="checkbox" className="mr-2" />
         <button className="text-gray-600 hover:text-black mr-2">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -427,6 +471,17 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     reply: "",
     aiReplies: entryData?.aiReplies || [],
   });
+
+  useEffect(() => {
+    if (entryData) {
+      setEntry({
+        to: `${entryData.firstName} ${entryData.lastName}`,
+        subject: entryData.subject,
+        reply: "",
+        aiReplies: entryData.aiReplies || [],
+      });
+    }
+  }, [mrn, entryData]);
 
   const [showModal, setShowModal] = useState(false);
   const [sentReplies, setSentReplies] = useState<{ content: string; timestamp: Date }[]>([]);
@@ -517,9 +572,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     
   };
   
-  
-
-  
   const handleInstructionToggle = (instruction: string): void => {
     setSelectedInstructions(prev =>
       prev.includes(instruction)
@@ -543,8 +595,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setActiveTab(tabIndex);
     setShowSplitView(false);
   };
-
-
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -581,11 +631,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         </div>
       </div>
     </div>
-  );
-};
+    );
+  };
 
-  
-  
   const handleTabClick = (index: number, e?: React.MouseEvent<HTMLButtonElement>) => {
     if (!showAIFeatures && index !== activeTab && (index != 3 && activeTab != 3)) {
       if (e?.ctrlKey) {
@@ -812,7 +860,43 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setIsAIEditButtonClicked(false);
     setShowDiff(false);
   };
-  
+
+  // drag updated functionality
+  const [isDragging, setIsDragging] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [categoriesHeight, setCategoriesHeight] = useState(200); 
+
+  const handleResizeStart = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setIsDragging(true);
+    setStartY(e.clientY);
+  };
+
+  const handleResizeEnd = () => {
+    setIsDragging(false);
+  };
+
+  const handleResize = (e: MouseEvent) => {
+    if (!isDragging) return;
+    const delta = e.clientY - startY;
+    setCategoriesHeight((prevHeight) =>
+      Math.max(100, Math.min(prevHeight + delta, window.innerHeight - 200))
+    );
+    setStartY(e.clientY);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", handleResize);
+      window.addEventListener("mouseup", handleResizeEnd);
+    } else {
+      window.removeEventListener("mousemove", handleResize);
+      window.removeEventListener("mouseup", handleResizeEnd);
+    }
+    return () => {
+      window.removeEventListener("mousemove", handleResize);
+      window.removeEventListener("mouseup", handleResizeEnd);
+    };
+  }, [isDragging]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditedText(e.target.value);
@@ -946,157 +1030,403 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     );
   }
   
-  
-
-
   if (!entryData) {
     return <div className="p-6 text-gray-700">Message not found.</div>;
   }
 
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-bold mb-5 text-gray-800">Message Details</h2>
-      <div className="mb-4">
-        <label className="font-semibold text-gray-600">To:</label>
-        <input
-          className="border w-full p-2 mt-1 text-blue-700 rounded"
-          value={entry.to}
-          readOnly
-        />
-      </div>
-      <div className="mb-4">
-        <label className="font-semibold text-gray-600">Subject:</label>
-        <input
-          className="border w-full p-2 mt-1 text-gray-700 rounded"
-          value={`RE: ${entry.subject}`}
-          readOnly
-        />
-      </div>
-      <div className="bg-gray-100 p-4 mb-4 border rounded">
-        <label className="font-semibold text-gray-600">Patient Message:</label>
-        <p className="text-sm text-gray-700">{entryData.message}</p>
-      </div>
-      <div className="mt-6 bg-gray-50 p-4 border rounded">
-        <h3 className="font-semibold text-gray-600">Sent Replies</h3>
-        {sentReplies.length > 0 ? (
-          sentReplies.map((sent, index) => (
-            <div key={index} className="mt-2 border-b">
-              <p className="text-sm text-gray-700 mb-2">{sent.content}</p>
-              <p className="text-xs text-gray-500 mb-2">
-                Sent at {sent.timestamp.toLocaleTimeString()} on{" "}
-                {sent.timestamp.toLocaleDateString()}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p className="text-sm text-gray-600">No replies sent yet.</p>
-        )}
-      </div>
-      <div className="mb-4 mt-4">
-        <label className="font-semibold text-gray-600">Categories:</label>
-        <div className='flex justify-between items-start'>
-          <div className="mt-2 flex flex-wrap">
-            {entryData.categories.map((category, index) => {
-              let colorClass = 'bg-blue-100 text-blue-800';
-              
-              if (category === 'High Urgency') {
-                colorClass = 'bg-red-500 text-white';
-              } else if (category === 'Medium Urgency') {
-                colorClass = 'bg-orange-500 text-white';
-              } else if (category === 'Low Urgency') {
-                colorClass = 'bg-yellow-500 text-black';
-              }
-              return (
-                <span
-                  key={index}
-                  className={`inline-block ${colorClass} text-xs font-medium mr-2 px-2 py-1 rounded-full mb-2`}
-                >
-                  {category}
-                </span>
-              );
-            })}
-          </div>
+    <div className="h-full flex flex-col bg-white overflow-auto">
+      <div className="p-4 border-b">
+        <h2 className="text-xl font-semibold mb-2">{entry.subject}</h2>
+        <div className="flex items-center text-sm text-gray-600">
+          <span className="mr-4">To: {entry.to}</span>
+          <span>From: {entryData?.fromUser}</span>
         </div>
       </div>
-      <div className="mt-6 bg-white border rounded shadow">
-
-      <div className="items-center px-4 pt-4">
-        <h3 className="font-semibold text-gray-600">Reply: (Click to Edit)</h3>
-        {!showAIFeatures && <small className="text-xs text-red-500">Ctrl+Click to compare replies</small>}
-      </div>
-
-      <div className="flex border-b">
-      {showAIFeatures ? (
-        <>
+      <div className="flex-grow p-4 overflow-auto">
+        <div className="bg-gray-50 p-4 rounded mb-4 border">
+          <p className="text-sm text-gray-700">{entryData?.message}</p>
+        </div>
+        {sentReplies.length > 0 && (
+          <div className="mb-4">
+            <h3 className="font-semibold text-gray-600 mb-2">Sent Replies</h3>
+            {sentReplies.map((sent, index) => (
+              <div key={index} className="bg-blue-50 p-3 rounded mb-2 border">
+                <p className="text-sm text-gray-700">{sent.content}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Sent at {sent.timestamp.toLocaleTimeString()} on{" "}
+                  {sent.timestamp.toLocaleDateString()}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="flex flex-col flex-grow overflow-hidden">
+          <div
+            className="overflow-y-auto"
+            style={{ height: `${categoriesHeight - 100}px`, minHeight: "100px" }}
+          >
+            <h3 className="font-semibold text-gray-600 mb-2">Categories</h3>
+            <div className="flex flex-wrap">
+              {entryData?.categories.map((category, index) => {
+                let colorClass = "bg-blue-100 text-blue-800";
+  
+                if (category === "High Urgency") {
+                  colorClass = "bg-red-100 text-red-800";
+                } else if (category === "Medium Urgency") {
+                  colorClass = "bg-orange-100 text-orange-800";
+                } else if (category === "Low Urgency") {
+                  colorClass = "bg-yellow-100 text-yellow-800";
+                }
+                return (
+                  <span
+                    key={index}
+                    className={`inline-block ${colorClass} text-xs font-medium mr-2 px-2 py-1 rounded-full mb-2`}
+                  >
+                    {category}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+          <div
+            className="h-1 bg-gray-300 cursor-row-resize"
+            onMouseDown={handleResizeStart}
+          ></div>
+          <div className="flex-grow overflow-y-auto">
+            <div className="bg-white border rounded shadow">
+              <div className="items-center px-4 pt-4">
+                <h3 className="font-semibold text-gray-600 pb-2">Reply: (Click to Edit)</h3>
+                {!showAIFeatures && (
+                  <small className="text-xs text-red-500 pb-2">
+                    Ctrl+Click to compare replies
+                  </small>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex border-b">
+        {showAIFeatures ? (
+          <>
+            <button
+              onClick={() => handleTabClick(0)}
+              className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+                activeTab === 0
+                  ? "border-b-2 border-blue-500 text-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Start Blank
+            </button>
+            <button
+              onClick={() => handleTabClick(-1)}
+              className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+                activeTab === -1
+                  ? "border-b-2 border-red-600 text-red-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Provide Instructions
+            </button>
+            <button
+              onClick={() => generateClicked ? handleTabClick(-2) : null}
+              disabled={!generateClicked}
+              className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+                activeTab === -2
+                  ? "border-b-2 border-blue-500 text-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
+              } ${!generateClicked ? 'cursor-not-allowed opacity-50' : ''}`}
+            >
+              See Generated Reply
+            </button>
+          </>
+        ) : (
+          entry.aiReplies.map((reply, index) => (
+            <button
+              key={index}
+              onClick={(e) => handleTabClick(index, e)}
+              className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+                activeTab === index
+                  ? "border-b-2 border-blue-500 text-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              {reply.label}
+            </button>
+          ))
+        )}
+        <SplitViewPopup />
+        {!showAIFeatures && (
           <button
-            onClick={() => handleTabClick(0)}
+            onClick={() => handleTabClick(entry.aiReplies.length)}
             className={`px-4 py-2 font-medium text-sm focus:outline-none ${
-              activeTab === 0
-                ? "border-b-2 border-blue-500 text-blue-600"
+              activeTab === entry.aiReplies.length
+                ? "border-b-2 border-red-600 text-red-600"
                 : "text-gray-500 hover:text-gray-700"
             }`}
           >
             Start Blank
           </button>
-          <button
-            onClick={() => handleTabClick(-1)}
-            className={`px-4 py-2 font-medium text-sm focus:outline-none ${
-              activeTab === -1
-                ? "border-b-2 border-red-600 text-red-600"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Provide Instructions
-          </button>
-          <button
-            onClick={() => generateClicked ? handleTabClick(-2) : null}
-            disabled={!generateClicked}
-            className={`px-4 py-2 font-medium text-sm focus:outline-none ${
-              activeTab === -2
-                ? "border-b-2 border-blue-500 text-blue-600"
-                : "text-gray-500 hover:text-gray-700"
-            } ${!generateClicked ? 'cursor-not-allowed opacity-50' : ''}`}
-          >
-            See Generated Reply
-          </button>
-        </>
-      ) : (
-        entry.aiReplies.map((reply, index) => (
-          <button
-            key={index}
-            onClick={(e) => handleTabClick(index, e)}
-            className={`px-4 py-2 font-medium text-sm focus:outline-none ${
-              activeTab === index
-                ? "border-b-2 border-blue-500 text-blue-600"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            {reply.label}
-          </button>
-        ))
+          
       )}
-      <SplitViewPopup />
-      {!showAIFeatures && (
-        <button
-          onClick={() => handleTabClick(entry.aiReplies.length)}
-          className={`px-4 py-2 font-medium text-sm focus:outline-none ${
-            activeTab === entry.aiReplies.length
-              ? "border-b-2 border-red-600 text-red-600"
-              : "text-gray-500 hover:text-gray-700"
-          }`}
-        >
-          Start Blank
-        </button>
-        
-      )}
-      
-    </div>
-    <div className="p-4">
-      {showAIFeatures && activeTab === 0 && (
+      </div>
+      <div className="p-4">
+        {showAIFeatures && activeTab === 0 && (
+          <div className="bg-white p-4 border rounded">
+            <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
+            {isAIEditButtonClicked && (
+            <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+            )}
+            <textarea
+              id="blankReplyTextarea"
+              className="w-full h-40 p-2 border rounded"
+              value={blankReply}
+              onChange={handleBlankReplyChange}
+              onSelect={handleTextSelect}
+              placeholder="Write your reply here..."
+            />
+
+            <div className="mt-2 flex gap-2">
+              <button
+                onClick={() => handleSendReply(blankReply)}
+                className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+              >
+                Send Reply
+              </button>
+              <button
+                onClick={handleStartBlank}
+                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
+              >
+                Clear
+              </button>
+              <button
+                onClick={() => {
+                  setShowAIEditModal(true);
+                  setIsAIEditButtonClicked(true);
+                }}
+                className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+              >
+                AI Edit
+              </button>
+            </div>
+          </div>
+        )}
+
+        {showAIFeatures && activeTab === -2 && generateClicked && (
+          <div className="bg-white p-4 border rounded">
+            <h3 className="font-semibold text-gray-600 mb-2">Generated AI Reply</h3>
+            {isAIEditButtonClicked && (
+            <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+            )}
+            <textarea
+              className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
+              value={generatedReply} 
+              onChange={(e) => handleAIReplyChange(-2, e.target.value)} 
+              readOnly 
+            />
+              <button
+                onClick={() => handleSendReply(generatedReply)}
+                className="bg-blue-600 text-white px-4 py-1 mr-2 rounded hover:bg-blue-700"
+              >
+                Send Reply
+              </button>
+              <button
+                className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+              >
+                Regenerate
+              </button>
+              {showAIFeatures && (
+              <button
+              onClick={() => {
+                setShowAIEditModal(true);
+                setIsAIEditButtonClicked(true);
+              }}
+              className="ml-2 bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+            >
+              AI Edit
+            </button>          
+            )}
+              <div className="relative mt-3">
+              <button
+                onClick={() => handleRateButtonClick(activeTab)}
+                className="inline-flex items-center text-black py-1 cursor-pointer"
+              >
+                Rate this Reply
+                <span
+                  className={`ml-2 transform ${showRating[activeTab] ? 'rotate-180' : 'rotate-0'} transition-transform`}
+                >
+                  ▼
+                </span>
+              </button>
+            </div>
+            {showRating[activeTab] && (
+              <>
+                <div className="mt-3">
+                  <label className="text-sm font-medium text-gray-700">Rating:</label>
+                  <div className="flex gap-1 mt-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => handleRatingChange(activeTab, star)}
+                        className={`text-xl ${ratings[activeTab] >= star ? "text-yellow-500" : "text-gray-300"}`}
+                      >
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
+                  <textarea
+                    className="w-full p-2 border rounded mt-1 bg-gray-50"
+                    value={feedback[activeTab]}
+                    onChange={(e) => handleFeedbackChange(activeTab, e.target.value)}
+                    placeholder="Optional: Share more thoughts..."
+                  />
+                </div>
+                <div className="mt-3">
+                  <button
+                    onClick={handleSubmitRating}
+                    className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {showAIFeatures && (activeTab === -1) && (
         <div className="bg-white p-4 border rounded">
+          <h3 className="font-semibold text-gray-600 mb-2">Set AI Instructions</h3>
+          <div
+            className="space-y-2"
+            style={{
+              maxHeight: '100px',
+              overflowY: 'auto', 
+            }}
+          >
+            {instructionOptions.map((instruction, index) => (
+              <label key={index} className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="form-checkbox"
+                  checked={selectedInstructions.includes(instruction)}
+                  onChange={() => handleInstructionToggle(instruction)}
+                />
+                <span className="ml-2">{instruction}</span>
+              </label>
+            ))}
+          </div>
+          <textarea
+            className="w-full p-2 border rounded mt-4"
+            placeholder="Add your own instruction..."
+            value={customInstruction}
+            onChange={(e) => setCustomInstruction(e.target.value)}
+          />
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={handleGenerateReplyClick}
+              className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Generate AI Reply
+            </button>
+            
+          </div>
+        </div>
+        )}
+        {!showAIFeatures && activeTab < entry.aiReplies.length && (
+          <>
+            {
+              isAIEditButtonClicked && (
+                <button onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+              )
+            }
+            <textarea
+              className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
+              value={aiEditedContent || entry.aiReplies[activeTab]?.content}
+              onChange={(e) => handleAIReplyChange(activeTab, e.target.value)}
+              readOnly={aiEditedContent ? true : false}
+            />
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={() => handleSendReply(entry.aiReplies[activeTab].content, true)}
+                className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+              >
+                Send Reply
+              </button>
+              <button
+                className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+              >
+                Regenerate
+              </button>
+              <button
+                onClick={() => {
+                  setShowAIEditModal(true);
+                  setIsAIEditButtonClicked(true);
+                }}
+                className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+              >
+                AI Edit
+              </button>
+            </div>
+            <div className="relative mt-3">
+              <button
+                onClick={() => handleRateButtonClick(activeTab)}
+                className="inline-flex items-center text-black py-1 cursor-pointer"
+              >
+                Rate this Reply
+                <span
+                  className={`ml-2 transform ${showRating[activeTab] ? 'rotate-180' : 'rotate-0'} transition-transform`}
+                >
+                  ▼
+                </span>
+              </button>
+            </div>
+            {showRating[activeTab] && (
+              <>
+                <div className="mt-3">
+                  <label className="text-sm font-medium text-gray-700">Rating:</label>
+                  <div className="flex gap-1 mt-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => handleRatingChange(activeTab, star)}
+                        className={`text-xl ${ratings[activeTab] >= star ? "text-yellow-500" : "text-gray-300"}`}
+                      >
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
+                  <textarea
+                    className="w-full p-2 border rounded mt-1 bg-gray-50"
+                    value={feedback[activeTab]}
+                    onChange={(e) => handleFeedbackChange(activeTab, e.target.value)}
+                    placeholder="Optional: Share more thoughts..."
+                  />
+                </div>
+                <div className="mt-3">
+                  <button
+                    onClick={handleSubmitRating}
+                    className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </>
+            )}
+          </>
+        )}
+        {!showAIFeatures && activeTab==3 && (
+          <div className="bg-white p-4 border rounded">
           <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
           {isAIEditButtonClicked && (
-          <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+            <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
           )}
           <textarea
             id="blankReplyTextarea"
@@ -1121,340 +1451,90 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
               Clear
             </button>
             <button
-              onClick={() => {
-                setShowAIEditModal(true);
-                setIsAIEditButtonClicked(true);
-              }}
-              className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
-            >
-              AI Edit
-            </button>
-          </div>
-        </div>
-      )}
-
-      {showAIFeatures && activeTab === -2 && generateClicked && (
-        <div className="bg-white p-4 border rounded">
-          <h3 className="font-semibold text-gray-600 mb-2">Generated AI Reply</h3>
-          {isAIEditButtonClicked && (
-          <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
-          )}
-          <textarea
-            className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
-            value={generatedReply} 
-            onChange={(e) => handleAIReplyChange(-2, e.target.value)} 
-            readOnly 
-          />
-            <button
-              onClick={() => handleSendReply(generatedReply)}
-              className="bg-blue-600 text-white px-4 py-1 mr-2 rounded hover:bg-blue-700"
-            >
-              Send Reply
-            </button>
-            <button
-              className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-            >
-              Regenerate
-            </button>
-            {showAIFeatures && (
-            <button
-            onClick={() => {
-              setShowAIEditModal(true);
-              setIsAIEditButtonClicked(true);
-            }}
-            className="ml-2 bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
-          >
-            AI Edit
-          </button>          
-          )}
-            <div className="relative mt-3">
-            <button
-              onClick={() => handleRateButtonClick(activeTab)}
-              className="inline-flex items-center text-black py-1 cursor-pointer"
-            >
-              Rate this Reply
-              <span
-                className={`ml-2 transform ${showRating[activeTab] ? 'rotate-180' : 'rotate-0'} transition-transform`}
+                onClick={() => {
+                  setShowAIEditModal(true);
+                  setIsAIEditButtonClicked(true);
+                }}
+                className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
               >
-                ▼
-              </span>
-            </button>
+                AI Edit
+              </button>
           </div>
-          {showRating[activeTab] && (
-            <>
-              <div className="mt-3">
-                <label className="text-sm font-medium text-gray-700">Rating:</label>
-                <div className="flex gap-1 mt-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      onClick={() => handleRatingChange(activeTab, star)}
-                      className={`text-xl ${ratings[activeTab] >= star ? "text-yellow-500" : "text-gray-300"}`}
-                    >
-                      ★
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="mt-3">
-                <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
-                <textarea
-                  className="w-full p-2 border rounded mt-1 bg-gray-50"
-                  value={feedback[activeTab]}
-                  onChange={(e) => handleFeedbackChange(activeTab, e.target.value)}
-                  placeholder="Optional: Share more thoughts..."
-                />
-              </div>
-              <div className="mt-3">
-                <button
-                  onClick={handleSubmitRating}
-                  className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-                >
-                  Submit
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      )}
 
-      {showAIFeatures && (activeTab === -1) && (
-      <div className="bg-white p-4 border rounded">
-        <h3 className="font-semibold text-gray-600 mb-2">Set AI Instructions</h3>
-        <div
-          className="space-y-2"
-          style={{
-            maxHeight: '100px',
-            overflowY: 'auto', 
-          }}
-        >
-          {instructionOptions.map((instruction, index) => (
-            <label key={index} className="flex items-center">
-              <input
-                type="checkbox"
-                className="form-checkbox"
-                checked={selectedInstructions.includes(instruction)}
-                onChange={() => handleInstructionToggle(instruction)}
-              />
-              <span className="ml-2">{instruction}</span>
-            </label>
-          ))}
         </div>
-        <textarea
-          className="w-full p-2 border rounded mt-4"
-          placeholder="Add your own instruction..."
-          value={customInstruction}
-          onChange={(e) => setCustomInstruction(e.target.value)}
-        />
-        <div className="flex gap-2 mt-2">
-          <button
-            onClick={handleGenerateReplyClick}
-            className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Generate AI Reply
-          </button>
-          
-        </div>
-      </div>
-      )}
-      {!showAIFeatures && activeTab < entry.aiReplies.length && (
-        <>
-          {
-            isAIEditButtonClicked && (
-              <button onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
-            )
-          }
-          <textarea
-            className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
-            value={aiEditedContent || entry.aiReplies[activeTab]?.content}
-            onChange={(e) => handleAIReplyChange(activeTab, e.target.value)}
-            readOnly={aiEditedContent ? true : false}
-          />
-          <div className="flex gap-2 mt-2">
-            <button
-              onClick={() => handleSendReply(entry.aiReplies[activeTab].content, true)}
-              className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-            >
-              Send Reply
-            </button>
-            <button
-              className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-            >
-              Regenerate
-            </button>
-            <button
-              onClick={() => {
-                setShowAIEditModal(true);
-                setIsAIEditButtonClicked(true);
-              }}
-              className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
-            >
-              AI Edit
-            </button>
-          </div>
-          <div className="relative mt-3">
-            <button
-              onClick={() => handleRateButtonClick(activeTab)}
-              className="inline-flex items-center text-black py-1 cursor-pointer"
-            >
-              Rate this Reply
-              <span
-                className={`ml-2 transform ${showRating[activeTab] ? 'rotate-180' : 'rotate-0'} transition-transform`}
-              >
-                ▼
-              </span>
-            </button>
-          </div>
-          {showRating[activeTab] && (
-            <>
-              <div className="mt-3">
-                <label className="text-sm font-medium text-gray-700">Rating:</label>
-                <div className="flex gap-1 mt-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      onClick={() => handleRatingChange(activeTab, star)}
-                      className={`text-xl ${ratings[activeTab] >= star ? "text-yellow-500" : "text-gray-300"}`}
-                    >
-                      ★
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="mt-3">
-                <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
-                <textarea
-                  className="w-full p-2 border rounded mt-1 bg-gray-50"
-                  value={feedback[activeTab]}
-                  onChange={(e) => handleFeedbackChange(activeTab, e.target.value)}
-                  placeholder="Optional: Share more thoughts..."
-                />
-              </div>
-              <div className="mt-3">
-                <button
-                  onClick={handleSubmitRating}
-                  className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-                >
-                  Submit
-                </button>
-              </div>
-            </>
-          )}
-        </>
-      )}
-      {!showAIFeatures && activeTab==3 && (
-        <div className="bg-white p-4 border rounded">
-        <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
-        {isAIEditButtonClicked && (
-          <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
         )}
-        <textarea
-          id="blankReplyTextarea"
-          className="w-full h-40 p-2 border rounded"
-          value={blankReply}
-          onChange={handleBlankReplyChange}
-          onSelect={handleTextSelect}
-          placeholder="Write your reply here..."
-        />
-
-        <div className="mt-2 flex gap-2">
-          <button
-            onClick={() => handleSendReply(blankReply)}
-            className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-          >
-            Send Reply
-          </button>
-          <button
-            onClick={handleStartBlank}
-            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
-          >
-            Clear
-          </button>
-          <button
-              onClick={() => {
-                setShowAIEditModal(true);
-                setIsAIEditButtonClicked(true);
-              }}
-              className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
-            >
-              AI Edit
-            </button>
-        </div>
-
       </div>
-      )}
-    </div>
-    </div>
-        <div className="mt-10">
-          <Link to="/" className="text-blue-500 hover:underline">
-            Back to Inbox
-          </Link>
-        </div>
-        <div className="flex border-b mt-6">
-    </div>
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg">
-            <h2 className="text-lg font-bold mb-4">Confirmation</h2>
-            <p>Your email has been sent successfully!</p>
-            <button
-              onClick={closeModal}
-              className="mt-4 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-            >
-              Close
-            </button>
+      </div>
+          <div className="mt-10">
+            <Link to="/" className="ml-5 text-blue-500 hover:underline">
+              Back to Inbox
+            </Link>
           </div>
-        </div>
-      )}
-      {showRatingModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg">
-            <h2 className="text-lg font-bold mb-4">Rating Submitted</h2>
-            <p>Thank you for your feedback!</p>
-            <button
-              onClick={handleCloseRatingModal}
-              className="mt-4 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-      {showAIEditModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded shadow-lg w-80">
-              <h2 className="text-lg font-bold mb-4">AI Edit Options</h2>
-              <div className="space-y-2">
-                <label className="flex items-center">
-                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.grammar} onChange={() => handleAIEditOptionChange('grammar')} />
-                  <span className="ml-2">Grammar</span>
-                </label>
-                <label className="flex items-center">
-                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.empathy} onChange={() => handleAIEditOptionChange('empathy')} />
-                  <span className="ml-2">Empathy</span>
-                </label>
-                <label className="flex items-center">
-                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.clarity} onChange={() => handleAIEditOptionChange('clarity')} />
-                  <span className="ml-2">Clarity</span>
-                </label>
-                <label className="flex items-center">
-                  <input type="checkbox" className="form-checkbox" checked={aiEditOptions.professionalism} onChange={() => handleAIEditOptionChange('professionalism')} />
-                  <span className="ml-2">Professionalism</span>
-                </label>
-              </div>
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={handleAIEditSubmit}
-                  className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-                >
-                  Apply Edits
-                </button>
-              </div>
+          <div className="flex border-b mt-6">
+      </div>
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded shadow-lg">
+              <h2 className="text-lg font-bold mb-4">Confirmation</h2>
+              <p>Your email has been sent successfully!</p>
+              <button
+                onClick={closeModal}
+                className="mt-4 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+              >
+                Close
+              </button>
             </div>
           </div>
         )}
-    </div>
-  ); 
+        {showRatingModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded shadow-lg">
+              <h2 className="text-lg font-bold mb-4">Rating Submitted</h2>
+              <p>Thank you for your feedback!</p>
+              <button
+                onClick={handleCloseRatingModal}
+                className="mt-4 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+        {showAIEditModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white p-6 rounded shadow-lg w-80">
+                <h2 className="text-lg font-bold mb-4">AI Edit Options</h2>
+                <div className="space-y-2">
+                  <label className="flex items-center">
+                    <input type="checkbox" className="form-checkbox" checked={aiEditOptions.grammar} onChange={() => handleAIEditOptionChange('grammar')} />
+                    <span className="ml-2">Grammar</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input type="checkbox" className="form-checkbox" checked={aiEditOptions.empathy} onChange={() => handleAIEditOptionChange('empathy')} />
+                    <span className="ml-2">Empathy</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input type="checkbox" className="form-checkbox" checked={aiEditOptions.clarity} onChange={() => handleAIEditOptionChange('clarity')} />
+                    <span className="ml-2">Clarity</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input type="checkbox" className="form-checkbox" checked={aiEditOptions.professionalism} onChange={() => handleAIEditOptionChange('professionalism')} />
+                    <span className="ml-2">Professionalism</span>
+                  </label>
+                </div>
+                <div className="mt-4 flex justify-end">
+                  <button
+                    onClick={handleAIEditSubmit}
+                    className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+                  >
+                    Apply Edits
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+      </div>
+    ); 
 };
 
 export default App;

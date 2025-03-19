@@ -209,64 +209,72 @@ function App() {
   
   
 // notes:
-  return (
-    <TabProvider>
+return (
+  <TabProvider>
     <Router>
-      <div className="min-h-screen flex flex-col bg-gray-50">
-        <header className="bg-gray-200 text-gray-800 p-3 flex justify-between items-center border-b fixed top-0 left-0 right-0 z-10">
-          <h1 className="text-lg font-medium">Inbox Messaging System</h1>
-          <div className='flex items-center space-x-6'>
-            <TabContext.Consumer>
-              {context => (
-                <ToggleSwitch 
-                  isOn={context?.showAIFeatures ?? false} 
-                  onToggle={() => {
-                    if (context?.showAIFeatures) {
-                      context.setActiveTab(0);
-                    }
-                    context?.setShowAIFeatures(!context.showAIFeatures);
-                  }} 
-                  label="AI Features Mode 2" 
-                />
-              )}
-            </TabContext.Consumer>
+      <div className="min-h-screen flex flex-col bg-white">
+        <header className="bg-white text-black p-2 flex justify-between items-center border-b fixed top-0 left-0 right-0 z-10 shadow-sm">
+          <div className="flex items-center space-x-4">
+            <button className="text-gray-600 hover:text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <h1 className="text-lg font-semibold">Outlook AI</h1>
           </div>
-          <nav className="space-x-6">
-            <Link to="/" className="text-gray-800 hover:text-blue-600">Inbox</Link>
-            <Link to="/settings" className="text-gray-800 hover:text-blue-600">Settings</Link>
+          <div className="flex-grow max-w-xl mx-4">
+            <input 
+              type="text" 
+              placeholder="Search"
+              className="w-full p-2 rounded-md bg-gray-100 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+          <nav className="flex items-center space-x-4">
+            <button className="text-gray-600 hover:text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+            </button>
+            <button className="text-gray-600 hover:text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
+            <button className="text-gray-600 hover:text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
           </nav>
         </header>
-        <div className="flex flex-1 pt-12">
-          <aside className="w-1/6 bg-gray-100 border-r">
-            <div className="bg-blue-200 border-b p-3 text-center font-semibold">Categories</div>
-            <nav className="overflow-y-auto">
-              {[
-                { label: "Labs/Diag - 8", id: "labs" },
-                { label: "Prescriptions - 6", id: "prescriptions" },
-                { label: "Messages - 5", id: "messages" },
-                { label: "Images - 5", id: "images" },
-                { label: "Documents - 0", id: "documents" },
-                { label: "Patient Portal - 5", id: "portal" },
-                { label: "Scheduled", id: "scheduled" },
-                { label: "Unmatched - 0", id: "unmatched" },
-                { label: "Sent Items - 0", id: "sentItems" },
-              ].map((item) => (
+        
+        <div className="flex flex-1 pt-14">
+          <aside className="w-64 bg-gray-100 text-black p-4 min-h-screen border-r">
+            <nav className="space-y-1">
+              {["Inbox", "Drafts", "Sent Items", "Deleted Items", "Junk Email", "Archive", "Notes"].map((folder, index) => (
                 <button
-                  key={item.id}
-                  className={`block p-3 text-left w-full hover:bg-blue-100 border-b transition-colors ${
-                    item.id === "messages" ? "bg-blue-500 text-white" : "bg-white"
-                  }`}
+                  key={index}
+                  className="block w-full p-2 text-left hover:bg-blue-100 rounded-md transition duration-200 flex items-center"
                 >
-                  {item.label}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  {folder}
                 </button>
               ))}
             </nav>
           </aside>
-          <main className="w-5/6 bg-white overflow-auto">
-            <Routes>
-              <Route path="/" element={<Inbox dummyData={dummyData} />} />
-              <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} />} />
-            </Routes>
+          
+          <main className="flex-1 bg-white overflow-auto flex">
+            <div className="w-2/5 border-r">
+              <Inbox dummyData={dummyData} />
+            </div>
+            <div className="w-3/5 p-4">
+              <Routes>
+                <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} />} />
+              </Routes>
+            </div>
           </main>
         </div>
       </div>
@@ -274,6 +282,7 @@ function App() {
   </TabProvider>
   );
 }
+
 
 type AIEdits = {
   content: string;
@@ -284,8 +293,6 @@ type AIReply = {
   content: string;
   AIEdits: AIEdits;
 };
-
-
 
 type InboxEntry = {
   mrn: string;
@@ -306,85 +313,77 @@ type InboxProps = {
 
 const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
   const navigate = useNavigate();
+  const [selectedEntry, setSelectedEntry] = useState<string | null>(null);
 
   const handleRowClick = (entry: InboxEntry) => {
+    setSelectedEntry(entry.mrn);
     navigate(`/message/${entry.mrn}`);
   };
 
-  const getUrgencyColor = (urgency: string) => {
+  const getUrgencyIcon = (urgency: string) => {
     switch (urgency) {
       case 'High Urgency':
-        return 'bg-red-500 text-white';
+        return '🔴';
       case 'Medium Urgency':
-        return 'bg-orange-500 text-black';
+        return '🟠';
       case 'Low Urgency':
-        return 'bg-yellow-500 text-black';
+        return '🟡';
       default:
-        return 'bg-gray-200 text-gray-700';
+        return '';
     }
   };
 
   const getUrgency = (categories: string[]) => {
     const urgencyTags = ['High Urgency', 'Medium Urgency', 'Low Urgency'];
-    return categories.find(category => urgencyTags.includes(category)) || 'N/A';
+    return categories.find(category => urgencyTags.includes(category)) || '';
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-bold mb-4 text-gray-800">Inbox Overview</h2>
-      <table className="w-full border-collapse text-sm bg-gray-50">
-        <thead>
-          <tr className="bg-blue-100 text-gray-700">
-            <th className="border p-2 text-left">MRN</th>
-            <th className="border p-2 text-left">Last Name</th>
-            <th className="border p-2 text-left">First Name</th>
-            <th className="border p-2 text-left">DOB</th>
-            <th className="border p-2 text-left">Subject</th>
-            <th className="border p-2 text-left">Date Received</th>
-            <th className="border p-2 text-left">From User</th>
-            <th className="border p-2 text-left">Categories</th>
-            <th className='border p-2 text-left'>Urgency</th>
-          </tr>
-        </thead>
-        <tbody>
-        {dummyData.map((entry, index) => {
-            const urgency = getUrgency(entry.categories);
-            const urgencyColor = getUrgencyColor(urgency);
-            const filteredCategories = entry.categories.filter(category => !['High Urgency', 'Medium Urgency', 'Low Urgency'].includes(category));
-            
-            return (
-              <tr
-                key={entry.mrn}
-                className={`cursor-pointer hover:bg-blue-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-100"}`}
-                onClick={() => handleRowClick(entry)}
-              >
-                <td className="border p-2">{entry.mrn}</td>
-                <td className="border p-2">{entry.lastName}</td>
-                <td className="border p-2">{entry.firstName}</td>
-                <td className="border p-2">{entry.dob}</td>
-                <td className="border p-2">{entry.subject}</td>
-                <td className="border p-2">{entry.dateReceived}</td>
-                <td className="border p-2">{entry.fromUser}</td>
-                <td className="border p-2">
-                  {filteredCategories.map((category, index) => (
-                    <span
-                      key={index}
-                      className="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2 py-1 rounded-full"
-                    >
-                      {category}
-                    </span>
-                  ))}
-                </td>
-                <td className="border p-2">
-                  <span className={`inline-block ${urgencyColor} text-xs font-medium px-2 py-1 rounded-full`}>
-                    {urgency}
-                  </span>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <div className="h-full overflow-auto">
+      <div className="sticky top-0 bg-white z-10 p-2 border-b flex items-center">
+        <input type="checkbox" className="mr-2" />
+        <button className="text-gray-600 hover:text-black mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+          </svg>
+        </button>
+        <button className="text-gray-600 hover:text-black mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+          </svg>
+        </button>
+        <button className="text-gray-600 hover:text-black">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          </svg>
+        </button>
+      </div>
+      {dummyData.map((entry) => {
+        const urgency = getUrgency(entry.categories);
+        const urgencyIcon = getUrgencyIcon(urgency);
+        
+        return (
+          <div
+            key={entry.mrn}
+            className={`flex items-center p-2 border-b hover:bg-blue-50 cursor-pointer ${selectedEntry === entry.mrn ? 'bg-blue-100' : ''}`}
+            onClick={() => handleRowClick(entry)}
+          >
+            <input type="checkbox" className="mr-2" onClick={(e) => e.stopPropagation()} />
+            <div className="w-6 text-center">{urgencyIcon}</div>
+            <div className="flex-grow">
+              <div className="flex ">
+                <span className="font-semibold">{entry.fromUser}</span>
+                <span className="text-sm text-gray-500 ml-10">{(entry.dateReceived)}</span>
+              </div>
+              <div className="flex ">
+                <span className="text-sm font-medium truncate">{entry.subject}</span>
+                <span className="flex text-sm text-gray-500 ml-5">{entry.categories.map(cat => `#${cat}`).join(' ')}</span>
+              </div>
+              <p className="text-sm text-gray-600 truncate">{entry.message}</p>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };

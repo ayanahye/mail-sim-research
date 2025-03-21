@@ -1029,6 +1029,12 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       </div>
     );
   }
+
+  const [showReplySection, setShowReplySection] = useState(false);
+
+  const toggleReplySection = () => {
+    setShowReplySection(!showReplySection);
+  };
   
   if (!entryData) {
     return <div className="p-6 text-gray-700">Message not found.</div>;
@@ -1038,11 +1044,27 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     <div className="h-full flex flex-col bg-white overflow-auto">
       <div className="p-4 border-b">
         <h2 className="text-xl font-semibold mb-2">{entry.subject}</h2>
-        <div className="items-center text-sm text-gray-600">
-          <div>Myname Surname &lt;myemail@mail.com&gt;</div>
-          <div className="mr-4 mt-2 mb-5">To: {entry.to}</div>
+        <div className="text-sm text-gray-600">
+       <div className="flex items-center">
+        <span>Myname Surname &lt;myemail@mail.com&gt;</span>
+        <svg
+          className="w-4 h-4 ml-2 cursor-pointer"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          onClick={toggleReplySection} 
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+          />
+        </svg>
         </div>
-
+          <div className="mr-4 mt-2 mb-5">To: {entry.to}</div>
+         </div>
             <div className="flex flex-wrap">
               {entryData?.categories.map((category, index) => {
                 let colorClass = "bg-blue-100 text-blue-800";
@@ -1064,8 +1086,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
                 );
               })}
             </div>
-      </div>
-      
+        </div>
+        {showReplySection && (
+        <div>
         <div className="items-center px-4 pt-4">
           <h3 className="font-semibold text-gray-600 pb-2">Reply: (Click to Edit)</h3>
           {!showAIFeatures && (
@@ -1415,24 +1438,26 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         </div>
 
         <div className="flex-grow p-4 overflow-auto">
-        <div className="bg-gray-50 p-4 rounded mb-4 border">
-          <p className="text-sm text-gray-700">{entryData?.message}</p>
-        </div>
         {sentReplies.length > 0 && (
           <div className="mb-4">
             <h3 className="font-semibold text-gray-600 mb-2">Sent Replies</h3>
-            {sentReplies.map((sent, index) => (
-              <div key={index} className="bg-blue-50 p-3 rounded mb-2 border">
-                <p className="text-sm text-gray-700">{sent.content}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Sent at {sent.timestamp.toLocaleTimeString()} on{" "}
-                  {sent.timestamp.toLocaleDateString()}
-                </p>
-              </div>
-            ))}
+            {sentReplies
+              .slice() 
+              .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) // Ensure timestamps are Date objects
+              .map((sent, index) => (
+                <div key={index} className="bg-blue-50 p-3 rounded mb-2 border">
+                  <p className="text-sm text-gray-700">{sent.content}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Sent at {new Date(sent.timestamp).toLocaleTimeString()} on{" "}
+                    {new Date(sent.timestamp).toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
           </div>
         )}
-
+        <div className="bg-gray-50 p-4 rounded mb-4 border">
+          <p className="text-sm text-gray-700">{entryData?.message}</p>
+        </div>
         </div>
         
           <div className="mt-10">
@@ -1503,6 +1528,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
               </div>
             </div>
           )}
+          </div>
+          )};
       </div>
     ); 
 };

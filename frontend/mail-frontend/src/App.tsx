@@ -484,7 +484,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   }, [mrn, entryData]);
 
   const [showModal, setShowModal] = useState(false);
-  const [sentReplies, setSentReplies] = useState<{ content: string; timestamp: Date }[]>([]);
+  const [sentReplies, setSentReplies] = useState<
+  { emailId: string; content: string; timestamp: Date }[]
+>([]);
+
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [showRating, setShowRating] = useState<{ [key: number]: boolean }>({});
@@ -688,27 +691,33 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   const handleSendReply = (replyContent: string, isAIReply: boolean = false) => {
     console.log("send Reply clicked");
-    if (replyContent.trim()) {
+  
+    if (replyContent.trim() && entryData?.mrn) {  
       setSentReplies((prevReplies) => [
         ...prevReplies,
-        { content: replyContent, timestamp: new Date() },
+        { emailId: entryData.mrn, content: replyContent, timestamp: new Date() }
       ]);
+  
       if (isAIReply) {
-        const updatedReplies = entry.aiReplies.map(reply => {
+        const updatedReplies = entry.aiReplies.map((reply) => {
           if (reply.content === replyContent) {
-            return { ...reply, content: reply.content };
+            return { ...reply, content: reply.content }; 
           }
           return reply;
         });
+  
         setEntry({ ...entry, aiReplies: updatedReplies });
       }
+  
       setShowModal(true);
       setBlankReply("");
       setShowBlankReplyForm(false);
     } else {
-      console.error("Reply cannot be empty");
+      console.error("Reply cannot be empty or entryData.mrn is undefined");
     }
   };
+  
+  
 
   const closeModal = () => {
     setShowModal(false);
@@ -1451,17 +1460,20 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           <div className="mb-4">
             <h3 className="font-semibold text-gray-600 mb-2">Sent Replies</h3>
             {sentReplies
-              .slice() 
-              .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) // Ensure timestamps are Date objects
-              .map((sent, index) => (
-                <div key={index} className="bg-blue-50 p-3 rounded mb-2 border">
-                  <p className="text-sm text-gray-700">{sent.content}</p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Sent at {new Date(sent.timestamp).toLocaleTimeString()} on{" "}
-                    {new Date(sent.timestamp).toLocaleDateString()}
-                  </p>
-                </div>
-              ))}
+            .filter((sent) => sent.emailId === entryData?.mrn) 
+            .slice()
+            .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) 
+            .map((sent, index) => (
+              <div key={index} className="bg-blue-50 p-3 rounded mb-2 border">
+                <p className="text-sm text-gray-700">{sent.content}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Sent at {new Date(sent.timestamp).toLocaleTimeString()} on{" "}
+                  {new Date(sent.timestamp).toLocaleDateString()}
+                </p>
+              </div>
+            ))}
+
+
           </div>
         )}
         <div className="bg-gray-50 p-4 rounded mb-4 border">

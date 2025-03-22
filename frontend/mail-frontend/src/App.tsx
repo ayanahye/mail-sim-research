@@ -238,7 +238,7 @@ return (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <h1 className="text-lg font-semibold">Outlook AI</h1>
+            <h1 className="text-lg font-semibold">Tangent Mail</h1>
           </div>
           <div className="flex-grow max-w-xl mx-4">
             <input 
@@ -1466,32 +1466,49 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         )}
         </div>
 
-        <div className="flex-grow p-4 overflow-auto">
-        {sentReplies.length > 0 && (
-          <div className="mb-4">
-            <h3 className="font-semibold text-gray-600 mb-2">Sent Replies</h3>
-            {sentReplies
-            .filter((sent) => sent.emailId === entryData?.mrn) 
-            .slice()
-            .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) 
-            .map((sent, index) => (
-              <div key={index} className="bg-blue-50 p-3 rounded mb-2 border">
-                <p className="text-sm text-gray-700">{sent.content}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Sent at {new Date(sent.timestamp).toLocaleTimeString()} on{" "}
-                  {new Date(sent.timestamp).toLocaleDateString()}
+        <div className="flex-grow p-4 overflow-auto bg-gray-100">
+          {sentReplies.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-gray-600 mb-4 text-lg">Replies</h3>
+              {sentReplies
+                .filter((sent) => sent.emailId === entryData?.mrn)
+                .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+                .map((sent, index) => (
+                  <div
+                    key={index}
+                    className="border rounded-lg bg-white shadow-sm p-4 mb-3 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-center mb-2">
+                      <div className="w-10 h-10 rounded-full bg-pink-400 flex items-center justify-center text-white font-bold mr-3">
+                        T
+                      </div>
+                      <div>
+                        <p className="font-semibold">You</p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(sent.timestamp).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-800">{sent.content}</p>
+                  </div>
+                ))}
+            </div>
+          )}
+          <div className="border rounded-lg bg-white shadow-sm p-4 mb-6">
+            <div className="flex items-center mb-2">
+              <div className="w-10 h-10 rounded-full bg-purple-400 flex items-center justify-center text-white font-bold mr-3">
+                {entryData?.fromUser.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <p className="font-semibold">{entryData?.fromUser}</p>
+                <p className="text-xs text-gray-500">
+                  {new Date(entryData?.dateReceived).toLocaleString()}
                 </p>
               </div>
-            ))}
-
-
+            </div>
+            <p className="text-sm text-gray-800">{entryData?.message}</p>
           </div>
-        )}
-        <div className="bg-gray-50 p-4 rounded mb-4 border">
-          <p className="text-sm text-gray-700">{entryData?.message}</p>
         </div>
-        </div>
-        
           <div className="mt-10">
             <Link to="/" className="ml-5 text-blue-500 hover:underline">
               Back to Inbox

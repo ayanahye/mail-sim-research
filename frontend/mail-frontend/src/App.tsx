@@ -1039,7 +1039,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     return (
       <div className='px-2 mt-10'>
         <h3>Make Additional Changes:</h3>
-        <textarea value={editedText} onChange={(e) => {
+        <textarea defaultValue={editedTextWithSpaces || ""} onChange={(e) => {
           if (activeTab < 3) {
             handleTextChange(e);
           } else {
@@ -1197,7 +1197,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <div className="bg-white p-4 border rounded">
         <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
         {isAIEditButtonClicked && (
-        <button className="pb-2" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
+        <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
         )}
         <textarea
         id="blankReplyTextarea"
@@ -1238,7 +1238,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <div className="bg-white p-4 border rounded">
         <h3 className="font-semibold text-gray-600 mb-2">Generated AI Reply</h3>
         {isAIEditButtonClicked && (
-        <button className="pb-2" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
+        <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
         )}
         <textarea
         className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
@@ -1352,7 +1352,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <>
         {
         isAIEditButtonClicked && (
-          <button className="pb-2" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
+          <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
         )
         }
         <textarea
@@ -1427,7 +1427,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <div className="bg-white p-4 border rounded">
         <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
         {isAIEditButtonClicked && (
-        <button className="pb-2" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
+        <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
         )}
         <textarea
         id="blankReplyTextarea"

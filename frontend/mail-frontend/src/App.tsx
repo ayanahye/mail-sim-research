@@ -790,6 +790,12 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   const editedTextWithSpaces = editedText.replace(/([.,!?;])/g, '$1 ');
 
+  const [showReplySection, setShowReplySection] = useState(false);
+
+  const toggleReplySection = () => {
+    setShowReplySection(!showReplySection);
+  };
+
   // fix
   useEffect(() => {
     // update here need to modify when doing actuall llm integration
@@ -995,12 +1001,20 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   
 
   if (showDiff) {
-    console.log("blank reply", blankReply)
-    let originalText = (!showAIFeatures && activeTab < 3) ? prevOriginalText : (showAIFeatures && activeTab > 0) ? prevInstructionsReply : prevBlankReply;
-    let editedText = editedTextWithSpaces;
-
-    console.log("test prev instructions", prevInstructionsReply)
+    console.log("blank reply", blankReply);
+  
+    let originalText = (!showAIFeatures && activeTab < 3) 
+      ? prevOriginalText || ""  
+      : (showAIFeatures && activeTab > 0) 
+        ? prevInstructionsReply || "" 
+        : prevBlankReply || "";
+  
+    let editedText = editedTextWithSpaces || "";
+  
+    console.log("test prev instructions", prevInstructionsReply);
     const highlightedText = highlightDifferences(originalText, editedText);
+  
+    console.log('even here');
   
     return (
       <div className='px-2 mt-10'>
@@ -1029,12 +1043,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       </div>
     );
   }
-
-  const [showReplySection, setShowReplySection] = useState(false);
-
-  const toggleReplySection = () => {
-    setShowReplySection(!showReplySection);
-  };
+  
   
   if (!entryData) {
     return <div className="p-6 text-gray-700">Message not found.</div>;
@@ -1168,7 +1177,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <div className="bg-white p-4 border rounded">
         <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
         {isAIEditButtonClicked && (
-        <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+        <button className="pb-2" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
         )}
         <textarea
         id="blankReplyTextarea"
@@ -1209,7 +1218,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <div className="bg-white p-4 border rounded">
         <h3 className="font-semibold text-gray-600 mb-2">Generated AI Reply</h3>
         {isAIEditButtonClicked && (
-        <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+        <button className="pb-2" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
         )}
         <textarea
         className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
@@ -1323,7 +1332,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <>
         {
         isAIEditButtonClicked && (
-          <button onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+          <button className="pb-2" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
         )
         }
         <textarea
@@ -1398,7 +1407,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <div className="bg-white p-4 border rounded">
         <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
         {isAIEditButtonClicked && (
-        <button className="pb-2" onClick={() => setShowDiff(!showDiff)}>Show Diff</button>
+        <button className="pb-2" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
         )}
         <textarea
         id="blankReplyTextarea"

@@ -409,24 +409,35 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
         return (
           <div
             key={entry.mrn}
-            className={`flex items-center p-2 border-b hover:bg-blue-50 cursor-pointer ${selectedEntry === entry.mrn ? 'bg-blue-100' : ''}`}
+            className="flex items-stretch p-2 border-b cursor-pointer"
             onClick={() => handleRowClick(entry)}
           >
             <input type="checkbox" className="mr-2" onClick={(e) => e.stopPropagation()} />
-            <div className="w-6 text-center">{urgencyIcon}</div>
-            <div className="flex-grow">
-              <div className="flex ">
-                <span className="font-semibold">{entry.fromUser}</span>
-                <span className="text-sm text-gray-500 ml-10">{(entry.dateReceived)}</span>
+            <div
+              className={`flex flex-grow p-2 rounded 
+                ${selectedEntry === entry.mrn 
+                  ? 'bg-gradient-to-r from-blue-200 to-white' 
+                  : 'hover:bg-gradient-to-r hover:from-blue-50 hover:to-white'
+                }`}
+            >
+              <div className="w-6 text-center mr-2">{urgencyIcon}</div>
+              <div className="flex-grow">
+                <div className="flex">
+                  <span className="font-semibold">{entry.fromUser}</span>
+                  <span className="text-sm text-gray-500 ml-10">{entry.dateReceived}</span>
+                </div>
+                <div className="flex">
+                  <span className="text-sm font-medium truncate">{entry.subject}</span>
+                  <span className="flex text-sm text-gray-500 ml-5">
+                    {entry.categories.map((cat) => `#${cat}`).join(' ')}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600 truncate">{entry.message}</p>
               </div>
-              <div className="flex ">
-                <span className="text-sm font-medium truncate">{entry.subject}</span>
-                <span className="flex text-sm text-gray-500 ml-5">{entry.categories.map(cat => `#${cat}`).join(' ')}</span>
-              </div>
-              <p className="text-sm text-gray-600 truncate">{entry.message}</p>
             </div>
           </div>
         );
+
       })}
     </div>
   );
@@ -1041,7 +1052,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           <h3 className='mt-4'>Edited Text:</h3>
           <p>{highlightedText}</p>
         </div>
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-2 mt-4 mb-4">
 
             <>
               <button onClick={handleAccept} className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Accept</button>

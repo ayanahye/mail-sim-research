@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext, useMemo } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 
 /*
@@ -61,18 +61,39 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ isOn, onToggle, label }) =>
 );
 
 function App() {
-
   const BACKEND_URL = "http://localhost:5000";
-  
+
   const [inboxWidth, setInboxWidth] = useState(40); // 40% as default
   const [data, setData] = useState<InboxEntry[]>([]);
-  const [showAIFeatures, setShowAIFeatures] = useState<boolean>(true);
+  const [queue, setQueue] = useState<Omit<InboxEntry, "categories" | "aiReplies">[]>([]);
 
-  const [loadingReplies, setLoadingReplies] = useState<boolean>(false); 
+  const newMessages: Omit<InboxEntry, "categories" | "aiReplies">[] = [
+    {
+      mrn: "123456",
+      lastName: "Smith",
+      firstName: "John",
+      dob: "01/01/1980",
+      subject: "Lab Results",
+      dateReceived: "12/18/2024",
+      fromUser: "Patient",
+      message: "I’ve been waiting for my lab results for what feels like forever...",
+    },
+    {
+      mrn: "234567",
+      lastName: "Doe",
+      firstName: "Jane",
+      dob: "02/02/1985",
+      subject: "Prescription",
+      dateReceived: "12/17/2024",
+      fromUser: "Patient",
+      message:
+        "This situation with my missing prescription has been absolutely unacceptable...",
+    },
+  ];
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -81,79 +102,64 @@ function App() {
   };
 
   const handleMouseUp = () => {
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
   };
 
-
-  const fetchMessageData = async (message: Omit<InboxEntry, 'categories' | 'aiReplies'>) => {
+  const fetchCategoriesAndReplies = async (email: Omit<InboxEntry, "categories" | "aiReplies">) => {
     try {
-
       const response = await fetch(`${BACKEND_URL}/api/get-ai-data`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ patientMessage: message.message }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ patientMessage: email.message }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch AI-generated data');
-      }
+      if (!response.ok) throw new Error("failed to fetch AI-generated data");
 
       const result = await response.json();
 
       const newEntry: InboxEntry = {
-        ...message,
+        ...email,
         categories: result.categories, 
         aiReplies: result.aiReplies.map((reply: any) => ({
           label: reply.label,
           content: reply.content,
-          AIEdits: reply.AIEdits || { content: '' },
+          AIEdits: reply.AIEdits || { content: "" }, 
         })),
       };
 
-      setData((prevData) => [...prevData, newEntry]);
+      setData((prevData) =>
+        prevData.map((entry) =>
+          entry.mrn === email.mrn ? newEntry : entry
+        )
+      );
     } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  const fetchData = async () => {
-    const messages = [
-      {
-        mrn: '123456',
-        lastName: 'Smith',
-        firstName: 'John',
-        dob: '01/01/1980',
-        subject: 'Lab Results',
-        dateReceived: '12/18/2024',
-        fromUser: 'Patient',
-        message:
-          'I’ve been waiting for my lab results for what feels like forever...',
-      },
-      {
-        mrn: '234567',
-        lastName: 'Doe',
-        firstName: 'Jane',
-        dob: '02/02/1985',
-        subject: 'Prescription',
-        dateReceived: '12/17/2024',
-        fromUser: 'Patient',
-        message:
-          'This situation with my missing prescription has been absolutely unacceptable...',
-      },
-    ];
-
-    for (const message of messages) {
-      await fetchMessageData(message); 
+      console.error("Error fetching data:", error);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    const initializedMessages: InboxEntry[] = newMessages.map((message) => ({
+      ...message,
+      categories: [],
+      aiReplies: [], 
+    }));
+
+
+    setData(initializedMessages);
+
+    setQueue(newMessages);
   }, []);
-  
+
+  useEffect(() => {
+    if (queue.length === 0) return; 
+
+    const message = queue[0]; 
+
+    fetchCategoriesAndReplies(message); 
+
+    setQueue((prevQueue) => prevQueue.slice(1)); 
+  }, [queue]);
   
 // notes:
 return (
@@ -286,12 +292,23 @@ type InboxProps = {
 
 const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
   const navigate = useNavigate();
+  const [inboxData, setInboxData] = useState<InboxEntry[]>([]);
   const [selectedEntry, setSelectedEntry] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // rm testing---
+  useEffect(() => {
+    setTimeout(() => {
+      setInboxData(dummyData);
+      setLoading(false);
+    }, 1000);
+  }, [dummyData]);
 
   const handleRowClick = (entry: InboxEntry) => {
     setSelectedEntry(entry.mrn);
     navigate(`/message/${entry.mrn}`);
   };
+
 
   const getUrgencyIcon = (urgency: string) => {
     switch (urgency) {
@@ -311,63 +328,104 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
     return categories.find(category => urgencyTags.includes(category)) || '';
   };
 
+  const processedData = useMemo(() => {
+    return inboxData.map((entry) => ({
+      ...entry,
+      urgency: getUrgency(entry.categories),
+      urgencyIcon: getUrgencyIcon(getUrgency(entry.categories)),
+    }));
+  }, [inboxData]);
+
+  if (loading) {
+    return <div className="text-center p-4">Loading messages...</div>;
+  }
+
   return (
     <div className="h-full overflow-auto">
       <div className="sticky top-0 bg-white p-2 border-b flex items-center mt-2">
         <input type="checkbox" className="mr-2" />
         <button className="text-gray-600 hover:text-black mr-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+              clipRule="evenodd"
+            />
           </svg>
         </button>
         <button className="text-gray-600 hover:text-black mr-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+              clipRule="evenodd"
+            />
           </svg>
         </button>
         <button className="text-gray-600 hover:text-black">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clipRule="evenodd"
+            />
           </svg>
         </button>
       </div>
-      {dummyData.map((entry) => {
-        const urgency = getUrgency(entry.categories);
-        const urgencyIcon = getUrgencyIcon(urgency);
-        
-        return (
+      {processedData.map((entry) => (
+        <div
+          key={entry.mrn}
+          className="flex items-stretch p-2 border-b cursor-pointer"
+          onClick={() => handleRowClick(entry)}
+        >
+          <input
+            type="checkbox"
+            className="mr-2"
+            onClick={(e) => e.stopPropagation()}
+          />
           <div
-            key={entry.mrn}
-            className="flex items-stretch p-2 border-b cursor-pointer"
-            onClick={() => handleRowClick(entry)}
+            className={`flex flex-grow p-2 rounded ${
+              selectedEntry === entry.mrn
+                ? "bg-gradient-to-r from-blue-200 to-white"
+                : "hover:bg-gradient-to-r hover:from-blue-50 hover:to-white"
+            }`}
           >
-            <input type="checkbox" className="mr-2" onClick={(e) => e.stopPropagation()} />
-            <div
-              className={`flex flex-grow p-2 rounded 
-                ${selectedEntry === entry.mrn 
-                  ? 'bg-gradient-to-r from-blue-200 to-white' 
-                  : 'hover:bg-gradient-to-r hover:from-blue-50 hover:to-white'
-                }`}
-            >
-              <div className="w-6 text-center mr-2">{urgencyIcon}</div>
-              <div className="flex-grow">
-                <div className="flex">
-                  <span className="font-semibold">{entry.fromUser}</span>
-                  <span className="text-sm text-gray-500 ml-10">{entry.dateReceived}</span>
-                </div>
-                <div className="flex">
-                  <span className="text-sm font-medium truncate">{entry.subject}</span>
-                  <span className="flex text-sm text-gray-500 ml-5">
-                    {entry.categories.map((cat) => `#${cat}`).join(' ')}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600 truncate">{entry.message}</p>
+            <div className="w-6 text-center mr-2">{entry.urgencyIcon}</div>
+            <div className="flex-grow">
+              <div className="flex">
+                <span className="font-semibold">{entry.fromUser}</span>
+                <span className="text-sm text-gray-500 ml-10">
+                  {entry.dateReceived}
+                </span>
               </div>
+              <div className="flex">
+                <span className="text-sm font-medium truncate">
+                  {entry.subject}
+                </span>
+                <span className="flex text-sm text-gray-500 ml-5">
+                  {entry.categories.map((cat) => `#${cat}`).join(" ")}
+                </span>
+              </div>
+              <p className="text-sm text-gray-600 truncate">{entry.message}</p>
             </div>
           </div>
-        );
-
-      })}
+        </div>
+      ))}
     </div>
   );
 };

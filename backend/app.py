@@ -64,8 +64,12 @@ def clean_and_extract_replies(raw_replies):
 
     return cleaned_replies
 
+
 def extract_categories(raw_categories):
-    return [category.strip() for category in raw_categories.split(",")]
+    pattern = r'\b(High Urgency|Medium Urgency|Low Urgency|Urgent Response|Follow-up|Prescription Issue|General Inquiry|Clarification Needed|Document Submission)\b'
+    matches = re.findall(pattern, raw_categories)
+    return list(set(matches))  
+
 
 @app.route('/api/get-ai-data', methods=['POST'])
 def get_ai_data():
@@ -81,7 +85,7 @@ def get_ai_data():
         Categorize the following patient message into relevant tags:
         Message: "{patient_message}"
         Categories: ["High Urgency", "Medium Urgency", "Low Urgency", "Urgent Response", "Follow-up", "Prescription Issue", "General Inquiry", "Clarification Needed", "Document Submission"]
-        Provide a comma-separated list of the most relevant categories.
+        Provide a comma-separated list of the most relevant categories. Return at most 3 and don't include anything else in your response.
     """
 
     reply_prompt = f"""
@@ -111,7 +115,8 @@ def get_ai_data():
         )
         
         raw_categories = category_completion.choices[0].message.content.strip()
-        categories = extract_categories(raw_categories)
+        categories = extract_categories(raw_categories)  
+
         reply_completion = client.chat.completions.create(
             messages=[{"role": "user", "content": reply_prompt}],
             model="llama3"

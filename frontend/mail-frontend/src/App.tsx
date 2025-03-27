@@ -501,7 +501,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   const [customInstruction, setCustomInstruction] = useState<string>("");
   const [selectedInstructions, setSelectedInstructions] = useState<Instruction[]>([]);
-  const [generatedReply, setGeneratedReply] = useState<string>("");
+  //const [generatedReply, setGeneratedReply] = useState<string>("");
 
   const [editedReply, setEditedReply] = useState<string>(entry.aiReplies[activeTab]?.content || "");
   const [aiEditedContent, setAiEditedContent] = useState<string>("");
@@ -530,6 +530,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     "Clarify any next steps or actions for the patient.",
     "Confirm appointment details or reschedule if necessary."
   ]);  
+
+  const [generatedReplies, setGeneratedReplies] = useState<{ [key: string]: string }>({}); 
+
 
   const handleAIEditOptionChange = (option: keyof AIEditOptions): void => {
     setAIEditOptions(prev => ({...prev, [option]: !prev[option]}));  //toggle
@@ -757,6 +760,53 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     }
   };
 
+  const BACKEND_URL = "http://localhost:5000";
+
+  const handleRegenerateReply_mode1 = async (mrn: string, patientMessage: string, activeTab: number) => {
+    console.log(activeTab);
+    const category =
+      activeTab === 0
+        ? "Informative"
+        : activeTab === 1
+        ? "Suggestive"
+        : activeTab === 2
+        ? "Redirective"
+        : "";
+  
+    if (!category) {
+      console.error("Invalid category for regeneration");
+      return;
+    }
+  
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/regenerate-ai-reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patientMessage,
+          category,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to regenerate AI reply");
+      }
+  
+      const result = await response.json();
+  
+      if (mrn) {
+        setGeneratedReplies((prevReplies) => ({
+          ...prevReplies,
+          [mrn]: result.aiReply.content, 
+        }));
+      }
+    } catch (error) {
+      console.error("Error regenerating reply:", error);
+    }
+  };
+  
+  
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey) { 
@@ -796,6 +846,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [isAiEditClicked, setIsAiEditClicked] = useState(false);
 
   const editedTextWithSpaces = editedText.replace(/([.,!?;])/g, '$1 ');
+
+  const [generatedReply, setGeneratedReply] = useState(""); 
 
   const [showReplySection, setShowReplySection] = useState(false);
 
@@ -1228,11 +1280,17 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
         )}
         <textarea
-        className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
-        value={generatedReply} 
-        onChange={(e) => handleAIReplyChange(-2, e.target.value)} 
-        readOnly 
-        />
+            className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
+            value={generatedReplies[mrn || ""] || ""} // Display reply specific to this message
+            onChange={(e) =>
+              mrn &&
+              setGeneratedReplies((prevReplies) => ({
+                ...prevReplies,
+                [mrn]: e.target.value, // Allow editing of reply for this specific message
+              }))
+            }
+            readOnly={!showAIFeatures} // Make it editable only if AI features are enabled
+          />
         <button
           onClick={() => handleSendReply(generatedReply)}
           className="bg-blue-600 text-white px-4 py-1 mr-2 rounded hover:bg-blue-700"
@@ -1240,6 +1298,13 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           Send Reply
         </button>
         <button
+          onClick={() =>
+            handleRegenerateReply_mode1(
+              mrn || "", 
+              entryData?.message || "",
+              activeTab
+            )
+          }
           className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
         >
           Regenerate

@@ -143,6 +143,52 @@ def get_ai_data():
         print("Unexpected Error:", str(e))
         return jsonify({"error": "An unexpected error occurred."}), 500
 
+@app.route('/api/regenerate-ai-reply', methods=['POST'])
+def regenerate_ai_reply():
+    data = request.json
+    patient_message = data.get('patientMessage', '')
+    category = data.get('category', '')
+
+    print(category)
+    print(patient_message)
+
+    if not patient_message or not category:
+        return jsonify({"error": "Patient message and category are required."}), 400
+
+    prompt = f"""
+        Respond to the following message from an upset and angry patient as if you were their nurse. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
+
+        1. **Template**: "Hello there, (your reply here), Kind regards, Nurse ___."
+        2. **Tone**: Maintain a professional, empathetic, and supportive tone at all times.
+        3. **No placeholders**: Do not use any placeholders like `(your reply here)` in your response.
+
+        Generate only one response based on this category: {category}.
+
+        Patient Message: "{patient_message}"
+    """
+
+    try:
+        completion = client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="llama3"
+        )
+
+        raw_reply = completion.choices[0].message.content.strip()
+
+        formatted_reply = {
+            "label": category,
+            "content": f"{raw_reply} Note: This email was drafted with AI assistance and reviewed/approved by the nurse."
+        }
+
+        return jsonify({"aiReply": formatted_reply})
+
+    except OpenAIError as e:
+        print("OpenAI API Error:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+    except Exception as e:
+        print("Unexpected Error:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -67,6 +67,8 @@ function App() {
   const [data, setData] = useState<InboxEntry[]>([]);
   const [queue, setQueue] = useState<Omit<InboxEntry, "categories" | "aiReplies">[]>([]);
 
+  const [isLoading, setIsLoading] = useState(false)
+
   const newMessages: Omit<InboxEntry, "categories" | "aiReplies">[] = [
     {
       mrn: "123456",
@@ -108,6 +110,7 @@ function App() {
 
   const fetchCategoriesAndReplies = async (email: Omit<InboxEntry, "categories" | "aiReplies">) => {
     try {
+      
       const response = await fetch(`${BACKEND_URL}/api/get-ai-data`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -161,6 +164,8 @@ function App() {
     setQueue((prevQueue) => prevQueue.slice(1)); 
   }, [queue]);
   
+
+
 // notes:
 return (
   <TabProvider>
@@ -252,7 +257,7 @@ return (
               style={{ width: `${100 - inboxWidth}%`, height: '100%' }}
             >
               <Routes>
-                <Route path="/message/:mrn" element={<MessageDetail dummyData={data} />} />
+                <Route path="/message/:mrn" element={<MessageDetail dummyData={data} isLoading={isLoading} setIsLoading={setIsLoading} />} />
               </Routes>
             </div>
           </main>
@@ -435,6 +440,8 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
 type MessageDetailProps = {
   dummyData: InboxEntry[];
   //showAIFeatures: boolean;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type EntryState = {
@@ -457,7 +464,7 @@ interface AIEditOptions {
 
 // logic to implement geenrated rpely function differ for both modes todo--integration not yet started
 
-const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
+const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, setIsLoading }) => {
   const { mrn } = useParams();
   const entryData = dummyData.find((item) => item.mrn === mrn);
 
@@ -510,6 +517,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [editedReply, setEditedReply] = useState<string>(entry.aiReplies[activeTab]?.content || "");
   const [aiEditedContent, setAiEditedContent] = useState<string>("");
 
+  //const [isLoading, setIsLoading] = useState(false); // Global loading state
 
   // updated one
 
@@ -545,6 +553,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   // update but no fix
   const handleAIEditSubmit = async (): Promise<void> => {
     try {
+      setIsLoading(true); 
+      setShowAIEditModal(false);
       const patientMessage = entryData?.message || "";
       let aiReply = "";
       let updateStateCallback: (editedReply: string) => void;
@@ -615,9 +625,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   
       updateStateCallback(editedReply);
   
-      setShowAIEditModal(false);
     } catch (error) {
       console.error("Error applying AI edits:", error);
+    } finally {
+      setIsLoading(false); 
     }
   };
   
@@ -771,8 +782,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   };
   
   
-  
-
   const closeModal = () => {
     setShowModal(false);
   };
@@ -819,6 +828,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   const handleGenerateReplyClick = async () => {
     try {
+      setIsLoading(true);
       if (!customInstruction.trim() && selectedInstructions.length === 0) {
         console.error("At least one instruction must be provided");
         return;
@@ -864,6 +874,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   
     } catch (error) {
       console.error("Error generating reply:", error);
+    } finally {
+      setIsLoading(false);
     }
   };  
   
@@ -887,6 +899,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         : "";
   
     try {
+      setIsLoading(true);
+
       const response = await fetch(`${BACKEND_URL}/api/regenerate-ai-reply`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -933,6 +947,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       }
     } catch (error) {
       console.error("Error regenerating reply:", error);
+    }  finally {
+      setIsLoading(false);
     }
   };  
   
@@ -984,6 +1000,13 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const toggleReplySection = () => {
     setShowReplySection(!showReplySection);
   };
+
+  const LoadingSpinner = () => (
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600"></div>
+    </div>
+  );
+  
 
   // fix
   useEffect(() => {
@@ -1250,6 +1273,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   return (
     <div className="h-full flex flex-col bg-white overflow-auto">
+      {isLoading && <LoadingSpinner />}
       <div className="p-4 border-b">
         <h2 className="text-xl font-semibold mb-2">{entry.subject}</h2>
         <div className="text-sm text-gray-600">
@@ -1295,6 +1319,22 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
               })}
             </div>
         </div>
+        {!showReplySection && (
+          <div className="border rounded-lg bg-white shadow-sm p-4 mb-6">
+            <div className="flex items-center mb-2">
+              <div className="w-10 h-10 rounded-full bg-purple-400 flex items-center justify-center text-white font-bold mr-3">
+                {entryData?.fromUser.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <p className="font-semibold">{entryData?.fromUser}</p>
+                <p className="text-xs text-gray-500">
+                  {new Date(entryData?.dateReceived).toLocaleString()}
+                </p>
+              </div>
+            </div>
+            <p className="text-sm text-gray-800">{entryData?.message}</p>
+          </div>
+        )}
         {showReplySection && (
         <div>
         <div className="items-center px-4 pt-4">

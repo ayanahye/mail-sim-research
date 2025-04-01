@@ -817,17 +817,56 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
     setSelectedText({ start: textarea.selectionStart, end: textarea.selectionEnd });
   };
 
-  const handleGenerateReplyClick = () => {
-    setGeneratedReply("Here is the generated reply"); 
-    setPrevInstructionsReply("Here is the generated reply");
-    setGenerateClicked(true); 
-    handleTabClick(-2);
-    if (customInstruction.trim() && !selectedInstructions.includes(customInstruction)) {
-      setSelectedInstructions((prev) => [...prev, customInstruction]);
-      setInstructionOptions((prev) => [...prev, customInstruction]);
-      setCustomInstruction(""); 
+  const handleGenerateReplyClick = async () => {
+    try {
+      if (!customInstruction.trim() && selectedInstructions.length === 0) {
+        console.error("At least one instruction must be provided");
+        return;
+      }
+  
+      let updatedSelectedInstructions = [...selectedInstructions];
+  
+      if (customInstruction.trim() && !updatedSelectedInstructions.includes(customInstruction)) {
+        updatedSelectedInstructions.push(customInstruction); 
+        setInstructionOptions((prev) => [...prev, customInstruction]); 
+        setCustomInstruction(""); 
+      }
+  
+      const response = await fetch(`${BACKEND_URL}/api/provide-instructions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          instructions: updatedSelectedInstructions, 
+          patientMessage: entryData?.message || "",
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to generate reply");
+      }
+  
+      const result = await response.json();
+      const generatedReply = result?.generatedReply?.content;
+  
+      if (!generatedReply) {
+        console.error("No reply received from backend");
+        return;
+      }
+  
+      setGeneratedReplies((prevReplies) => ({
+        ...prevReplies,
+        [mrn || ""]: generatedReply, 
+      }));
+  
+      setPrevInstructionsReply(generatedReply); 
+      setGenerateClicked(true); 
+      handleTabClick(-2); 
+  
+    } catch (error) {
+      console.error("Error generating reply:", error);
     }
-  };
+  };  
+  
 
   const BACKEND_URL = "http://localhost:5000";
 

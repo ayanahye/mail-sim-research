@@ -262,6 +262,52 @@ def edit_ai_reply():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/api/provide-instructions', methods=['POST'])
+def provide_instructions():
+    data = request.json
+
+    predefined_instructions = data.get('instructions', [])
+    patient_message = data.get('patientMessage', '')
+
+    print(f"Predefined Instructions: {predefined_instructions}")
+    print(f"Patient Message: {patient_message}")
+
+    if not predefined_instructions:
+        return jsonify({"error": "At least one instruction must be provided."}), 400
+
+    all_instructions = ", ".join(predefined_instructions)
+    
+    prompt = f"""
+        Based on the following patient message, generate a reply that adheres strictly to these user-provided instructions:
+        Instructions: "{all_instructions}"
+
+        1. **Template**: "Hello there, (your reply here), Kind regards, Nurse ___."
+        2. **No placeholders**: Do not use any placeholders like `(your reply here)` in your response.
+
+
+        Patient Message: "{patient_message}"
+
+        Provide a concise and empathetic response.
+    """
+
+    try:
+        completion = client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="llama3"
+        )
+
+        raw_reply = completion.choices[0].message.content.strip()
+        print(raw_reply)
+
+        formatted_reply = {"content": raw_reply}
+
+        return jsonify({"generatedReply": formatted_reply})
+
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 

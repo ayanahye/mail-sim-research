@@ -762,14 +762,19 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   const BACKEND_URL = "http://localhost:5000";
 
-  const handleRegenerateReply_mode1 = async (mrn: string, patientMessage: string, activeTab: number) => {
-    console.log(activeTab);
+  const handleRegenerateReply_mode1 = async (
+    replyIndex: number, 
+    currentReplyContent: string, 
+    subject: string, 
+    previousMessage: string,
+    patientMessage: string 
+  ) => {
     const category =
-      activeTab === 0
+      replyIndex === 0
         ? "Informative"
-        : activeTab === 1
+        : replyIndex === 1
         ? "Suggestive"
-        : activeTab === 2
+        : replyIndex === 2
         ? "Redirective"
         : "";
   
@@ -783,8 +788,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          patientMessage,
+          patientMessage, 
+          aiReply: currentReplyContent, 
           category,
+          subject, 
+          previousMessage, 
         }),
       });
   
@@ -794,17 +802,24 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   
       const result = await response.json();
   
-      if (mrn) {
-        setGeneratedReplies((prevReplies) => ({
-          ...prevReplies,
-          [mrn]: result.aiReply.content, 
-        }));
+      const regeneratedReply = result?.aiReply?.content;
+  
+      if (!regeneratedReply) {
+        console.error("No regenerated reply received from backend");
+        return;
       }
+  
+
+      setEntry((prevEntry) => ({
+        ...prevEntry,
+        aiReplies: prevEntry.aiReplies.map((reply, index) =>
+          index === replyIndex ? { ...reply, content: regeneratedReply } : reply
+        ),
+      }));
     } catch (error) {
       console.error("Error regenerating reply:", error);
     }
-  };
-  
+  };  
   
 
   useEffect(() => {
@@ -1300,15 +1315,19 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <button
           onClick={() =>
             handleRegenerateReply_mode1(
-              mrn || "", 
-              entryData?.message || "",
-              activeTab
+              activeTab, 
+              generatedReplies[mrn || ""] || "", 
+              entryData?.subject || "", 
+              entry.aiReplies[activeTab - 1]?.content || "", 
+              entryData?.message || ""
             )
           }
           className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
         >
           Regenerate
         </button>
+
+
         {showAIFeatures && (
         <button
         onClick={() => {
@@ -1421,10 +1440,20 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           Send Reply
         </button>
         <button
-          className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-        >
-          Regenerate
-        </button>
+        className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+        onClick={() =>
+          handleRegenerateReply_mode1(
+            activeTab, 
+            entry.aiReplies[activeTab]?.content || "", 
+            entry.subject || "", 
+            entry.aiReplies[activeTab - 1]?.content || "", 
+            entryData?.message || "" 
+          )
+        }
+      >
+        Regenerate here
+      </button>
+
         <button
           onClick={() => {
             setShowAIEditModal(true);

@@ -86,7 +86,19 @@ def get_ai_data():
         Message: "{patient_message}"
         Categories: ["High Urgency", "Medium Urgency", "Low Urgency", "Urgent Response", "Follow-up", "Prescription Issue", "General Inquiry", "Clarification Needed", "Document Submission"]
         Provide a comma-separated list of the most relevant categories. Return at most 3 and don't include anything else in your response.
+        Provide at least 1 category. 
+        Urgency always provide a category (always 1)
+        high urgency and urgent response redudant 
+
+        sub cats
+            sub level of urgency 
+            other sub is content 
+                - presciption issue, etc, appintmnet 
+        - assign 1 for each
+
     """
+
+    # mon april 7th on cmpus
 
     reply_prompt = f"""
         Respond to the following message from an upset and angry patient as if you were their nurse. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
@@ -146,11 +158,17 @@ def get_ai_data():
 @app.route('/api/regenerate-ai-reply', methods=['POST'])
 def regenerate_ai_reply():
     data = request.json
+
     patient_message = data.get('patientMessage', '')
     category = data.get('category', '')
+    prev_message = data.get('previousMessage', '')  
+    ai_reply = data.get('aiReply', '')  
+    subject = data.get('subject', '') 
 
-    print(category)
-    print(patient_message)
+    print(f"Category: {category}")
+    print(f"Patient Message: {patient_message}")
+    print(f"Previous Message: {prev_message}")
+    print(f"Current AI Reply: {ai_reply}")
 
     if not patient_message or not category:
         return jsonify({"error": "Patient message and category are required."}), 400
@@ -159,12 +177,14 @@ def regenerate_ai_reply():
         Respond to the following message from an upset and angry patient as if you were their nurse. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
 
         1. **Template**: "Hello there, (your reply here), Kind regards, Nurse ___."
-        2. **Tone**: Maintain a professional, empathetic, and supportive tone at all times.
-        3. **No placeholders**: Do not use any placeholders like `(your reply here)` in your response.
+        2. **No placeholders**: Do not use any placeholders like `(your reply here)` in your response.
 
         Generate only one response based on this category: {category}.
 
-        Patient Message: "{patient_message}"
+        Previous AI Reply (if applicable): "{ai_reply}"
+        Previous Message (if applicable): "{prev_message}"
+
+        Patient Message: "{patient_message}". Do not repeat the same reply change it significantly and be kind and understanding in your reply.
     """
 
     try:
@@ -179,6 +199,8 @@ def regenerate_ai_reply():
             "label": category,
             "content": f"{raw_reply} Note: This email was drafted with AI assistance and reviewed/approved by the nurse."
         }
+
+        print(raw_reply)
 
         return jsonify({"aiReply": formatted_reply})
 

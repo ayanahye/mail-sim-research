@@ -212,6 +212,56 @@ def regenerate_ai_reply():
         print("Unexpected Error:", str(e))
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/edit-ai-reply', methods=['POST'])
+def edit_ai_reply():
+    data = request.json
+
+    patient_message = data.get('patientMessage', '')
+    ai_reply = data.get('aiReply', '')
+    edit_options = data.get('editOptions', {})
+
+    print(f"Patient Message: {patient_message}")
+    print(f"Current AI Reply: {ai_reply}")
+    print(f"Selected Edit Options: {edit_options}")
+
+    if not patient_message or not ai_reply or not edit_options:
+        return jsonify({"error": "Patient message, AI reply, and edit options are required."}), 400
+
+    selected_options = ', '.join([key for key, value in edit_options.items() if value])
+    prompt = f"""
+        Respond to the following message from an upset and angry patient as if you were their nurse. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
+
+        1. **Template**: "Hello there, (your reply here), Kind regards, Nurse ___."
+        2. **No placeholders**: Do not use any placeholders like `(your reply here)` in your response.
+
+        Based on the following patient message and AI-generated reply, apply edits according to these options:
+        {selected_options}
+
+        Patient Message: "{patient_message}"
+        Current AI Reply: "{ai_reply}"
+        
+        Provide an updated reply that adheres strictly to these instructions. Do not repeat the same reply. Change at least 5 words.
+    """
+
+    try:
+        completion = client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="llama3"
+        )
+
+        raw_reply = completion.choices[0].message.content.strip()
+
+        print(raw_reply)
+
+        formatted_reply = {"content": raw_reply}
+
+        return jsonify({"editedReply": formatted_reply})
+
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 

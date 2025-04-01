@@ -539,42 +539,85 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   };
 
   // update but no fix
-  const handleAIEditSubmit = (): void => {
-      if ((!showAIFeatures && (activeTab === 3)) || (showAIFeatures)) {
-        console.log("hello")
-
-        if (!(showAIFeatures && (activeTab != 0))) {
-          setPrevBlankReply(blankReply);
-        } else {
-          // change this to the edited reply
-          setPrevBlankReply(generatedReply);
-        }
-
-        setBlankReply("this is a test");
-        setGeneratedReply("this is a test");
-        setEditedText("this is a test");
-        //console.log('aiEditedContent:', aiEditedContent); 
-        //handleSendReply("this is a test");
-      } else if (!showAIFeatures && (activeTab < 3)) {
-        let contentToUpdate = entry.aiReplies[activeTab].AIEdits.content;
-        
-        const updatedReplies = [...entry.aiReplies];
-        
-        updatedReplies[activeTab] = {
-          ...updatedReplies[activeTab],
-          content: contentToUpdate
+  const handleAIEditSubmit = async (): Promise<void> => {
+    try {
+      const patientMessage = entryData?.message || "";
+      let aiReply = "";
+      let updateStateCallback: (editedReply: string) => void;
+  
+      if (showAIFeatures && activeTab === 0) {
+        // case - blank
+        aiReply = blankReply;
+        updateStateCallback = (editedReply: string) => {
+          setBlankReply(editedReply);
         };
-  
-        setEntry((prevState) => ({
-          ...prevState,
-          aiReplies: updatedReplies
-        }));
-  
-        setEditedText(contentToUpdate); 
+      } else if (showAIFeatures && activeTab === -2) {
+        // case - generated edit
+        aiReply = generatedReplies[mrn || ""] || "";
+        updateStateCallback = (editedReply: string) => {
+          setGeneratedReplies((prevReplies) => ({
+            ...prevReplies,
+            [mrn || ""]: editedReply, 
+          }));
+        };
+      } else if (!showAIFeatures && activeTab < entry.aiReplies.length) {
+        // case - ai replies tabbed
+        aiReply = entry.aiReplies[activeTab]?.content || "";
+        updateStateCallback = (editedReply: string) => {
+          const updatedReplies = [...entry.aiReplies];
+          updatedReplies[activeTab] = {
+            ...updatedReplies[activeTab],
+            content: editedReply, 
+          };
+          setEntry((prevState) => ({
+            ...prevState,
+            aiReplies: updatedReplies,
+          }));
+        };
+      } else if (!showAIFeatures && activeTab === 3) {
+        // case 4 - blank mode 1
+        aiReply = blankReply;
+        updateStateCallback = (editedReply: string) => {
+          setBlankReply(editedReply); 
+        };
+      } else {
+        console.error("Unhandled case for AI Edit");
+        return;
       }
+  
+      const response = await fetch(`${BACKEND_URL}/api/edit-ai-reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patientMessage,
+          aiReply,
+          editOptions: aiEditOptions, 
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to apply AI edits");
+      }
+  
+      const result = await response.json();
+      const editedReply = result?.editedReply?.content;
+  
+      if (!editedReply) {
+        console.error("No edited reply received from backend");
+        return;
+      }
+  
+      console.log("Edited Reply:", editedReply);
+  
+      updateStateCallback(editedReply);
+  
       setShowAIEditModal(false);
-    
+    } catch (error) {
+      console.error("Error applying AI edits:", error);
+    }
   };
+  
+  
   
   const handleInstructionToggle = (instruction: string): void => {
     setSelectedInstructions(prev =>

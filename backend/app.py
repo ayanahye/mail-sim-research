@@ -170,7 +170,7 @@ def regenerate_ai_reply():
     print(f"Previous Message: {prev_message}")
     print(f"Current AI Reply: {ai_reply}")
 
-    if not patient_message or not category:
+    if not patient_message:
         return jsonify({"error": "Patient message and category are required."}), 400
 
     prompt = f"""

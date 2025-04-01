@@ -778,11 +778,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         ? "Redirective"
         : "";
   
-    if (!category) {
-      console.error("Invalid category for regeneration");
-      return;
-    }
-  
     try {
       const response = await fetch(`${BACKEND_URL}/api/regenerate-ai-reply`, {
         method: "POST",
@@ -809,13 +804,25 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         return;
       }
   
+      // avoid err using def
+      const mrn: string | undefined = "123456";
 
-      setEntry((prevEntry) => ({
-        ...prevEntry,
-        aiReplies: prevEntry.aiReplies.map((reply, index) =>
-          index === replyIndex ? { ...reply, content: regeneratedReply } : reply
-        ),
-      }));
+      if (replyIndex === -2) {
+
+        setGeneratedReplies((prevReplies) => ({
+          ...prevReplies,
+          [mrn]: regeneratedReply, 
+          
+        }));
+        setGeneratedReply(regeneratedReply);
+      } else {
+        setEntry((prevEntry) => ({
+          ...prevEntry,
+          aiReplies: prevEntry.aiReplies.map((reply, index) =>
+            index === replyIndex ? { ...reply, content: regeneratedReply } : reply
+          ),
+        }));
+      }
     } catch (error) {
       console.error("Error regenerating reply:", error);
     }

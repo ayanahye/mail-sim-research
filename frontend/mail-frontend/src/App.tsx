@@ -1432,7 +1432,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             readOnly={!showAIFeatures} // Make it editable only if AI features are enabled
           />
         <button
-          onClick={() => handleSendReply(generatedReply)}
+          onClick={() => handleSendReply(generatedReplies[mrn || ""] || "")}
           className="bg-blue-600 text-white px-4 py-1 mr-2 rounded hover:bg-blue-700"
         >
           Send Reply

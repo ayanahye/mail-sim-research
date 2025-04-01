@@ -1,0 +1,8 @@
+Bugs:
+- show diff doesnt work (low priority - will fix later)
+
+Issues:
+- using small model - not able to generate significantly different re-generated or edited responses. Have to force it to make changes using "Change at least 5 words".
+- Need a loading UI for all features calling api endpoint as its not clear what is happening on the screen.
+
+benchmark - timing (todo before thursday)

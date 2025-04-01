@@ -88,14 +88,6 @@ def get_ai_data():
         Provide a comma-separated list of the most relevant categories. Return at most 3 and don't include anything else in your response.
         Provide at least 1 category. 
         Urgency always provide a category (always 1)
-        high urgency and urgent response redudant 
-
-        sub cats
-            sub level of urgency 
-            other sub is content 
-                - presciption issue, etc, appintmnet 
-        - assign 1 for each
-
     """
 
     # mon april 7th on cmpus
@@ -184,7 +176,7 @@ def regenerate_ai_reply():
         Previous AI Reply (if applicable): "{ai_reply}"
         Previous Message (if applicable): "{prev_message}"
 
-        Patient Message: "{patient_message}". Do not repeat the same reply change it significantly and be kind and understanding in your reply.
+        Patient Message: "{patient_message}". Do not repeat the same reply change it significantly and be kind and understanding in your reply. Do not repeat the same reply. Change at least 5 words. Do not include anything else in your response.
     """
 
     try:
@@ -240,7 +232,7 @@ def edit_ai_reply():
         Patient Message: "{patient_message}"
         Current AI Reply: "{ai_reply}"
         
-        Provide an updated reply that adheres strictly to these instructions. Do not repeat the same reply. Change at least 5 words.
+        Provide an updated reply that adheres strictly to these instructions. Do not repeat the same reply. Change at least 5 words. Do not include anything else in your response.
     """
 
     try:
@@ -280,6 +272,8 @@ def provide_instructions():
     prompt = f"""
         Based on the following patient message, generate a reply that adheres strictly to these user-provided instructions:
         Instructions: "{all_instructions}"
+
+        Your response must strictly adhere to the following structure:
 
         1. **Template**: "Hello there, (your reply here), Kind regards, Nurse ___."
         2. **No placeholders**: Do not use any placeholders like `(your reply here)` in your response.

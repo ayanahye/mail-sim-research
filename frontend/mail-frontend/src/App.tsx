@@ -491,7 +491,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const [showRating, setShowRating] = useState<{ [key: number]: boolean }>({});
   //const [activeTab, setActiveTab] = useState<number>(0);
   const [showRatingModal, setShowRatingModal] = useState(false);
-  const [blankReply, setBlankReply] = useState("");
+  //const [blankReply, setBlankReply] = useState("");
+
+  const [blankReplyAI, setBlankReplyAI] = useState(""); 
+  const [blankReplyManual, setBlankReplyManual] = useState(""); 
+
   const [isBold, setIsBold] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
   const [showBlankReplyForm, setShowBlankReplyForm] = useState(false);
@@ -547,9 +551,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   
       if (showAIFeatures && activeTab === 0) {
         // case - blank
-        aiReply = blankReply;
+        aiReply = blankReplyAI;
         updateStateCallback = (editedReply: string) => {
-          setBlankReply(editedReply);
+          setBlankReplyAI(editedReply);
         };
       } else if (showAIFeatures && activeTab === -2) {
         // case - generated edit
@@ -576,9 +580,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         };
       } else if (!showAIFeatures && activeTab === 3) {
         // case 4 - blank mode 1
-        aiReply = blankReply;
+        aiReply = blankReplyManual;
         updateStateCallback = (editedReply: string) => {
-          setBlankReply(editedReply); 
+          setBlankReplyManual(editedReply);
         };
       } else {
         console.error("Unhandled case for AI Edit");
@@ -745,21 +749,27 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
       if (isAIReply) {
         const updatedReplies = entry.aiReplies.map((reply) => {
           if (reply.content === replyContent) {
-            return { ...reply, content: reply.content }; 
+            return { ...reply, content: replyContent }; 
           }
-          return reply;
+          return reply; 
         });
   
         setEntry({ ...entry, aiReplies: updatedReplies });
       }
   
-      setShowModal(true);
-      setBlankReply("");
-      setShowBlankReplyForm(false);
+      if (showAIFeatures && activeTab === 0) {
+        setBlankReplyAI(""); 
+      } else if (!showAIFeatures && activeTab === 3) {
+        setBlankReplyManual(""); 
+      }
+  
+      setShowModal(true); 
+      setShowBlankReplyForm(false); 
     } else {
       console.error("Reply cannot be empty or entryData.mrn is undefined");
     }
   };
+  
   
   
 
@@ -775,16 +785,32 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
   const handleStartBlank = () => {
     setShowBlankReplyForm(!showBlankReplyForm);
-    setBlankReply("");
-    setIsBold(false);
-    setIsUnderline(false);
+  
+    if (showAIFeatures && activeTab === 0) {
+      setBlankReplyAI(""); 
+    } else if (!showAIFeatures && activeTab === 3) {
+      setBlankReplyManual(""); 
+    }
+  
+    setIsBold(false); 
+    setIsUnderline(false); 
   };
+  
 
   const handleBlankReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setBlankReply(e.target.value);
-    console.log('blankReply:', blankReply); 
-    console.log('e.target.value:', e.target.value);
+    const newValue = e.target.value;
+  
+    if (showAIFeatures && activeTab === 0) {
+      setBlankReplyAI(newValue);
+      console.log('AI Blank Reply:', newValue);
+    } else if (!showAIFeatures && activeTab === 3) {
+      setBlankReplyManual(newValue);
+      console.log('Manual Blank Reply:', newValue);
+    } else {
+      console.error("Unhandled case in handleBlankReplyChange");
+    }
   };
+  
 
   const handleTextSelect = () => {
     const textarea = document.getElementById('blankReplyTextarea') as HTMLTextAreaElement;
@@ -933,9 +959,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   const handleAccept = () => {
     if ((!showAIFeatures && activeTab < 3) || (showAIFeatures && activeTab === 0)) {
       if (showAIFeatures && activeTab === 0) {
-        setPrevBlankReply(editedTextWithSpaces);
-        setBlankReply(editedTextWithSpaces);
+        // blank
+        setPrevBlankReply(blankReplyAI); 
+        setBlankReplyAI(editedTextWithSpaces); 
       } else {
+        // tabs
         setPrevOriginalText(editedTextWithSpaces);
         const updatedReplies = [...entry.aiReplies];
         updatedReplies[activeTab] = {
@@ -947,25 +975,32 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           aiReplies: updatedReplies,
         }));
       }
-    } else if (showAIFeatures && activeTab > 0) {
+    } else if (showAIFeatures && activeTab === -2) {
+      // gen
       setPrevOriginalText(editedTextWithSpaces);
-      setPrevInstructionsReply(editedTextWithSpaces)
+      setGeneratedReply(editedTextWithSpaces);
+    } else if (!showAIFeatures && activeTab === 3) {
+      // blank manual
+      setPrevBlankReply(blankReplyManual); 
+      setBlankReplyManual(editedTextWithSpaces); 
     } else {
-      setPrevBlankReply(editedTextWithSpaces);
-      setBlankReply(editedTextWithSpaces);
+      console.error("Unhandled case in handleAccept");
     }
+  
     setIsAIEditButtonClicked(false);
     setShowDiff(false);
   };
   
+  
   const handleRevert = () => {
-    console.log("here test 36363636")
-    console.log("act tab", activeTab);
-    if ((!showAIFeatures && activeTab < 3) || (showAIFeatures && activeTab == 0)) {
+    console.log("Reverting changes...");
+    
+    if ((!showAIFeatures && activeTab < 3) || (showAIFeatures && activeTab === 0)) {
       if (showAIFeatures && activeTab === 0) {
-        setBlankReply(prevBlankReply);
-        //setAiEditedContent(prevBlankReply);
+        // blank
+        setBlankReplyAI(prevBlankReply); 
       } else {
+        // tabs
         const updatedReplies = [...entry.aiReplies];
         updatedReplies[activeTab] = {
           ...updatedReplies[activeTab],
@@ -975,21 +1010,22 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           ...prevState,
           aiReplies: updatedReplies,
         }));
-        setEditedText(prevOriginalText);
+        setEditedText(prevOriginalText); 
       }
-    } else if (showAIFeatures && activeTab == -2) {
-      setPrevOriginalText(prevInstructionsReply);
-      setGeneratedReply(prevInstructionsReply)
-      setPrevInstructionsReply(prevInstructionsReply)
-      console.log("here", prevInstructionsReply)
+    } else if (showAIFeatures && activeTab === -2) {
+      // gen
+      setGeneratedReply(prevInstructionsReply); 
+    } else if (!showAIFeatures && activeTab === 3) {
+      // blank
+      setBlankReplyManual(prevBlankReply); 
     } else {
-      console.log("test 3")
-      setBlankReply(prevBlankReply);
-      //setAiEditedContent(prevBlankReply);
+      console.error("Unhandled case in handleRevert");
     }
+  
     setIsAIEditButtonClicked(false);
     setShowDiff(false);
   };
+  
 
   // drag updated functionality
   const [isDragging, setIsDragging] = useState(false);
@@ -1125,7 +1161,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
   
 
   if (showDiff) {
-    console.log("blank reply", blankReply);
+    //console.log("blank reply", blankReply);
   
     let originalText = (!showAIFeatures && activeTab < 3) 
       ? prevOriginalText || ""  
@@ -1306,7 +1342,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <textarea
         id="blankReplyTextarea"
         className="w-full h-40 p-2 border rounded"
-        value={blankReply}
+        value={blankReplyAI}
         onChange={handleBlankReplyChange}
         onSelect={handleTextSelect}
         placeholder="Write your reply here..."
@@ -1314,7 +1350,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
         <div className="mt-2 flex gap-2">
         <button
-          onClick={() => handleSendReply(blankReply)}
+          onClick={() => handleSendReply(blankReplyAI)}
           className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
         >
           Send Reply
@@ -1563,7 +1599,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
         <textarea
         id="blankReplyTextarea"
         className="w-full h-40 p-2 border rounded"
-        value={blankReply}
+        value={blankReplyManual} 
         onChange={handleBlankReplyChange}
         onSelect={handleTextSelect}
         placeholder="Write your reply here..."
@@ -1571,7 +1607,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
 
         <div className="mt-2 flex gap-2">
         <button
-        onClick={() => handleSendReply(blankReply)}
+        onClick={() => handleSendReply(blankReplyManual)}
         className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
         >
         Send Reply

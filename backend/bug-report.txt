@@ -122,3 +122,8 @@ Provide Instructions:
 - 44.67
 
 Summarized in time_data.csv
+
+--
+Hello there, I'm so sorry to hear that you're experiencing issues with your missing prescription. Can you please tell me more about what's been happening and when you last had your prescription filled? I'd like to help you get it sorted as soon as possible. Note: This email was drafted with AI assistance and reviewed/approved by the nurse.
+
+Hello there, I'm deeply concerned about the situation with your missing prescription. Can you please explain what's been happening and when you last had your prescription filled? I'd like to help you get it sorted as soon as possible.<|eot_id|>

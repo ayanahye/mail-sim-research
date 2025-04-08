@@ -544,7 +544,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   ]);  
 
   const [generatedReplies, setGeneratedReplies] = useState<{ [key: string]: string }>({}); 
-
+  const [isAIEditApplied, setIsAIEditApplied] = useState(false);
 
   const handleAIEditOptionChange = (option: keyof AIEditOptions): void => {
     setAIEditOptions(prev => ({...prev, [option]: !prev[option]}));  //toggle
@@ -564,6 +564,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         aiReply = blankReplyAI;
         updateStateCallback = (editedReply: string) => {
           setBlankReplyAI(editedReply);
+          setEditedText(editedReply); 
         };
       } else if (showAIFeatures && activeTab === -2) {
         // case - generated edit
@@ -573,9 +574,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
             ...prevReplies,
             [mrn || ""]: editedReply, 
           }));
+          setEditedText(editedReply); 
         };
       } else if (!showAIFeatures && activeTab < entry.aiReplies.length) {
-        // case - ai replies tabbed
+         // case - ai replies tabbed
         aiReply = entry.aiReplies[activeTab]?.content || "";
         updateStateCallback = (editedReply: string) => {
           const updatedReplies = [...entry.aiReplies];
@@ -587,12 +589,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
             ...prevState,
             aiReplies: updatedReplies,
           }));
+          setEditedText(editedReply); 
         };
       } else if (!showAIFeatures && activeTab === 3) {
         // case 4 - blank mode 1
         aiReply = blankReplyManual;
         updateStateCallback = (editedReply: string) => {
           setBlankReplyManual(editedReply);
+          setEditedText(editedReply); 
         };
       } else {
         console.error("Unhandled case for AI Edit");
@@ -603,9 +607,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          patientMessage,
-          aiReply,
-          editOptions: aiEditOptions, 
+          patientMessage: entryData?.message || "",
+          aiReply: editedText || entry.aiReplies[activeTab]?.content || "",
+          editOptions: aiEditOptions,
         }),
       });
   
@@ -615,6 +619,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   
       const result = await response.json();
       const editedReply = result?.editedReply?.content;
+      console.log(editedReply);
   
       if (!editedReply) {
         console.error("No edited reply received from backend");
@@ -622,9 +627,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       }
   
       console.log("Edited Reply:", editedReply);
+
   
       updateStateCallback(editedReply);
-  
+      setEditedText(editedReply);
+      setIsAIEditApplied(true); 
     } catch (error) {
       console.error("Error applying AI edits:", error);
     } finally {
@@ -992,6 +999,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   const [isAiEditClicked, setIsAiEditClicked] = useState(false);
 
   const editedTextWithSpaces = editedText.replace(/([.,!?;])/g, '$1 ');
+  console.log("edited text here: ", editedTextWithSpaces)
 
   const [generatedReply, setGeneratedReply] = useState(""); 
 
@@ -1010,11 +1018,13 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
 
   // fix
   useEffect(() => {
-    // update here need to modify when doing actuall llm integration
-    //setOriginalText(entry.aiReplies[activeTab]?.content || "");
-    setOriginalText(entry.aiReplies[activeTab]?.content || "");
-    setEditedText(entry.aiReplies[activeTab]?.AIEdits?.content || "");
+    if (!isAIEditApplied) { 
+      setOriginalText(entry.aiReplies[activeTab]?.content || "");
+      setEditedText(entry.aiReplies[activeTab]?.AIEdits?.content || "");
+    }
   }, [activeTab, entry.aiReplies]);
+  
+  
 
   // prevInstructionsReply
 
@@ -1232,6 +1242,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         : prevBlankReply || "";
   
     let editedText = editedTextWithSpaces || "";
+    console.log("edited text...:", editedText);
   
     console.log("test prev instructions", prevInstructionsReply);
     const highlightedText = highlightDifferences(originalText, editedText);
@@ -1588,7 +1599,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         <>
         {
         isAIEditButtonClicked && (
-          <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
+          <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff Test</button>
         )
         }
         <textarea

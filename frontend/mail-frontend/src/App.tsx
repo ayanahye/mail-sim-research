@@ -519,6 +519,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
 
   //const [isLoading, setIsLoading] = useState(false); // Global loading state
 
+  const [originalBlankReplyAI, setOriginalBlankReplyAI] = useState(""); 
+  const [originalBlankReplyManual, setOriginalBlankReplyManual] = useState(""); 
+
   // updated one
 
   const [showAIEditModal, setShowAIEditModal] = useState<boolean>(false);
@@ -553,22 +556,30 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   // update but no fix
   const handleAIEditSubmit = async (): Promise<void> => {
     try {
-      setIsLoading(true); 
+      setIsLoading(true);
       setShowAIEditModal(false);
+  
       const patientMessage = entryData?.message || "";
+      let originalText = "";
       let aiReply = "";
       let updateStateCallback: (editedReply: string) => void;
   
       if (showAIFeatures && activeTab === 0) {
         // case - blank
+        originalText = blankReplyAI; 
         aiReply = blankReplyAI;
+  
+        setOriginalBlankReplyAI(blankReplyAI);
+  
         updateStateCallback = (editedReply: string) => {
-          setBlankReplyAI(editedReply);
+          setBlankReplyAI(editedReply); 
           setEditedText(editedReply); 
         };
       } else if (showAIFeatures && activeTab === -2) {
         // case - generated edit
+        originalText = generatedReplies[mrn || ""] || ""; 
         aiReply = generatedReplies[mrn || ""] || "";
+  
         updateStateCallback = (editedReply: string) => {
           setGeneratedReplies((prevReplies) => ({
             ...prevReplies,
@@ -577,25 +588,25 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
           setEditedText(editedReply); 
         };
       } else if (!showAIFeatures && activeTab < entry.aiReplies.length) {
-         // case - ai replies tabbed
+        // case - ai replies tabbed
+        originalText = entry.aiReplies[activeTab]?.content || ""; 
         aiReply = entry.aiReplies[activeTab]?.content || "";
+  
         updateStateCallback = (editedReply: string) => {
           const updatedReplies = [...entry.aiReplies];
-          updatedReplies[activeTab] = {
-            ...updatedReplies[activeTab],
-            content: editedReply, 
-          };
-          setEntry((prevState) => ({
-            ...prevState,
-            aiReplies: updatedReplies,
-          }));
-          setEditedText(editedReply); 
+          updatedReplies[activeTab] = { ...updatedReplies[activeTab], content: editedReply };
+          setEntry((prevState) => ({ ...prevState, aiReplies: updatedReplies })); 
+          setEditedText(editedReply);
         };
       } else if (!showAIFeatures && activeTab === 3) {
-        // case 4 - blank mode 1
+         // case 4 - blank mode 1
+        originalText = blankReplyManual;
         aiReply = blankReplyManual;
+  
+        setOriginalBlankReplyManual(blankReplyManual);
+  
         updateStateCallback = (editedReply: string) => {
-          setBlankReplyManual(editedReply);
+          setBlankReplyManual(editedReply); 
           setEditedText(editedReply); 
         };
       } else {
@@ -603,12 +614,16 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         return;
       }
   
+      console.log("Original Text:", originalText);
+      console.log("AI Reply:", aiReply);
+  
       const response = await fetch(`${BACKEND_URL}/api/edit-ai-reply`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          patientMessage: entryData?.message || "",
-          aiReply: editedText || entry.aiReplies[activeTab]?.content || "",
+          patientMessage,
+          originalText, 
+          aiReply, 
           editOptions: aiEditOptions,
         }),
       });
@@ -619,7 +634,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   
       const result = await response.json();
       const editedReply = result?.editedReply?.content;
-      console.log(editedReply);
   
       if (!editedReply) {
         console.error("No edited reply received from backend");
@@ -627,17 +641,17 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       }
   
       console.log("Edited Reply:", editedReply);
-
   
-      updateStateCallback(editedReply);
-      setEditedText(editedReply);
-      setIsAIEditApplied(true); 
+      updateStateCallback(editedReply); 
+  
     } catch (error) {
       console.error("Error applying AI edits:", error);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
+  
+  
   
   
   
@@ -817,15 +831,18 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     const newValue = e.target.value;
   
     if (showAIFeatures && activeTab === 0) {
-      setBlankReplyAI(newValue);
+      setBlankReplyAI(newValue); 
+      setOriginalText(newValue); 
       console.log('AI Blank Reply:', newValue);
     } else if (!showAIFeatures && activeTab === 3) {
-      setBlankReplyManual(newValue);
+      setBlankReplyManual(newValue); 
+      setOriginalText(newValue); 
       console.log('Manual Blank Reply:', newValue);
     } else {
       console.error("Unhandled case in handleBlankReplyChange");
     }
   };
+  
   
 
   const handleTextSelect = () => {
@@ -989,11 +1006,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   const [prevBlankReply, setPrevBlankReply] = useState("");
   const [prevInstructionsReply, setPrevInstructionsReply] = useState("");
 
-  useEffect(() => {
-    setPrevOriginalText(entryData?.aiReplies[activeTab]?.content || "");
-  }, [activeTab, entryData]);
-  
-
   const [originalText, setOriginalText] = useState(entry.aiReplies[activeTab]?.content || "");
   const [editedText, setEditedText] = useState(entry.aiReplies[activeTab]?.AIEdits?.content || "");  
   const [isAiEditClicked, setIsAiEditClicked] = useState(false);
@@ -1016,15 +1028,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   );
   
 
-  // fix
-  useEffect(() => {
-    if (!isAIEditApplied) { 
-      setOriginalText(entry.aiReplies[activeTab]?.content || "");
-      setEditedText(entry.aiReplies[activeTab]?.AIEdits?.content || "");
-    }
-  }, [activeTab, entry.aiReplies]);
-  
-  
+
 
   // prevInstructionsReply
 
@@ -1032,15 +1036,16 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     if ((!showAIFeatures && activeTab < 3) || (showAIFeatures && activeTab === 0)) {
       if (showAIFeatures && activeTab === 0) {
         // blank
-        setPrevBlankReply(blankReplyAI); 
+        setOriginalBlankReplyAI(blankReplyAI); 
+        setPrevBlankReply(blankReplyAI);
         setBlankReplyAI(editedTextWithSpaces); 
       } else {
         // tabs
-        setPrevOriginalText(editedTextWithSpaces);
+        setPrevOriginalText(editedTextWithSpaces); 
         const updatedReplies = [...entry.aiReplies];
         updatedReplies[activeTab] = {
           ...updatedReplies[activeTab],
-          content: editedTextWithSpaces,
+          content: editedTextWithSpaces, 
         };
         setEntry((prevState) => ({
           ...prevState,
@@ -1049,10 +1054,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       }
     } else if (showAIFeatures && activeTab === -2) {
       // gen
-      setPrevOriginalText(editedTextWithSpaces);
-      setGeneratedReply(editedTextWithSpaces);
+      setPrevOriginalText(editedTextWithSpaces); 
+      setGeneratedReply(editedTextWithSpaces); 
     } else if (!showAIFeatures && activeTab === 3) {
       // blank manual
+      setOriginalBlankReplyManual(blankReplyManual); 
       setPrevBlankReply(blankReplyManual); 
       setBlankReplyManual(editedTextWithSpaces); 
     } else {
@@ -1064,19 +1070,21 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   };
   
   
+  
+  
   const handleRevert = () => {
     console.log("Reverting changes...");
-    
+  
     if ((!showAIFeatures && activeTab < 3) || (showAIFeatures && activeTab === 0)) {
       if (showAIFeatures && activeTab === 0) {
-        // blank
-        setBlankReplyAI(prevBlankReply); 
+       // blank
+        setBlankReplyAI(originalBlankReplyAI); 
       } else {
-        // tabs
+         // tabs
         const updatedReplies = [...entry.aiReplies];
         updatedReplies[activeTab] = {
           ...updatedReplies[activeTab],
-          content: prevOriginalText,
+          content: prevOriginalText, 
         };
         setEntry((prevState) => ({
           ...prevState,
@@ -1086,10 +1094,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       }
     } else if (showAIFeatures && activeTab === -2) {
       // gen
-      setGeneratedReply(prevInstructionsReply); 
+      setGeneratedReply(prevInstructionsReply);
     } else if (!showAIFeatures && activeTab === 3) {
       // blank
-      setBlankReplyManual(prevBlankReply); 
+      setBlankReplyManual(originalBlankReplyManual); 
     } else {
       console.error("Unhandled case in handleRevert");
     }
@@ -1097,6 +1105,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     setIsAIEditButtonClicked(false);
     setShowDiff(false);
   };
+  
   
 
   // drag updated functionality
@@ -1233,49 +1242,60 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   
 
   if (showDiff) {
-    //console.log("blank reply", blankReply);
+    let originalText = "";
+    let editedText = "";
   
-    let originalText = (!showAIFeatures && activeTab < 3) 
-      ? prevOriginalText || ""  
-      : (showAIFeatures && activeTab > 0) 
-        ? prevInstructionsReply || "" 
-        : prevBlankReply || "";
+    if (showAIFeatures && activeTab === 0) {
+      originalText = originalBlankReplyAI; 
+      editedText = editedTextWithSpaces || blankReplyAI; 
+    } else if (showAIFeatures && activeTab === -2) {
+
+      originalText = generatedReplies[mrn || ""] || ""; 
+      editedText = editedTextWithSpaces || generatedReplies[mrn || ""] || "";
+    } else if (!showAIFeatures && activeTab < entry.aiReplies.length) {
+   
+      originalText = entry.aiReplies[activeTab]?.content || "";
+      editedText = editedTextWithSpaces || entry.aiReplies[activeTab]?.content || ""; 
+    } else if (!showAIFeatures && activeTab === 3) {
+    
+      originalText = originalBlankReplyManual; 
+      editedText = editedTextWithSpaces || blankReplyManual; 
+    } else {
+      console.error("Unhandled case for Show Diff");
+      return null; 
+    }
   
-    let editedText = editedTextWithSpaces || "";
-    console.log("edited text...:", editedText);
+    console.log("Original Text:", originalText);
+    console.log("Edited Text:", editedText);
   
-    console.log("test prev instructions", prevInstructionsReply);
     const highlightedText = highlightDifferences(originalText, editedText);
   
-    console.log('even here');
-  
     return (
-      <div className='px-2 mt-10'>
+      <div className="px-2 mt-10">
         <h3>Make Additional Changes:</h3>
-        <textarea defaultValue={editedTextWithSpaces || ""} onChange={(e) => {
-          if (activeTab < 3) {
-            handleTextChange(e);
-          } else {
-            setAiEditedContent(e.target.value);
-          }
-        }} className="w-full h-40 p-2 border rounded" />
+        <textarea defaultValue={editedText} onChange={(e) => handleBlankReplyChange(e)} className="w-full h-40 p-2 border rounded" />
         <div className="mt-4 px-2">
           <h3>Original Text:</h3>
           <p>{originalText}</p>
-          <h3 className='mt-4'>Edited Text:</h3>
+          <h3 className="mt-4">Edited Text:</h3>
           <p>{highlightedText}</p>
         </div>
         <div className="flex gap-2 mt-4 mb-4">
-
-            <>
-              <button onClick={handleAccept} className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Accept</button>
-              <button onClick={handleRevert} className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">Revert</button>
-            </>
-          
+          <>
+            <button onClick={handleAccept} className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">
+              Accept
+            </button>
+            <button onClick={handleRevert} className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600">
+              Revert
+            </button>
+          </>
         </div>
       </div>
     );
   }
+  
+  
+  
   
   
   if (!entryData) {

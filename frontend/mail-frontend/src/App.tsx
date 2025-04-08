@@ -674,10 +674,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   const currentTabContent = entry.aiReplies[activeTab].content;
   const selectedTabContent = entry.aiReplies[splitViewTab as number].content;
 
+  /*
   const handleTabClick = (tabIndex: number) => {
     setActiveTab(tabIndex);
     setShowSplitView(false);
+    setShowDiff(false);
+    setIsAIEditButtonClicked(false);
   };
+  */
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -734,6 +738,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       }
       setShowSplitView(false); 
     }
+    setShowDiff(false);
+    setIsAIEditButtonClicked(false);
   };
 
   const handleRateButtonClick = (index: number) => {

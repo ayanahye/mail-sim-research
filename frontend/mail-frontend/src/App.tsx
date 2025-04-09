@@ -522,6 +522,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   const [originalBlankReplyAI, setOriginalBlankReplyAI] = useState(""); 
   const [originalBlankReplyManual, setOriginalBlankReplyManual] = useState(""); 
 
+  // cant find a easier way
+  const [originalGeneratedReply, setOriginalGeneratedReply] = useState("");
+  const [originalTabbedReply, setOriginalTabbedReply] = useState("");
+
+
   // updated one
 
   const [showAIEditModal, setShowAIEditModal] = useState<boolean>(false);
@@ -579,6 +584,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         // case - generated edit
         originalText = generatedReplies[mrn || ""] || ""; 
         aiReply = generatedReplies[mrn || ""] || "";
+
+        setOriginalGeneratedReply(originalText);
+
+        console.log("og text here:", originalText);
   
         updateStateCallback = (editedReply: string) => {
           setGeneratedReplies((prevReplies) => ({
@@ -592,6 +601,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         originalText = entry.aiReplies[activeTab]?.content || ""; 
         aiReply = entry.aiReplies[activeTab]?.content || "";
   
+        setOriginalTabbedReply(originalText);
+
         updateStateCallback = (editedReply: string) => {
           const updatedReplies = [...entry.aiReplies];
           updatedReplies[activeTab] = { ...updatedReplies[activeTab], content: editedReply };
@@ -967,6 +978,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
           
         }));
         setGeneratedReply(regeneratedReply);
+        console.log("gen reps here:", generatedReplies);
       } else {
         setEntry((prevEntry) => ({
           ...prevEntry,
@@ -1047,7 +1059,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         setBlankReplyAI(editedTextWithSpaces); 
       } else {
         // tabs
-        setPrevOriginalText(editedTextWithSpaces); 
+        //setPrevOriginalText(editedTextWithSpaces); 
         const updatedReplies = [...entry.aiReplies];
         updatedReplies[activeTab] = {
           ...updatedReplies[activeTab],
@@ -1057,6 +1069,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
           ...prevState,
           aiReplies: updatedReplies,
         }));
+
+        //setOriginalTabbedReply(entry.aiReplies[activeTab]?.content || ""); 
       }
     } else if (showAIFeatures && activeTab === -2) {
       // gen
@@ -1090,17 +1104,27 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         const updatedReplies = [...entry.aiReplies];
         updatedReplies[activeTab] = {
           ...updatedReplies[activeTab],
-          content: prevOriginalText, 
+          content: originalTabbedReply 
         };
         setEntry((prevState) => ({
           ...prevState,
           aiReplies: updatedReplies,
         }));
-        setEditedText(prevOriginalText); 
+        setEditedText(originalTabbedReply);
       }
     } else if (showAIFeatures && activeTab === -2) {
       // gen
-      setGeneratedReply(prevInstructionsReply);
+      const mrn = entryData?.mrn || "default_mrn"; // Ensure MRN is set
+
+      console.log("Reverting Generated Reply...");
+      console.log("Original Generated Reply:", originalGeneratedReply);
+    
+      setGeneratedReplies((prevReplies) => ({
+        ...prevReplies,
+        [mrn]: originalGeneratedReply, // Restore original generated reply
+      }));
+    
+      setGeneratedReply(originalGeneratedReply); // Update state for 
     } else if (!showAIFeatures && activeTab === 3) {
       // blank
       setBlankReplyManual(originalBlankReplyManual); 
@@ -1255,12 +1279,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       originalText = originalBlankReplyAI; 
       editedText = editedTextWithSpaces || blankReplyAI; 
     } else if (showAIFeatures && activeTab === -2) {
-
-      originalText = generatedReplies[mrn || ""] || ""; 
+      originalText = originalGeneratedReply;
+      //originalText = generatedReplies[mrn || ""] || ""; 
+      console.log("ogtext2", originalText);
       editedText = editedTextWithSpaces || generatedReplies[mrn || ""] || "";
+      console.log("edt2", editedText);
     } else if (!showAIFeatures && activeTab < entry.aiReplies.length) {
    
-      originalText = entry.aiReplies[activeTab]?.content || "";
+      originalText = originalTabbedReply;
       editedText = editedTextWithSpaces || entry.aiReplies[activeTab]?.content || ""; 
     } else if (!showAIFeatures && activeTab === 3) {
     
@@ -1515,7 +1541,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
           Send Reply
         </button>
         <button
-          onClick={() =>
+          onClick={() =>{
             handleRegenerateReply_mode1(
               activeTab, 
               generatedReplies[mrn || ""] || "", 
@@ -1523,6 +1549,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
               entry.aiReplies[activeTab - 1]?.content || "", 
               entryData?.message || ""
             )
+            console.log("flip", generatedReplies)}
           }
           className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
         >

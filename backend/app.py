@@ -40,7 +40,11 @@ if __name__ == '__main__':
 
 '''
 
-# bug with regenerate on mode 2 not setting the new response
+# todo:
+    # remove <eot_id> stuff
+    # change requests processing order
+    # test models on prof laptop
+    # fix questionaire for test interview
 # another consideration maybe use a stack of requests not a queue bc we dont want to wait for all messages to generate b4 being able to use other features..(maybe just waiting for the initial email)
 
 import os

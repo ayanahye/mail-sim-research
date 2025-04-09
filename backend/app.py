@@ -41,11 +41,9 @@ if __name__ == '__main__':
 '''
 
 # todo:
-    # remove <eot_id> stuff
-    # change requests processing order
+    # nvm process order - seems v difficult as of now
     # test models on prof laptop
     # fix questionaire for test interview
-# another consideration maybe use a stack of requests not a queue bc we dont want to wait for all messages to generate b4 being able to use other features..(maybe just waiting for the initial email)
 
 import os
 import re
@@ -62,6 +60,7 @@ client = OpenAI(
 )
 
 def parse_responses(raw_replies):
+    raw_replies = clean_response(raw_replies)
     sections = re.split(r"(Hello there,)", raw_replies)
 
     responses = []
@@ -89,6 +88,10 @@ def parse_responses(raw_replies):
     while len(parsed_responses) < 3:
         parsed_responses.append({"label": "No Response", "content": "No response provided."})
     return parsed_responses
+
+def clean_response(raw_response):
+    cleaned_response = re.sub(r"<.*?>", "", raw_response)
+    return cleaned_response.strip() 
 
 
 def extract_categories(raw_categories):
@@ -219,6 +222,8 @@ def regenerate_ai_reply():
 
         raw_reply = completion.choices[0].message.content.strip()
 
+        raw_reply = clean_response(raw_reply)
+
         formatted_reply = {
             "label": category,
             "content": f"{raw_reply} Note: This email was drafted with AI assistance and reviewed/approved by the nurse."
@@ -275,9 +280,10 @@ def edit_ai_reply():
 
         raw_reply = completion.choices[0].message.content.strip()
 
+        raw_reply = clean_response(raw_reply)
         print(raw_reply)
 
-        formatted_reply = {"content": raw_reply}
+        formatted_reply = {"content": raw_reply + " Note: This email was drafted with AI assistance and reviewed/approved by the nurse."}
 
         return jsonify({"editedReply": formatted_reply})
 
@@ -323,9 +329,11 @@ def provide_instructions():
         )
 
         raw_reply = completion.choices[0].message.content.strip()
+
+        raw_reply = clean_response(raw_reply)
         print(raw_reply)
 
-        formatted_reply = {"content": raw_reply}
+        formatted_reply = {"content": raw_reply + " Note: This email was drafted with AI assistance and reviewed/approved by the nurse."}
 
         return jsonify({"generatedReply": formatted_reply})
 

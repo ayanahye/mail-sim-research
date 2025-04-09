@@ -40,6 +40,9 @@ if __name__ == '__main__':
 
 '''
 
+# bug with regenerate on mode 2 not setting the new response
+# another consideration maybe use a stack of requests not a queue bc we dont want to wait for all messages to generate b4 being able to use other features..(maybe just waiting for the initial email)
+
 import os
 import re
 from flask import Flask, jsonify, request, Response
@@ -54,15 +57,34 @@ client = OpenAI(
     api_key="fake-key",
 )
 
-def clean_and_extract_replies(raw_replies):
-    pattern = r'\*\*(.*?)\*\*: "(.*?)"'
-    matches = re.findall(pattern, raw_replies)
-    cleaned_replies = [{"label": match[0], "content": match[1].strip()} for match in matches]
+def parse_responses(raw_replies):
+    sections = re.split(r"(Hello there,)", raw_replies)
 
-    while len(cleaned_replies) < 3:
-        cleaned_replies.append({"label": "No Response", "content": "No response provided."})
-
-    return cleaned_replies
+    responses = []
+    for i in range(1, len(sections), 2):  
+        greeting = sections[i].strip()  
+        content = sections[i + 1].strip() if i + 1 < len(sections) else ""
+        full_response = f"{greeting} {content}"
+        responses.append(full_response)
+    
+    labels = ["Informative", "Suggestive", "Redirective"]
+    parsed_responses = []
+    
+    for i, response in enumerate(responses):
+        if i >= len(labels):
+            break
+        
+        content_match = re.search(r"(.*?), Kind regards", response)
+        content = content_match.group(1).strip() if content_match else response
+        
+        parsed_responses.append({
+            "label": labels[i],
+            "content": content
+        })
+    
+    while len(parsed_responses) < 3:
+        parsed_responses.append({"label": "No Response", "content": "No response provided."})
+    return parsed_responses
 
 
 def extract_categories(raw_categories):
@@ -131,16 +153,16 @@ def get_ai_data():
         raw_replies = reply_completion.choices[0].message.content
         print("raw")
         print(raw_replies)
-        cleaned_replies = clean_and_extract_replies(raw_replies)
+        parsed_replies = parse_responses(raw_replies)
         print(2)
-        print(cleaned_replies)
+        print(parsed_replies)
 
         formatted_replies = [
             {
                 "label": reply["label"],
                 "content": f'{reply["content"]} Note: This email was drafted with AI assistance and reviewed/approved by the nurse.'
             }
-            for reply in cleaned_replies
+            for reply in parsed_replies
         ]
 
         return jsonify({"categories": categories, "aiReplies": formatted_replies})

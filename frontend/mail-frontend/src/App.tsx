@@ -75,23 +75,98 @@ function App() {
       lastName: "Smith",
       firstName: "John",
       dob: "01/01/1980",
-      subject: "Lab Results",
-      dateReceived: "12/18/2024",
+      subject: "Fatigue",
+      dateReceived: "04/01/2025",
       fromUser: "Patient",
-      message: "I’ve been waiting for my lab results for what feels like forever...",
+      message:
+        "I've been feeling more fatigued than usual for the past week, and I'm having trouble completing my daily tasks. Is this normal? Should I be concerned?",
+      emrData: `Age: 55 years
+Gender: Male
+Cancer diagnosis: Stage III non-small cell lung cancer (NSCLC)
+PMH: hypertension, hyperlipidemia
+Prior cancer treatments: None
+Current cancer treatments: radiotherapy with concurrent cisplatin (started 2 weeks ago)
+Current medication list: lisinopril, amlodipine, simvastatin, aspirin, pantoprazole
+Summary of most recent oncology visit (1 week ago): 55-year-old male with newly diagnosed stage III NSCLC. He is on chemoradiation and tolerating treatment well. No significant side effects were reported. Will continue treatment as planned.`
     },
     {
       mrn: "234567",
-      lastName: "Doe",
-      firstName: "Jane",
+      lastName: "Taylor",
+      firstName: "Emily",
       dob: "02/02/1985",
-      subject: "Prescription",
-      dateReceived: "12/17/2024",
+      subject: "Hair Loss",
+      dateReceived: "04/02/2025",
       fromUser: "Patient",
       message:
-        "This situation with my missing prescription has been absolutely unacceptable...",
-    },
+        "I've noticed that my hair has started falling out more than usual. Is this a side effect of my treatment? What can I do to minimize hair loss?",
+      emrData: `Age: 47 years
+Gender: Female
+Cancer diagnosis: Stage II invasive ductal carcinoma of the breast
+PMH: asthma, obesity
+Prior cancer treatments: lumpectomy (completed 2 months ago)
+Current cancer treatments: adjuvant doxorubicin/cyclophosphamide (started 1 month ago)
+Current medication list: albuterol, montelukast, metformin, aspirin, atorvastatin, vitamin D
+Summary of most recent oncology visit (3 weeks ago): 47-year-old female with a history of stage II breast cancer s/p lumpectomy. She is on adjuvant doxorubicin/cyclophosphamide and tolerating treatment well. Will continue treatment as planned.`
+  },
+    {
+      mrn: "345678",
+      lastName: "Garcia",
+      firstName: "Luis",
+      dob: "03/03/1969",
+      subject: "Diarrhea",
+      dateReceived: "04/03/2025",
+      fromUser: "Patient",
+      message:
+        "I've been experiencing severe diarrhea for the past three days. I've tried over-the-counter medications, but they don't seem to help. What should I do?",
+      emrData: `Age: 68 years
+Gender: Male
+Cancer diagnosis: Stage IV colorectal cancer with liver metastases
+PMH: coronary artery disease, type 2 diabetes
+Prior cancer treatments: None
+Current cancer treatments: FOLFIRI + bevacizumab (started 2 months ago)
+Current medication list: metformin, aspirin, atorvastatin, metoprolol, lisinopril
+Summary of most recent oncology visit (6 weeks ago): 68-year-old male with newly diagnosed stage IV colorectal cancer with liver metastases. He is on first-line FOLFIRI + bevacizumab and tolerating treatment well. Will continue treatment as planned.`
+  },
+    {
+      mrn: "456789",
+      lastName: "Nguyen",
+      firstName: "Linh",
+      dob: "04/04/1977",
+      subject: "Abdominal Bloating",
+      dateReceived: "04/04/2025",
+      fromUser: "Patient",
+      message:
+        "I've been experiencing persistent abdominal bloating and discomfort for the past week. Is this a side effect of my treatment, or should I be concerned about something else?",
+      emrData: `Age: 72 years
+Gender: Female
+Cancer diagnosis: Stage III ovarian cancer
+PMH: osteoporosis, hypothyroidism
+Prior cancer treatments: debulking surgery (completed 3 months ago)
+Current cancer treatments: paclitaxel/carboplatin (started 2 months ago)
+Current medication list: levothyroxine, alendronate, calcium, vitamin D
+Summary of most recent oncology visit (4 weeks ago): 72-year-old female with stage III ovarian cancer s/p debulking surgery. She is on adjuvant paclitaxel/carboplatin and tolerating treatment well. Will continue treatment as planned.`
+  },
+    {
+      mrn: "567890",
+      lastName: "Patel",
+      firstName: "Ravi",
+      dob: "05/05/1985",
+      subject: "Shortness of Breath",
+      dateReceived: "04/05/2025",
+      fromUser: "Patient",
+      message:
+        "I've developed a persistent cough and shortness of breath over the past few days. Is this a side effect of my treatment, or should I be concerned about something else?",
+      emrData: `Age: 39 years
+Gender: Male
+Cancer diagnosis: Stage IIA Hodgkin lymphoma
+PMH: None
+Prior cancer treatments: None
+Current cancer treatments: ABVD (started 1 month ago)
+Current medication list: None
+Summary of most recent oncology visit (2 weeks ago): 39-year-old male with newly diagnosed stage IIA Hodgkin lymphoma. He is on ABVD and tolerating treatment well. Will continue treatment as planned.`
+  }
   ];
+  
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     document.addEventListener("mousemove", handleMouseMove);
@@ -114,7 +189,7 @@ function App() {
       const response = await fetch(`${BACKEND_URL}/api/get-ai-data`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ patientMessage: email.message }),
+        body: JSON.stringify({ patientMessage: email.message, emrDets: email.emrData }),
       });
 
       if (!response.ok) throw new Error("failed to fetch AI-generated data");
@@ -287,7 +362,8 @@ type InboxEntry = {
   dateReceived: string;
   fromUser: string;
   message: string;
-  categories: string[];
+  emrData: string;
+  categories: string[]; 
   aiReplies: AIReply[];
 };
 
@@ -565,6 +641,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       setShowAIEditModal(false);
   
       const patientMessage = entryData?.message || "";
+      const emrDets = entryData?.emrData || "";
       let originalText = "";
       let aiReply = "";
       let updateStateCallback: (editedReply: string) => void;
@@ -633,6 +710,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           patientMessage,
+          emrDets,
           originalText, 
           aiReply, 
           editOptions: aiEditOptions,
@@ -889,6 +967,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         body: JSON.stringify({
           instructions: updatedSelectedInstructions, 
           patientMessage: entryData?.message || "",
+          emrDets: entryData?.emrData || ""
         }),
       });
   
@@ -928,7 +1007,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     currentReplyContent: string, 
     subject: string, 
     previousMessage: string,
-    patientMessage: string 
+    patientMessage: string,
+    emrDets: string
   ) => {
     const category =
       replyIndex === 0
@@ -947,6 +1027,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           patientMessage, 
+          emrDets,
           aiReply: currentReplyContent, 
           category,
           subject, 
@@ -1381,11 +1462,15 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
                 );
               })}
             </div>
+            <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-700 whitespace-pre-wrap font-mono shadow-inner">
+              {entryData?.emrData}
+            </div>
         </div>
+   
         {!showReplySection && (
           <div className="border rounded-lg bg-white shadow-sm p-4 mb-6">
             <div className="flex items-center mb-2">
-              <div className="w-10 h-10 rounded-full bg-purple-400 flex items-center justify-center text-white font-bold mr-3">
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-bold mr-3">
                 {entryData?.fromUser.charAt(0).toUpperCase()}
               </div>
               <div>
@@ -1547,7 +1632,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
               generatedReplies[mrn || ""] || "", 
               entryData?.subject || "", 
               entry.aiReplies[activeTab - 1]?.content || "", 
-              entryData?.message || ""
+              entryData?.message || "",
+              entryData?.emrData || ""
             )
             console.log("flip", generatedReplies)}
           }
@@ -1676,7 +1762,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
             entry.aiReplies[activeTab]?.content || "", 
             entry.subject || "", 
             entry.aiReplies[activeTab - 1]?.content || "", 
-            entryData?.message || "" 
+            entryData?.message || "",
+            entryData?.emrData || ""
           )
         }
       >
@@ -1806,7 +1893,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
           )}
           <div className="border rounded-lg bg-white shadow-sm p-4 mb-6">
             <div className="flex items-center mb-2">
-              <div className="w-10 h-10 rounded-full bg-purple-400 flex items-center justify-center text-white font-bold mr-3">
+              <div className="w-10 h-10 rounded-full bg-red-400 flex items-center justify-center text-white font-bold mr-3">
                 {entryData?.fromUser.charAt(0).toUpperCase()}
               </div>
               <div>

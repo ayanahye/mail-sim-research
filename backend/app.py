@@ -11,6 +11,12 @@ Prompts in each endpoint are based on prompts from prior works:
 - https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2824738 
 - https://www.sciencedirect.com/science/article/pii/S2949761225000057#appsec1 
 
+Data Used for EMR Details and Messages:
+- https://github.com/AIM-Harvard/OncQA/blob/main/Data/original_questions_gpt4_outputs/Master2.csv
+
+Notes:
+- small models not performing well. test on prof laptop
+
 *************
 '''
 ##############################################
@@ -74,6 +80,7 @@ def extract_categories(raw_categories):
 def get_ai_data():
     data = request.json
     patient_message = data.get('patientMessage', '')
+    EMR_details = data.get('emrDets', '')
 
     print(patient_message)
 
@@ -125,7 +132,7 @@ def get_ai_data():
 
         **Here are the patient details**:
 
-        {EMR details}
+        {EMR_details}
 
         Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
 
@@ -192,6 +199,7 @@ def regenerate_ai_reply():
     data = request.json
 
     patient_message = data.get('patientMessage', '')
+    EMR_details = data.get('emrDets', '')
     category = data.get('category', '')
     prev_message = data.get('previousMessage', '')  
     ai_reply = data.get('aiReply', '')  
@@ -239,7 +247,7 @@ def regenerate_ai_reply():
 
         **Here are the patient details**:
 
-        {EMR details}
+        {EMR_details}
 
         Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
 
@@ -290,6 +298,7 @@ def edit_ai_reply():
     data = request.json
 
     patient_message = data.get('patientMessage', '')
+    EMR_details = data.get("emrDets", '')
     ai_reply = data.get('aiReply', '')
     edit_options = data.get('editOptions', {})
 
@@ -335,7 +344,7 @@ def edit_ai_reply():
 
         **Here are the patient details**:
 
-        {EMR details}
+        {EMR_details}
 
         Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
 
@@ -378,6 +387,7 @@ def provide_instructions():
 
     predefined_instructions = data.get('instructions', [])
     patient_message = data.get('patientMessage', '')
+    EMR_details = data.get('emrDets', '')
 
     print(f"Predefined Instructions: {predefined_instructions}")
     print(f"Patient Message: {patient_message}")
@@ -421,7 +431,7 @@ def provide_instructions():
 
         **Here are the patient details**:
 
-        {EMR details}
+        {EMR_details}
 
         Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
 

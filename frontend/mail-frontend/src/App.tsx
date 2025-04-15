@@ -181,14 +181,14 @@ Summary of most recent oncology visit (3 weeks ago): 47-year-old female with a h
       message: "I've been experiencing severe diarrhea for the past three days. I've tried over-the-counter medications, but they don't seem to help. What should I do?",
       categories: ["Treatment Side Effect", "Symptom Management", "Needs Follow-up", "High Urgency"],
       emrData: `Age: 68 years
-  Gender: Male
-  Cancer diagnosis: Stage IV colorectal cancer with liver metastases
-  PMH: coronary artery disease, type 2 diabetes
-  Prior cancer treatments: None
-  Current cancer treatments: FOLFIRI + bevacizumab (started 2 months ago)
-  Current medication list: metformin, aspirin, atorvastatin, metoprolol, lisinopril
-  Summary of most recent oncology visit (6 weeks ago): 68-year-old male with newly diagnosed stage IV colorectal cancer with liver metastases. He is on first-line FOLFIRI + bevacizumab and tolerating treatment well. Will continue treatment as planned.`,
-    aiReplies: [
+Gender: Male
+Cancer diagnosis: Stage IV colorectal cancer with liver metastases
+PMH: coronary artery disease, type 2 diabetes
+Prior cancer treatments: None
+Current cancer treatments: FOLFIRI + bevacizumab (started 2 months ago)
+Current medication list: metformin, aspirin, atorvastatin, metoprolol, lisinopril
+Summary of most recent oncology visit (6 weeks ago): 68-year-old male with newly diagnosed stage IV colorectal cancer with liver metastases. He is on first-line FOLFIRI + bevacizumab and tolerating treatment well. Will continue treatment as planned.`,
+  aiReplies: [
         {
           label: "Empathetic Reply",
           content: "Dear Carlos,\n\nI’m so sorry to hear that you’ve been struggling with severe diarrhea. I can only imagine how uncomfortable and frustrating this must be for you, especially when over-the-counter treatments haven’t helped. You’re not alone in this—we're here to support you and help find a solution. I’ve flagged your message for urgent review and will follow up with the care team so we can determine next steps as soon as possible.\n\nWarmly,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",

@@ -86,142 +86,132 @@ function App() {
   // ugh this 
 
   const dummyData = [
-    { 
-      mrn: "123456", 
-      lastName: "Smith", 
-      firstName: "John", 
-      dob: "01/01/1980", 
-      subject: "Lab Results", 
-      dateReceived: "12/18/2024", 
-      fromUser: "Patient", 
-      message: "I’ve been waiting for my lab results for what feels like forever, and it’s starting to take a serious toll on me. I’m losing sleep, I can’t focus at work, and the uncertainty is just too much to bear. I don’t understand why it’s taking this long, and honestly, it feels like no one even cares about how stressful this is for me. I’ve reached out multiple times, but I haven’t gotten any clear answers. I just want to know what’s happening and when I’ll get the results. Please, I need someone to take this seriously and give me some clarity. I can’t handle this waiting anymore.",
-      categories: ["Urgent Response", "Follow-up", "High Urgency"],
-      aiReplies: [
-        { 
-          label: "Empathetic Reply", 
-          content: "Dear John,\n\nI’m truly sorry to hear how this delay has been impacting you. I completely understand how stressful it is to wait for important results. Please know that we’re prioritizing your case, and I’ll personally ensure you’re updated as soon as we have any information. Thank you for your patience during this difficult time.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+    {
+      mrn: "223344",
+      lastName: "Johnson",
+      firstName: "Michael",
+      dob: "06/22/1968",
+      subject: "Fatigue During Treatment",
+      dateReceived: "04/10/2025",
+      fromUser: "Patient",
+      message: "I've been feeling more fatigued than usual for the past week, and I'm having trouble completing my daily tasks. Is this normal? Should I be concerned?",
+      categories: ["Treatment Side Effects", "Follow-up", "Low Urgency"],
+      emrData: `Age: 55 years
+Gender: Male
+Cancer diagnosis: Stage III non-small cell lung cancer (NSCLC)
+PMH: hypertension, hyperlipidemia
+Prior cancer treatments: None
+Current cancer treatments: radiotherapy with concurrent cisplatin (started 2 weeks ago)
+Current medication list: lisinopril, amlodipine, simvastatin, aspirin, pantoprazole
+Summary of most recent oncology visit (1 week ago): 55-year-old male with newly diagnosed stage III NSCLC. He is on chemoradiation and tolerating treatment well. No significant side effects were reported. Will continue treatment as planned.`,
+    aiReplies: [
+        {
+          label: "Empathetic Reply",
+          content: "Dear Michael,\n\nI’m sorry to hear that you’re feeling more fatigued than usual. It’s completely understandable to feel concerned, especially while going through treatment. Fatigue is a common side effect of both chemotherapy and radiation. Please know that your experience is valid, and we’re here to support you every step of the way.\n\nWarmly,\nNurse Anna",
           AIEdits: {
-            content: "Dear John,\n\nI truly understand the stress and anxiety you must be feeling as you await your results. Please know that your concerns are being heard, and we are prioritizing your case. We are actively working to provide you with the information you need, and I will ensure you’re promptly updated. Thank you for your patience and understanding during this challenging time.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+            content: "Dear Michael,\n\nThank you for sharing how you’ve been feeling. Fatigue during treatment can be overwhelming, and your concerns are completely valid. It’s not uncommon for patients undergoing chemoradiation to experience this. We’ll continue to monitor your symptoms closely, and I encourage you to rest when you can and let us know if your fatigue worsens or affects your ability to care for yourself.\n\nWarmly,\nNurse Anna"
           }
         },
-        { 
-          label: "Direct Reply", 
-          content: "Hi John,\n\nYour lab results are still being processed. I completely understand the urgency, and I’ll notify you immediately once they are ready. Please rest assured that we’re working to get this resolved for you as quickly as possible.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+        {
+          label: "Direct Reply",
+          content: "Hi Michael,\n\nFatigue is a known side effect of your current treatment. Please monitor your symptoms and reach out if they worsen. We’ll continue your care as planned unless something changes.\n\nBest,\nNurse Anna",
           AIEdits: {
-            content: "Hi John,\n\nI completely understand how important these results are to you, and I sincerely apologize for the delay. Rest assured, I am actively following up on your case and will notify you as soon as the results are available. Your patience is greatly appreciated.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+            content: "Hi Michael,\n\nFatigue is common with both cisplatin and radiation therapy. It’s important to monitor your energy levels, and if things get worse or interfere with daily activities, please let us know right away so we can evaluate next steps.\n\nBest regards,\nNurse Anna"
           }
         },
-        { 
-          label: "Reassurance Reply", 
-          content: "Hello John,\n\nI understand how frustrating this wait must be, and I want to reassure you that your results are a priority for us. We’re actively monitoring the situation and will reach out as soon as the information is available. You are in good hands, and I appreciate your patience.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+        {
+          label: "Reassurance Reply",
+          content: "Hello Michael,\n\nWhat you’re experiencing is not unusual during chemoradiation. Many patients report fatigue, especially in the early weeks. Please rest assured that we’re keeping a close eye on your progress and are here to support you throughout.\n\nKind regards,\nNurse Anna",
           AIEdits: {
-            content: "Hello John,\n\nI truly understand how stressful this waiting period is, and I want to assure you that we’re doing everything we can to prioritize your results. We’re actively monitoring the situation and will be in touch as soon as we have more information. Your patience and trust mean a great deal to us.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+            content: "Hello Michael,\n\nFatigue can certainly be challenging, but it’s a common and expected part of treatment like yours. We’ll continue monitoring you closely, and if anything changes or you need additional support, we’re just a message away.\n\nKind regards,\nNurse Anna"
           }
         }
       ]
     },
-    { 
-      mrn: "234567", 
-      lastName: "Doe", 
-      firstName: "Jane", 
-      dob: "02/02/1985", 
-      subject: "Prescription", 
-      dateReceived: "12/17/2024", 
-      fromUser: "Patient", 
-      message: "This situation with my missing prescription has been absolutely unacceptable. I’ve been without my medication for several days now, and it’s causing me serious distress. This medication isn’t optional for me—it’s something I rely on every day to manage my condition. I feel like I’m being completely ignored. No one seems to understand how urgent this is, and I’m starting to feel like I can’t trust the system to take care of me. I need answers, and I need someone to take responsibility for fixing this immediately. I shouldn’t have to beg for something so basic and essential to my health.",
-      categories: ["Prescription Issue", "High Urgency", "Follow-up"],
-      aiReplies: [
-        { 
-          label: "Empathetic Reply", 
-          content: "Dear Jane,\n\nI’m so sorry for the distress and inconvenience this has caused. I completely understand how important your medication is and how frustrating delays can be. I’m looking into this immediately and will ensure it is resolved as quickly as possible. Your trust is very important to us, and we’ll do everything we can to make this right.\n\nSincerely,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*",
+    {
+      mrn: "334455",
+      lastName: "Taylor",
+      firstName: "Sandra",
+      dob: "11/05/1977",
+      subject: "Hair Loss Concerns",
+      dateReceived: "04/11/2025",
+      fromUser: "Patient",
+      message: "I've noticed that my hair has started falling out more than usual. Is this a side effect of my treatment? What can I do to minimize hair loss?",
+      categories: ["Treatment Side Effects", "Information Request", "Medium Urgency"],
+      emrData: `Age: 47 years
+Gender: Female
+Cancer diagnosis: Stage II invasive ductal carcinoma of the breast
+PMH: asthma, obesity
+Prior cancer treatments: lumpectomy (completed 2 months ago)
+Current cancer treatments: adjuvant doxorubicin/cyclophosphamide (started 1 month ago)
+Current medication list: albuterol, montelukast, metformin, aspirin, atorvastatin, vitamin D
+Summary of most recent oncology visit (3 weeks ago): 47-year-old female with a history of stage II breast cancer s/p lumpectomy. She is on adjuvant doxorubicin/cyclophosphamide and tolerating treatment well. Will continue treatment as planned.`,
+    aiReplies: [
+        {
+          label: "Empathetic Reply",
+          content: "Dear Sandra,\n\nI completely understand how upsetting it can be to notice hair loss. It’s a visible and emotional part of the treatment journey, and you’re not alone in feeling concerned. We’re here to support you with resources and options to help you feel more comfortable and informed.\n\nWarm wishes,\nNurse Anna",
           AIEdits: {
-            content: "Dear Jane,\n\nI’m truly sorry to hear about the distress you’re experiencing. I understand how critical this medication is for you, and I deeply regret the inconvenience this delay has caused. I am personally addressing this issue and will ensure that it’s resolved promptly. Your well-being and trust are our top priority, and we’re committed to making this right.\n\nSincerely,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+            content: "Dear Sandra,\n\nHair loss can be a deeply emotional side effect of chemotherapy, and I truly empathize with what you're going through. This is unfortunately common with your treatment regimen, but we’re here to provide you with support, including options like wigs or scarves and referrals to services that specialize in this area.\n\nWarm wishes,\nNurse Anna"
           }
         },
-        { 
-          label: "Direct Reply", 
-          content: "Hi Jane,\n\nI understand how critical your medication is, and I apologize for the delay. I’ve already reached out to the pharmacy and will follow up with you as soon as I have an update. Thank you for bringing this to my attention.\n\nBest regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*",
+        {
+          label: "Direct Reply",
+          content: "Hi Sandra,\n\nHair loss is a known side effect of doxorubicin/cyclophosphamide. If you’d like, we can connect you with supportive resources such as head coverings or hair care tips. Let us know how we can help.\n\nBest,\nNurse Anna",
           AIEdits: {
-            content: "Hi Jane,\n\nI completely understand the urgency of this matter, and I sincerely apologize for the delay. I’ve reached out to the pharmacy and am closely following up to ensure the issue is resolved quickly. I will keep you informed with updates as soon as I have them. Thank you for your patience and understanding.\n\nBest regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+            content: "Hi Sandra,\n\nYes, hair loss is a typical side effect of your chemotherapy regimen. We can provide referrals for wigs or other hair accessories, and there are programs that may offer assistance. Please reach out if you’d like us to connect you.\n\nBest,\nNurse Anna"
           }
         },
-        { 
-          label: "Reassurance Reply", 
-          content: "Hello Jane,\n\nI completely understand your frustration and want to assure you that we’re working to resolve this issue as a top priority. I’m in contact with the pharmacy to ensure your medication is sent out immediately. Thank you for your patience as we address this.\n\nKind regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*",
+        {
+          label: "Reassurance Reply",
+          content: "Hello Sandra,\n\nHair loss can be one of the more distressing effects of chemotherapy, but it’s a common and expected part of this phase of treatment. We’ll help you navigate this with compassion and resources to support your comfort.\n\nKind regards,\nNurse Anna",
           AIEdits: {
-            content: "Hello Jane,\n\nI understand how distressing this situation is, and I want to assure you that it’s being prioritized. I’m actively working with the pharmacy to ensure your medication is sent to you as soon as possible. Your patience and trust are greatly appreciated as we resolve this.\n\nKind regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+            content: "Hello Sandra,\n\nWhat you’re experiencing is a very normal reaction to your chemotherapy. We’re here to walk through it with you and can guide you toward options that may help you feel more supported during this time.\n\nKind regards,\nNurse Anna"
           }
         }
       ]
     },
-    { 
-      mrn: "345678", 
-      lastName: "Brown", 
-      firstName: "Charlie", 
-      dob: "03/03/1990", 
-      subject: "Message", 
-      dateReceived: "12/16/2024", 
-      fromUser: "Patient", 
-      message: "I don’t know what’s going on with my condition, and the lack of communication has been unbearable. I’m constantly on edge, wondering if I’ve been forgotten or if something has gone wrong. The anxiety is making it hard for me to function in my daily life. I don’t understand why it’s so hard to get updates. I’ve tried to be patient, but it feels like I’m being left in the dark with no regard for how this is affecting me emotionally. I need someone to step up and provide me with the information I’ve been waiting for because I can’t take this silence anymore.",
-      categories: ["General Inquiry", "Medium Urgency", "Clarification Needed"],
-      aiReplies: [
-        { 
-          label: "Empathetic Reply", 
-          content: "Hi Charlie,\n\nI’m so sorry for the anxiety this is causing you. It’s absolutely understandable to feel this way, and I want to reassure you that your case is important to us. I’m reviewing your file now and will provide you with an update as soon as I have more information. You are not being forgotten.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+    {
+      mrn: "789012",
+      lastName: "Garcia",
+      firstName: "Carlos",
+      dob: "03/14/1957",
+      subject: "Side Effects - Diarrhea",
+      dateReceived: "03/20/2025",
+      fromUser: "Patient",
+      message: "I've been experiencing severe diarrhea for the past three days. I've tried over-the-counter medications, but they don't seem to help. What should I do?",
+      categories: ["Treatment Side Effect", "Symptom Management", "Needs Follow-up", "High Urgency"],
+      emrData: `Age: 68 years
+  Gender: Male
+  Cancer diagnosis: Stage IV colorectal cancer with liver metastases
+  PMH: coronary artery disease, type 2 diabetes
+  Prior cancer treatments: None
+  Current cancer treatments: FOLFIRI + bevacizumab (started 2 months ago)
+  Current medication list: metformin, aspirin, atorvastatin, metoprolol, lisinopril
+  Summary of most recent oncology visit (6 weeks ago): 68-year-old male with newly diagnosed stage IV colorectal cancer with liver metastases. He is on first-line FOLFIRI + bevacizumab and tolerating treatment well. Will continue treatment as planned.`,
+    aiReplies: [
+        {
+          label: "Empathetic Reply",
+          content: "Dear Carlos,\n\nI’m so sorry to hear that you’ve been struggling with severe diarrhea. I can only imagine how uncomfortable and frustrating this must be for you, especially when over-the-counter treatments haven’t helped. You’re not alone in this—we're here to support you and help find a solution. I’ve flagged your message for urgent review and will follow up with the care team so we can determine next steps as soon as possible.\n\nWarmly,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
           AIEdits: {
-            content: "Hi Charlie,\n\nI completely understand the anxiety you must be feeling, and I want to assure you that you are not being forgotten. Your concerns are very important to us. I’m reviewing your file now and will provide you with an update as soon as possible. Please know that we’re here for you during this challenging time.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+            content: "Dear Carlos,\n\nI'm sorry you're going through this discomfort. Diarrhea can be a distressing side effect, especially when treatments aren’t effective. Thank you for letting us know—we’re here for you. I've elevated this to your care team, and we’ll be in touch shortly with next steps.\n\nTake care,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
           }
         },
-        { 
-          label: "Direct Reply", 
-          content: "Hi Charlie,\n\nI’m so sorry for the delay in communication. We are currently reviewing your case and will provide you with an update as soon as possible. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+        {
+          label: "Direct Reply",
+          content: "Hi Carlos,\n\nThank you for reaching out. Persistent diarrhea for several days may be a side effect of your treatment, but it’s important we evaluate it further. Please avoid taking additional medications until we’ve had a chance to speak. I’ll notify your oncology team and we’ll follow up with you as soon as possible.\n\nBest,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
           AIEdits: {
-            content: "Hi Charlie,\n\nI’m so sorry for the delay in i hate u so much. We are currently reviewing your case and will provide you with an update as soon as possible. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+            content: "Hi Carlos,\n\nSevere diarrhea can be a known side effect of your treatment. I’ve alerted the oncology team and we’ll get back to you with guidance shortly. Please avoid trying new medications on your own for now.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
           }
         },
-        { 
-          label: "Reassurance Reply", 
-          content: "Hello Charlie,\n\nI know it’s been tough, and I want to assure you that we’re on top of your case. I’m actively reviewing your situation and will update you soon. We value your trust and appreciate your patience.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+        {
+          label: "Reassurance Reply",
+          content: "Hello Carlos,\n\nI understand how worrying it is to deal with persistent diarrhea, especially when you're already going through treatment. This can sometimes occur with your current regimen, and we’re here to help you manage it. We’ll review your symptoms right away and get back to you with steps you can take. You're not alone—we’re with you every step of the way.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
           AIEdits: {
-            content: "Hello Charlie,\n\nI truly understand how stressful this situation is, and I want to reassure you that we’re reviewing your case carefully. You are not being overlooked, and we’re working to provide you with the information you need. Thank you for your patience during this time.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+            content: "Hello Carlos,\n\nI know dealing with severe diarrhea can be very concerning, especially while undergoing cancer treatment. This can be a side effect, and we want to make sure you're supported. We’ll review your message immediately and connect with you on the best next steps.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
           }
         }
       ]
-    },
-    { 
-      mrn: "567890", 
-      lastName: "Lee", 
-      firstName: "Chris", 
-      dob: "05/05/2000", 
-      subject: "Document", 
-      dateReceived: "12/14/2024", 
-      fromUser: "Patient", 
-      message: "I submitted all of my documents over a week ago, and I haven’t heard a single word back. I’m starting to feel like no one is even paying attention to my case, and it’s making me incredibly anxious. I keep wondering if something went wrong—were my documents lost, or did I miss a step? The uncertainty is driving me crazy, and I feel completely ignored. I just need someone to confirm that everything is in order and let me know what’s going on. This is so important to me, and I can’t understand why it’s taking so long to get even a simple acknowledgment.",
-      categories: ["Document Submission", "Low Urgency", "Follow-up"],
-      aiReplies: [
-        { 
-          label: "Empathetic Reply", 
-          content: "Dear Chris,\n\nI understand how stressful it can be to wait for confirmation. Thank you for letting me know. I’ll review your documents immediately and confirm everything for you. Please don’t worry—we’ll make sure everything is in order.\n\nSincerely,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
-          AIEdits: {
-            content: "Some edited content here"
-          }
-        },
-        { 
-          label: "Direct Reply", 
-          content: "Hi Chris,\n\nYour documents have been received and are currently under review. I’ll notify you as soon as everything is processed. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
-          AIEdits: {
-            content: "Some edited content here"
-          }
-        },
-        { 
-          label: "Reassurance Reply", 
-          content: "Hello Chris,\n\nI want to let you know that your documents have been received and everything looks great. You’ll hear from us soon regarding the next steps. Thank you for keeping us updated.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
-          AIEdits: {
-            content: "Some edited content here"
-          }
-        }
-      ]
-    }
+    }    
   ];
   
   
@@ -349,6 +339,7 @@ type InboxEntry = {
   message: string;
   categories: string[];
   aiReplies: AIReply[];
+  emrData: string;
 };
 
 type InboxProps = {
@@ -1115,7 +1106,28 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
                 );
               })}
             </div>
+            <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-700 whitespace-pre-wrap font-mono shadow-inner">
+              {entryData?.emrData}
+            </div>
         </div>
+
+        {!showReplySection && (
+          <div className="border rounded-lg bg-white shadow-sm p-4 mb-6">
+            <div className="flex items-center mb-2">
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-bold mr-3">
+                {entryData?.fromUser.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <p className="font-semibold">{entryData?.fromUser}</p>
+                <p className="text-xs text-gray-500">
+                  {new Date(entryData?.dateReceived).toLocaleString()}
+                </p>
+              </div>
+            </div>
+            <p className="text-sm text-gray-800">{entryData?.message}</p>
+          </div>
+        )}
+
         {showReplySection && (
         <div>
         <div className="items-center px-4 pt-4">
@@ -1226,7 +1238,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             setShowAIEditModal(true);
             setIsAIEditButtonClicked(true);
           }}
-          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
         >
           AI Edit
         </button>
@@ -1263,7 +1275,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           setShowAIEditModal(true);
           setIsAIEditButtonClicked(true);
         }}
-        className="ml-2 bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+        className="ml-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
         >
         AI Edit
         </button>          
@@ -1378,7 +1390,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             setShowAIEditModal(true);
             setIsAIEditButtonClicked(true);
           }}
-          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
         >
           AI Edit
         </button>
@@ -1456,7 +1468,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
             setShowAIEditModal(true);
             setIsAIEditButtonClicked(true);
           }}
-          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
         >
           AI Edit
         </button>
@@ -1496,7 +1508,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData }) => {
           )}
           <div className="border rounded-lg bg-white shadow-sm p-4 mb-6">
             <div className="flex items-center mb-2">
-              <div className="w-10 h-10 rounded-full bg-purple-400 flex items-center justify-center text-white font-bold mr-3">
+              <div className="w-10 h-10 rounded-full bg-red-400 flex items-center justify-center text-white font-bold mr-3">
                 {entryData?.fromUser.charAt(0).toUpperCase()}
               </div>
               <div>

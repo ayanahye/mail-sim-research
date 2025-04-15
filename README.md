@@ -22,3 +22,7 @@ This is a research project in progress, to setup please follow:
 ### Branches
 - **main:** this is the application currently deployed and accessible at: https://mail-ai-simulation.netlify.app/
 - **llm-integration:** this will not be deployed but is for testing purposes.
+
+### Data
+- Please note EMR data and messages are from: https://github.com/AIM-Harvard/OncQA/blob/main/Data/original_questions_gpt4_outputs/Master2.csv
+- Drafted replies are from GPT 4

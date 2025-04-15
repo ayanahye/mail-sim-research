@@ -127,7 +127,7 @@ def get_ai_data():
 
         {EMR details}
 
-        Now, respond to the following message from an upset and angry patient as if you were their nurse. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
+        Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
 
         1. **Template**: "Hello there, (your reply here), Best, ___."
         2. **Tone**: Maintain a professional, empathetic, and supportive tone at all times.
@@ -172,7 +172,7 @@ def get_ai_data():
         formatted_replies = [
             {
                 "label": reply["label"],
-                "content": f'{reply["content"]} Note: This email was drafted with AI assistance and reviewed/approved by the nurse.'
+                "content": f'{reply["content"]} Note: This email was drafted with AI assistance and reviewed/approved by the provider.'
             }
             for reply in parsed_replies
         ]
@@ -241,7 +241,7 @@ def regenerate_ai_reply():
 
         {EMR details}
 
-        Now, respond to the following message from an upset and angry patient as if you were their nurse. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
+        Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
 
         1. **Template**: "Hello there, (your reply here), Best, ___."
         2. **Tone**: Maintain a professional, empathetic, and supportive tone at all times.
@@ -270,7 +270,7 @@ def regenerate_ai_reply():
 
         formatted_reply = {
             "label": category,
-            "content": f"{raw_reply} Note: This email was drafted with AI assistance and reviewed/approved by the nurse."
+            "content": f"{raw_reply} Note: This email was drafted with AI assistance and reviewed/approved by the provider."
         }
 
         print(raw_reply)
@@ -337,7 +337,7 @@ def edit_ai_reply():
 
         {EMR details}
 
-        Now, respond to the following message from an upset and angry patient as if you were their nurse. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
+        Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
 
         1. **Template**: "Hello there, (your reply here), Best, ___."
         2. **Tone**: Maintain a professional, empathetic, and supportive tone at all times.
@@ -363,7 +363,7 @@ def edit_ai_reply():
         raw_reply = clean_response(raw_reply)
         print(raw_reply)
 
-        formatted_reply = {"content": raw_reply + " Note: This email was drafted with AI assistance and reviewed/approved by the nurse."}
+        formatted_reply = {"content": raw_reply + " Note: This email was drafted with AI assistance and reviewed/approved by the provider."}
 
         return jsonify({"editedReply": formatted_reply})
 
@@ -423,7 +423,7 @@ def provide_instructions():
 
         {EMR details}
 
-        Now, respond to the following message from an upset and angry patient as if you were their nurse. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
+        Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
 
         1. **Template**: "Hello there, (your reply here), Best, ___."
         2. **Tone**: Maintain a professional, empathetic, and supportive tone at all times.
@@ -448,7 +448,7 @@ def provide_instructions():
         raw_reply = clean_response(raw_reply)
         print(raw_reply)
 
-        formatted_reply = {"content": raw_reply + " Note: This email was drafted with AI assistance and reviewed/approved by the nurse."}
+        formatted_reply = {"content": raw_reply + " Note: This email was drafted with AI assistance and reviewed/approved by the provider."}
 
         return jsonify({"generatedReply": formatted_reply})
 

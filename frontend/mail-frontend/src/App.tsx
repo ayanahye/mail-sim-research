@@ -61,7 +61,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ isOn, onToggle, label }) =>
 );
 
 function App() {
-  const BACKEND_URL = "http://localhost:5000";
+  const BACKEND_URL = "http://127.0.0.1:5000";
 
   const [inboxWidth, setInboxWidth] = useState(40); // 40% as default
   const [data, setData] = useState<InboxEntry[]>([]);
@@ -921,7 +921,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   };  
   
 
-  const BACKEND_URL = "http://localhost:5000";
+  const BACKEND_URL = "http://127.0.0.1:5000";
 
   const handleRegenerateReply_mode1 = async (
     replyIndex: number, 

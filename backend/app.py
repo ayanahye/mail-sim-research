@@ -55,7 +55,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173"]}})
 
 client = OpenAI(
-    base_url="http://localhost:8080/v1",
+    base_url="http://127.0.0.1:8080/v1",
     api_key="fake-key",
 )
 

@@ -16,6 +16,10 @@ Data Used for EMR Details and Messages:
 
 Notes:
 - small models not performing well. test on prof laptop
+    - Mistral 7b performs the best (how do we eval) -- talk w prof
+    - gemini responses way too short and almost always ask patient to make an appointment
+    - llama faces similar issues
+    - Mistral actually makes attempts to provide advice outside of "discuss at our next appointment" 
 
 *************
 '''
@@ -53,7 +57,7 @@ def parse_responses(raw_replies):
         if i >= len(labels):
             break
         
-        content_match = re.search(r"(.*?), Kind regards", response)
+        content_match = re.search(r"(.*?) Best,", response)
         content = content_match.group(1).strip() if content_match else response
         
         parsed_responses.append({
@@ -93,15 +97,15 @@ def get_ai_data():
         Categories: ["High Urgency", "Medium Urgency", "Low Urgency", "Medication", "Symptoms", "Test-Related", "Medical Questions", "Acknowledgments", "More Than One Issue"]
         Provide a comma-separated list of the most relevant categories. Return at most 3 and don't include anything else in your response.
         Provide at least 1 category. 
-        For urgency always provide a category (always 1).
+        Always provide one urgency level (High, Medium, or Low).
     """
 
     # mon april 7th on cmpus
 
     reply_prompt = f"""
-        You are drafting a message for a provider to send in response to a patient message. The response should be empathetic, polite, and concise, and should only address the patient's specific question or request. Before generating the response, review the following information:
+        You are drafting 3 messages for a provider to send in response to a patient message. The responses should be empathetic, polite, and concise, and should only address the patient's specific question or request. Before generating the responses, review the following information:
 
-        Patient details, Diagnosis details. Treatment information, Summary of most recent oncology visit
+        Patient details, Diagnosis details. Treatment information, Summary of most recent oncology visit (provided below)
 
         **Instructions**:
 
@@ -109,11 +113,7 @@ def get_ai_data():
 
         Assume the patient reads at a high school level. Use simple and clear language.
 
-        Do not diagnose or suggest specific medical conditions or treatments.
-
-        Do not interpret labs, test results, or symptoms.
-
-        Do not confirm or offer to order any tests. If asked, respond: “We’ll discuss any needed tests at your next appointment.”
+        Do not confirm or offer to order any tests. If asked about tests, respond: “We’ll discuss any needed tests at your next appointment.”
 
         Do not offer to take any action, and do not say that anyone else will take action (e.g., calling the patient, sending prescriptions, making referrals).
 
@@ -130,17 +130,18 @@ def get_ai_data():
         If the patient asks about scheduling, respond with:
         “Please check for available appointment times in the Message Portal or call our office.”
 
+        In writing your response, feel free to make recommendations as if you were the attending healthcare provider (since your response will be approved by the healthcare provider). Do not mention the patient should contact their provider, since you are acting as the provider.
+
         **Here are the patient details**:
 
         {EMR_details}
 
-        Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
+        Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure for all 3 response types:
 
-        1. **Template**: "Hello there, (your reply here), Best, ___."
-        2. **Tone**: Maintain a professional, empathetic, and supportive tone at all times.
-        3. **No placeholders**: Do not use any placeholders like `(your reply here)` in your response. The response must directly address the patient's concerns or queries.
+        1. **Tone**: Maintain a professional, empathetic, and supportive tone at all times.
+        2. **No placeholders**: Do not use any placeholders like `(your reply here)` in your response. The response must directly address the patient's concerns or queries. Don't as the patient to schedule and appointment unless it is deemed necessary.
 
-        Follow these guidelines for each response:
+        Here are the response types:
         - **Informative**: Provide helpful information about procedures, policies, or next steps.
         - **Suggestive**: Suggest next steps or actions that the patient can take.
         - **Redirective**: Redirect the issue to appropriate resources if needed.
@@ -170,10 +171,10 @@ def get_ai_data():
         )
         
         raw_replies = reply_completion.choices[0].message.content
-        print("raw")
+        print("\nraw replies: ")
         print(raw_replies)
         parsed_replies = parse_responses(raw_replies)
-        print(2)
+        print("\nparsed replies:  ")
         print(parsed_replies)
 
         formatted_replies = [

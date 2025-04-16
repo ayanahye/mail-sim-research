@@ -1593,7 +1593,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
             setShowAIEditModal(true);
             setIsAIEditButtonClicked(true);
           }}
-          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
         >
           AI Edit
         </button>
@@ -1649,7 +1649,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
           setShowAIEditModal(true);
           setIsAIEditButtonClicked(true);
         }}
-        className="ml-2 bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+        className="ml-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
         >
         AI Edit
         </button>          
@@ -1767,7 +1767,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
           )
         }
       >
-        Regenerate here
+        Regenerate
       </button>
 
         <button
@@ -1775,7 +1775,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
             setShowAIEditModal(true);
             setIsAIEditButtonClicked(true);
           }}
-          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
         >
           AI Edit
         </button>
@@ -1853,7 +1853,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
             setShowAIEditModal(true);
             setIsAIEditButtonClicked(true);
           }}
-          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
         >
           AI Edit
         </button>

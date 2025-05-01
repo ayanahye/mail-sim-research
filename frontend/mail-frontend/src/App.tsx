@@ -1385,8 +1385,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   
     return (
       <div className="px-2 mt-10">
-        <h3>Make Additional Changes:</h3>
-        <textarea defaultValue={editedText} onChange={(e) => handleBlankReplyChange(e)} className="w-full h-40 p-2 border rounded" />
         <div className="mt-4 px-2">
           <h3>Original Text:</h3>
           <p>{originalText}</p>
@@ -1738,7 +1736,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         <>
         {
         isAIEditButtonClicked && (
-          <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff Test</button>
+          <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
         )
         }
         <textarea

@@ -105,7 +105,7 @@ def get_ai_data():
     reply_prompt = f"""
         You are drafting 3 messages for a provider to send in response to a patient message. The responses should be empathetic, polite, and concise, and should only address the patient's specific question or request. Before generating the responses, review the following information:
 
-        Patient details, Diagnosis details. Treatment information, Summary of most recent oncology visit (provided below)
+        Patient details, Diagnosis details, Treatment information, Summary of most recent oncology visit (provided below)
 
         **Instructions**:
 
@@ -217,7 +217,7 @@ def regenerate_ai_reply():
     prompt = f"""
         You are re-drafting a message for a provider to send in response to a patient message. The previous message requires improvement in the following category {category}. The response should be empathetic, polite, and concise, and should only address the patient's specific question or request. Before generating the response, review the following information:
 
-        Patient details, Diagnosis details. Treatment information, Summary of most recent oncology visit
+        Patient details, Diagnosis details, Treatment information, Summary of most recent oncology visit (provided below)
 
         **Instructions**:
 
@@ -225,11 +225,7 @@ def regenerate_ai_reply():
 
         Assume the patient reads at a high school level. Use simple and clear language.
 
-        Do not diagnose or suggest specific medical conditions or treatments.
-
-        Do not interpret labs, test results, or symptoms.
-
-        Do not confirm or offer to order any tests. If asked, respond: “We’ll discuss any needed tests at your next appointment.”
+        Do not confirm or offer to order any tests. If asked about tests, respond: “We’ll discuss any needed tests at your next appointment.”
 
         Do not offer to take any action, and do not say that anyone else will take action (e.g., calling the patient, sending prescriptions, making referrals).
 
@@ -245,6 +241,8 @@ def regenerate_ai_reply():
 
         If the patient asks about scheduling, respond with:
         “Please check for available appointment times in the Message Portal or call our office.”
+
+        In writing your response, feel free to make recommendations as if you were the attending healthcare provider (since your response will be approved by the healthcare provider). Do not mention the patient should contact their provider, since you are acting as the provider.
 
         **Here are the patient details**:
 
@@ -314,7 +312,7 @@ def edit_ai_reply():
     prompt = f"""
         You are editing a message for a provider to send in response to a patient message. The previous AI reply requires improvement in the following options {selected_options}. The response should be empathetic, polite, and concise, and should only address the patient's specific question or request. Before generating the response, review the following information:
 
-        Patient details, Diagnosis details. Treatment information, Summary of most recent oncology visit
+        Patient details, Diagnosis details, Treatment information, Summary of most recent oncology visit (provided below)
 
         **Instructions**:
 
@@ -322,11 +320,7 @@ def edit_ai_reply():
 
         Assume the patient reads at a high school level. Use simple and clear language.
 
-        Do not diagnose or suggest specific medical conditions or treatments.
-
-        Do not interpret labs, test results, or symptoms.
-
-        Do not confirm or offer to order any tests. If asked, respond: “We’ll discuss any needed tests at your next appointment.”
+        Do not confirm or offer to order any tests. If asked about tests, respond: “We’ll discuss any needed tests at your next appointment.”
 
         Do not offer to take any action, and do not say that anyone else will take action (e.g., calling the patient, sending prescriptions, making referrals).
 
@@ -342,6 +336,8 @@ def edit_ai_reply():
 
         If the patient asks about scheduling, respond with:
         “Please check for available appointment times in the Message Portal or call our office.”
+
+        In writing your response, feel free to make recommendations as if you were the attending healthcare provider (since your response will be approved by the healthcare provider). Do not mention the patient should contact their provider, since you are acting as the provider.
 
         **Here are the patient details**:
 
@@ -401,7 +397,7 @@ def provide_instructions():
     prompt = f"""
         You are drafting a message for a provider to send in response to a patient message. The response should be empathetic, polite, and concise, and should only address the patient's specific question or request. Before generating the response, review the following information:
 
-        Patient details, Diagnosis details. Treatment information, Summary of most recent oncology visit
+        Patient details, Diagnosis details, Treatment information, Summary of most recent oncology visit (provided below)
 
         **Instructions**:
 
@@ -409,11 +405,7 @@ def provide_instructions():
 
         Assume the patient reads at a high school level. Use simple and clear language.
 
-        Do not diagnose or suggest specific medical conditions or treatments.
-
-        Do not interpret labs, test results, or symptoms.
-
-        Do not confirm or offer to order any tests. If asked, respond: “We’ll discuss any needed tests at your next appointment.”
+        Do not confirm or offer to order any tests. If asked about tests, respond: “We’ll discuss any needed tests at your next appointment.”
 
         Do not offer to take any action, and do not say that anyone else will take action (e.g., calling the patient, sending prescriptions, making referrals).
 
@@ -429,6 +421,8 @@ def provide_instructions():
 
         If the patient asks about scheduling, respond with:
         “Please check for available appointment times in the Message Portal or call our office.”
+
+        In writing your response, feel free to make recommendations as if you were the attending healthcare provider (since your response will be approved by the healthcare provider). Do not mention the patient should contact their provider, since you are acting as the provider.
 
         **Here are the patient details**:
 

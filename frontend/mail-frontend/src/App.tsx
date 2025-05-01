@@ -812,7 +812,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
 
   const handleTabClick = (index: number, e?: React.MouseEvent<HTMLButtonElement>) => {
     if (!showAIFeatures && index !== activeTab && (index != 3 && activeTab != 3)) {
-      if (e?.ctrlKey) {
+      if (e?.ctrlKey || e?.metaKey) {
         handleSplitView(index);
       }
       else {

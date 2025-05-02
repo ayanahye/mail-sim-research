@@ -33,7 +33,7 @@ const useTabContext = () => {
 
 const TabProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeTab, setActiveTab] = useState(0);
-  const [showAIFeatures, setShowAIFeatures] = useState(true);
+  const [showAIFeatures, setShowAIFeatures] = useState(false);
 
   return (
     <TabContext.Provider value={{ activeTab, setActiveTab, showAIFeatures, setShowAIFeatures }}>
@@ -79,7 +79,7 @@ function App() {
       dateReceived: "04/01/2025",
       fromUser: "Patient",
       message:
-        "I've been feeling more fatigued than usual for the past week, and I'm having trouble completing my daily tasks. Is this normal? Should I be concerned?",
+        "I am in real trouble. I am in so much pain, I am in tears. I can barely walk, im passing out all over my house from severe exhaustion. My feet and legs feel like they are going to split open. My thighs, lower back and kidneys are in so much pain. My upper back is just aching badly. My whole body is in such incredible pain. My Cluster Headaches are killing me. Just had the worst attack I can remember. I feel like what ever is happening to me is going to kill me. My arms are swollen and my left arm/elbow feels like it is fractured. Dr.Smith office said I need to do a rest and exercise test. Doc I can't go anywhere let alone any appointments. I can barely walk. Smith can bare witness to the severe suffering I'm in. I have never been in this much pain in my life. I need help badly. I need to be back on hospice now",
       emrData: `Age: 55 years
 Gender: Male
 Cancer diagnosis: Stage III non-small cell lung cancer (NSCLC)
@@ -136,7 +136,7 @@ Summary of most recent oncology visit (6 weeks ago): 68-year-old male with newly
       dateReceived: "04/04/2025",
       fromUser: "Patient",
       message:
-        "I've been experiencing persistent abdominal bloating and discomfort for the past week. Is this a side effect of my treatment, or should I be concerned about something else?",
+        "Well I am not a religious person, I hope and expect that you will spend eternity in hell. You are an abusive, nasty, cheap person.",
       emrData: `Age: 72 years
 Gender: Female
 Cancer diagnosis: Stage III ovarian cancer
@@ -155,7 +155,7 @@ Summary of most recent oncology visit (4 weeks ago): 72-year-old female with sta
       dateReceived: "04/05/2025",
       fromUser: "Patient",
       message:
-        "I've developed a persistent cough and shortness of breath over the past few days. Is this a side effect of my treatment, or should I be concerned about something else?",
+        "So I have to tell you I’m pretty perturbed by this whole thing. I don’t care what the rules are, I think it’s pretty cra**y, that there couldn’t have been an exception regarding having the Covid test the morning before the procedure, considering all this cra* that could have been avoided, by you giving me the exact info, and your staff taking care of the insurance deal. Two trips up there again is a bit much. Why don’t you see what you can do about it? If not, why don’t you have one of these upper ups that make these rules give me a call.",
       emrData: `Age: 39 years
 Gender: Male
 Cancer diagnosis: Stage IIA Hodgkin lymphoma

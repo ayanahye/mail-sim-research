@@ -2,13 +2,12 @@ import os
 import pandas as pd
 from bert_score import score
 from openai import OpenAI
+import csv
 
 '''
 data used for comparing model responses:
 https://github.com/AIM-Harvard/OncQA/blob/main/Data/
-
 '''
-
 
 client = OpenAI(
     base_url="http://localhost:8080/v1",
@@ -21,11 +20,11 @@ merged_df = questions_df.merge(responses_df[['id', 'doc_change']], left_on='pin'
 
 os.makedirs("evaluation", exist_ok=True)
 output_path = os.path.join("evaluation", "llm_evaluation_results_llama.csv")
-results = []
 
-def extract_recommendation_text(text):
-    parts = text.split("Recommendations:")
-    return parts[-1].strip() if len(parts) > 1 else text.strip()
+if not os.path.exists(output_path):
+    with open(output_path, mode='w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(["id", "question", "llm_response", "actual_response", "bertscore_precision", "bertscore_recall", "bertscore_f1"])
 
 def build_prompt(patient_message, emr_data):
     prompt = f"""
@@ -89,7 +88,7 @@ for index, row in merged_df.iterrows():
     qid = row['id']
     question = row['pin']
     reference_full = row['doc_change']
-    reference = extract_recommendation_text(reference_full)
+    reference = reference_full
     full_input = row['Input']
     if "Patient message:" in full_input:
         emr_data, patient_message = full_input.split("Patient message:", 1)
@@ -106,18 +105,12 @@ for index, row in merged_df.iterrows():
     p_score = P[0].item()
     r_score = R[0].item()
     f1_score = F1[0].item()
+    
     print(f"\nQuestion ID: {qid}): {question}")
     print(f"\nReference Answer:{reference}")
     print(f"\nLLM Response: {llm_response}")
     print(f"\nBERTScore → Precision: {p_score:.4f}, Recall: {r_score:.4f}, F1: {f1_score:.4f}")
-    results.append({
-        "id": qid,
-        "question": question,
-        "llm_response": llm_response,
-        "actual_response": reference,
-        "bertscore_precision": p_score,
-        "bertscore_recall": r_score,
-        "bertscore_f1": f1_score
-    })
-
-pd.DataFrame(results).to_csv(output_path, index=False)
+    
+    with open(output_path, mode='a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow([qid, question, llm_response, reference, p_score, r_score, f1_score])

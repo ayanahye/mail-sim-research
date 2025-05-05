@@ -23,6 +23,10 @@ os.makedirs("evaluation", exist_ok=True)
 output_path = os.path.join("evaluation", "llm_evaluation_results_llama.csv")
 results = []
 
+def extract_recommendation_text(text):
+    parts = text.split("Recommendations:")
+    return parts[-1].strip() if len(parts) > 1 else text.strip()
+
 def build_prompt(patient_message, emr_data):
     prompt = f"""
         You are drafting a message for a provider to send in response to a patient message. The response should be empathetic, polite, and concise, and should only address the patient's specific question or request. Before generating the response, review the following information:
@@ -84,7 +88,8 @@ def query_llm(prompt):
 for index, row in merged_df.iterrows():
     qid = row['id']
     question = row['pin']
-    reference = row['doc_change']
+    reference_full = row['doc_change']
+    reference = extract_recommendation_text(reference_full)
     full_input = row['Input']
     if "Patient message:" in full_input:
         emr_data, patient_message = full_input.split("Patient message:", 1)

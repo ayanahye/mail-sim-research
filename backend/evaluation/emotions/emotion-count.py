@@ -38,3 +38,7 @@ llm_evaluation_results_llama3.2_emotions.csv: 100.0 percent
 llm_evaluation_results_llama3-8b_emotions.csv: 46 / 50 responses
 llm_evaluation_results_llama3-8b_emotions.csv: 92.0 percent
 '''
+
+'''
+this method also might not be the best..will do more literature review
+'''

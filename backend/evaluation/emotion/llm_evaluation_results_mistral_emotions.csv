@@ -1,0 +1,418 @@
+Unnamed: 0,id,question,llm_response,actual_response,bertscore_precision,bertscore_recall,bertscore_f1,emotions
+158,51,51,"Hello there, I'm sorry to hear that you've been experiencing increased shortness of breath and wheezing. Given your history of COPD and recent symptoms, it's important to closely monitor your breathing. I recommend continuing to use your oxygen as needed and keeping a record of your symptoms. If your symptoms worsen or you notice any new symptoms, please contact me or your primary care provider. Best, [Your Name]</s>","The provided information is sufficient to address the patient's immediate concern, but further evaluation is needed to determine the cause of the worsening symptoms.
+
+Recommendations:
+
+1. It's good to hear that increasing your oxygen from 2L to 4L has helped with your shortness of breath and wheezing. However, it's important to discuss this change with your healthcare team to ensure it's appropriate for your situation.
+
+2. Since you have a history of COPD, the worsening shortness of breath and wheezing could be related to a COPD exacerbation. Make sure you are using your albuterol and tiotropium as prescribed, and inform your primary care physician or pulmonologist about the change in your symptoms.
+
+3. It's also important to consider the possibility that your lung cancer could be contributing to your symptoms. Schedule an appointment with your oncologist to discuss your symptoms and determine if any additional imaging or testing is needed to evaluate your cancer status.
+
+4. In the meantime, monitor your symptoms closely and seek immediate medical attention if you experience severe shortness of breath, chest pain, or any other concerning symptoms.",0.8840007781982422,0.8534472584724426,0.8684554100036621,"caring, remorse, sadness"
+159,51,51,"Hello there, I'm sorry to hear that you've been experiencing increased shortness of breath and wheezing. Given your history of COPD and recent symptoms, it's important to closely monitor your breathing. I recommend continuing to use your oxygen as needed and keeping a record of your symptoms. If your symptoms worsen or you notice any new symptoms, please contact me or your primary care provider. Best, [Your Name]</s>","The provided information is sufficient to address the patient's immediate concern, but further evaluation is needed to determine the cause of the worsening symptoms.
+
+Hello,
+
+I think it would be best for you to come in today so that we can evaluate this and see if any additional tests or changes to medications are needed.",0.8512969017028809,0.8596524596214294,0.8554542064666748,"caring, remorse, sadness"
+160,52,52,"Hello there, I understand your concern about the swelling and tenderness in your breasts. It's important to note that these symptoms can have various causes, some of which may not be related to cancer. I recommend that you schedule an appointment with your healthcare provider to discuss these symptoms in detail. In the meantime, try to keep a record of when you first noticed these symptoms, their severity, and any other associated symptoms. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern, but it is important to note that a thorough physical examination and further diagnostic tests may be needed to confirm the cause of the swelling and tenderness.
+
+Recommendations:
+
+1. It is important for the patient to schedule an appointment with their oncologist or primary care physician to discuss the swelling and tenderness in the breasts. A physical examination can help determine if there are any concerning findings.
+
+2. The oncologist may recommend additional imaging studies, such as a mammogram or ultrasound, to further evaluate the breast tissue and look for any signs of recurrence.
+
+3. It is also possible that the swelling and tenderness are unrelated to cancer recurrence and could be due to other factors, such as hormonal changes, infection, or inflammation. The healthcare provider can help determine the cause and recommend appropriate treatment if necessary.
+
+4. The patient should continue to follow their oncologist's recommendations for routine surveillance and follow-up visits to monitor for any signs of cancer recurrence.",0.8782763481140137,0.8537286520004272,0.8658285140991211,"caring, approval, neutral"
+161,52,52,"Hello there, I understand your concern about the swelling and tenderness in your breasts. It's important to note that these symptoms can have various causes, some of which may not be related to cancer. I recommend that you schedule an appointment with your healthcare provider to discuss these symptoms in detail. In the meantime, try to keep a record of when you first noticed these symptoms, their severity, and any other associated symptoms. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern, but it is important to note that a thorough physical examination and further diagnostic tests may be needed to confirm the cause of the swelling and tenderness.
+
+Recommendations:
+
+1. It is important for you to schedule an appointment with your oncologist or primary care physician to discuss the swelling and tenderness in the breasts. A physical examination can help determine if there are any concerning findings.
+
+2. The oncologist may recommend additional imaging studies, such as a mammogram or ultrasound, to further evaluate the breast tissue and look for any signs of recurrence.
+
+3. It is also possible that the swelling and tenderness are unrelated to cancer recurrence and could be due to other factors, such as hormonal changes, infection, or inflammation. The healthcare provider can help determine the cause and recommend appropriate treatment if necessary.
+
+4. The patient should continue to follow their oncologist's recommendations for routine surveillance and follow-up visits to monitor for any signs of cancer recurrence.",0.8809271454811096,0.8551391363143921,0.8678415417671204,"caring, approval, neutral"
+162,53,53,"Hello there, I understand your concerns about new constipation and abdominal discomfort. These symptoms can sometimes be related to previous cancer treatments, especially chemotherapy. It's important to keep track of these symptoms and report them to your healthcare team. You can speak with me about this during your next appointment. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concerns to some extent. However, a more comprehensive assessment would require additional information such as the duration and severity of the constipation and abdominal discomfort, any changes in bowel habits, and any other associated symptoms.
+
+Based on the available information, it is possible that the new constipation and abdominal discomfort could be related to the patient's previous cancer treatment. Chemotherapy, such as FOLFOX, can have long-term effects on the gastrointestinal system, including constipation. However, it is important to consider other potential causes as well, such as dietary changes, stress, or other medical conditions.
+
+I recommend the patient to schedule an appointment with their oncologist or primary care physician to discuss these symptoms in more detail. The healthcare provider can then perform a thorough evaluation, including a physical examination and possibly additional tests, to determine the cause of the constipation and abdominal discomfort and recommend appropriate management.",0.8767984509468079,0.852628767490387,0.864544689655304,"caring, approval, neutral"
+163,54,54,"Hello there, I understand your concerns about bloating and abdominal pain. Based on the information available to me, it's important to note that these symptoms can have various causes, some of which may not be related to your cancer. I recommend that you keep a symptom diary to help identify patterns and discuss any concerning symptoms with me at your next appointment. Best, [Your Name]</s>","Yes, the provided information is sufficient to address the patient's concerns.
+
+Recommendations:
+
+1. It is important to note that bloating and abdominal pain can be caused by various factors, not just cancer recurrence. Some possible causes include gastrointestinal issues, constipation, or even side effects from medications.
+
+2. Although your recent imaging showed a good response to treatment with no evidence of disease progression and your CA-125 levels are stable, it is essential to monitor your symptoms and report any changes or worsening to your oncologist.
+
+3. I would recommend to schedule a follow-up appointment with your oncologist to discuss your symptoms in more detail. They may recommend additional tests or imaging to rule out any possible recurrence or other underlying causes for your bloating and abdominal pain.
+
+4. In the meantime, try to maintain a healthy lifestyle, including a balanced diet, regular exercise, and stress management, as these can help improve your overall well-being and potentially alleviate some of your symptoms.
+
+Remember, it is always important to communicate any new or concerning symptoms to your healthcare team, as they can provide the most accurate guidance based on your specific medical history and situation.",0.8814601898193359,0.8460058569908142,0.8633691668510437,"caring, approval, neutral"
+164,55,55,"Hello there, I'm sorry to hear that you're experiencing worsening urinary incontinence and new lower back pain. It's important to assess the severity of these symptoms. If you're unable to manage your symptoms at home or they're causing significant distress, I would recommend contacting your primary care provider for further evaluation. If your symptoms worsen or become severe, you can also visit the emergency room. In the meantime, try to rest and stay hydrated. Best, [Your Name]</s>","Based on the provided information, it is not possible to definitively determine the cause of the your worsening urinary incontinence and new lower back pain. However, I can provide some recommendations.
+
+Recommendations:
+1. You should contact your primary care physician or urologist as soon as possible to discuss the worsening urinary incontinence and new lower back pain. They may be able to provide guidance on whether an emergency room visit is necessary or if an outpatient appointment is more appropriate.
+2. You should monitor your symptoms closely. If the pain becomes severe, unmanageable, or is accompanied by other concerning symptoms (such as fever, chills, or significant changes in bowel or bladder function,  or muscle weakness in the legs), you should consider going to the emergency room.",0.876988410949707,0.8640097379684448,0.8704507350921631,"caring, remorse, approval"
+165,55,55,"Hello there, I'm sorry to hear that you're experiencing worsening urinary incontinence and new lower back pain. It's important to assess the severity of these symptoms. If you're unable to manage your symptoms at home or they're causing significant distress, I would recommend contacting your primary care provider for further evaluation. If your symptoms worsen or become severe, you can also visit the emergency room. In the meantime, try to rest and stay hydrated. Best, [Your Name]</s>","Based on the provided information, it is not possible to definitively determine the cause of the patient's worsening urinary incontinence and new lower back pain. However, I can provide some recommendations.
+
+Recommendations:
+1. The patient should contact their primary care physician or urologist to discuss the worsening urinary incontinence and new lower back pain. They may be able to provide guidance on whether an emergency room visit is necessary or if an outpatient appointment is more appropriate.
+2. The patient should monitor their symptoms closely. If the pain becomes severe, unmanageable, or is accompanied by other concerning symptoms (such as fever, chills, or significant changes in bowel or bladder function), they should consider going to the emergency room.
+
+Additional information that would be helpful from the EHR includes:
+1. Any recent imaging studies (e.g., CT scan, MRI, or bone scan) to assess for potential metastasis or other causes of the lower back pain.
+2. Any recent laboratory results, including PSA levels, to evaluate for potential recurrence of prostate cancer.
+3. A detailed history of the patient's urinary incontinence, including any previous treatments or interventions, and the timeline of symptom improvement and worsening.",0.8721185326576233,0.839674711227417,0.8555892109870911,"caring, remorse, approval"
+166,56,56,"Hello there, I'm sorry to hear you're experiencing severe abdominal pain and bloating. It's important to assess your symptoms carefully. Based on the information you've provided, I would recommend contacting your primary care provider or your oncologist for further evaluation. They can help determine if an emergency room visit is necessary. In the meantime, try to rest and stay hydrated. Best, [Your Name]</s>","Based on the provided information, it is not possible to definitively determine whether the patient needs to go to the emergency room. However, given the patient's history of colorectal cancer, recent bowel issues, and current symptoms of severe abdominal pain and bloating, it is important to take these symptoms seriously.
+
+I would recommend the patient to contact their primary care physician or oncologist for further evaluation and guidance. If the pain is unbearable or if there are additional concerning symptoms such as fever, vomiting, or signs of intestinal obstruction (e.g., inability to pass gas or have a bowel movement), the patient should consider going to the emergency room for immediate evaluation.",0.8844409584999084,0.8731118440628052,0.8787398934364319,"caring, approval, sadness"
+167,56,56,"Hello there, I'm sorry to hear you're experiencing severe abdominal pain and bloating. It's important to assess your symptoms carefully. Based on the information you've provided, I would recommend contacting your primary care provider or your oncologist for further evaluation. They can help determine if an emergency room visit is necessary. In the meantime, try to rest and stay hydrated. Best, [Your Name]</s>","Given your history of colorectal cancer, recent bowel issues, and current symptoms of severe abdominal pain and bloating, it is important to take these symptoms seriously.
+
+I would recommend you to contact yourprimary care physician or oncologist as soons as possible for further evaluation and guidance. If the pain becomes worse and is unbearable or if there are additional concerning symptoms such as fever, vomiting, or signs of intestinal obstruction (e.g., inability to pass gas or have a bowel movement), you should consider going to the emergency room for immediate evaluation.",0.8814513087272644,0.8679780960083008,0.8746628165245056,"caring, approval, sadness"
+168,57,57,"Hello there, I'm sorry to hear that you've been experiencing palpitations and feeling that your pants are loose. These symptoms can be concerning, but it's important to remember that they don't necessarily indicate a serious problem. However, I'd recommend keeping a record of when these symptoms occur and any other associated symptoms. If they persist or worsen, please bring this information to your next appointment. Best, [Your Name]</s>","The provided information is not sufficient to definitively answer the patient's question. While it is reassuring that the patient is clinically and radiographically without evidence of disease recurrence, the new onset of palpitations and weight loss warrant further evaluation.
+
+To better assess the patient's concerns, I would need additional information from the EHR, such as:
+
+1. Vital signs, including heart rate and blood pressure.
+2. Any recent laboratory results, including thyroid function tests, electrolyte levels, and complete blood count.
+3. A detailed review of systems, including any other symptoms the patient may be experiencing.
+4. Any history of cardiac issues or arrhythmias in the patient or their family.
+
+Based on the available information, I would recommend the patient to contact their primary care physician or oncologist to discuss these new symptoms. They may need further evaluation, including a physical examination, an electrocardiogram (ECG), and additional laboratory tests to determine the cause of the palpitations and weight loss.",0.8479816317558289,0.824073314666748,0.8358564972877502,"caring, remorse, approval"
+169,58,58,"Hello there, I'm sorry to hear that you're experiencing chest discomfort. Based on your description, it might be helpful to try over-the-counter pain relievers like acetaminophen or ibuprofen. If the pain persists or worsens, please contact me for further evaluation. Best, [Your Name]</s>","Yes, the provided information is sufficient to answer the patient's question.
+
+Recommendations:
+
+1. It is important to first assess the severity and duration of the pain. If the pain is mild and has been present for a short period, it may be due to a musculoskeletal issue or irritation from the patient's COPD. In this case, over-the-counter pain relievers such as acetaminophen or ibuprofen may help alleviate the discomfort.
+
+2. Encourage the patient to monitor their symptoms closely. If the pain worsens, becomes persistent, or is accompanied by other symptoms such as shortness of breath, cough, or fever, they should contact their healthcare provider for further evaluation.
+
+3. The patient should continue to take their prescribed medications for COPD (albuterol, tiotropium, and prednisone) as directed, as these may help manage any underlying respiratory issues that could be contributing to the chest pain.
+
+4. It is important for the patient to attend regular follow-up appointments with their oncologist to monitor for any signs of cancer recurrence or complications related to their prior cancer treatments.
+
+5. Encourage the patient to maintain a healthy lifestyle, including regular exercise, a balanced diet, and stress management techniques, as these can help improve overall well-being and potentially reduce the risk of cancer recurrence.
+
+If the patient's symptoms do not improve or worsen, they should contact their healthcare provider for further evaluation and management.",0.8806496262550354,0.824580192565918,0.8516931533813477,"caring, remorse, sadness"
+170,58,58,"Hello there, I'm sorry to hear that you're experiencing chest discomfort. Based on your description, it might be helpful to try over-the-counter pain relievers like acetaminophen or ibuprofen. If the pain persists or worsens, please contact me for further evaluation. Best, [Your Name]</s>","Yes, the provided information is sufficient to answer the patient's question.
+
+Recommendations:
+
+1. It is important to first assess the severity and duration of the pain. If the pain is mild and has been present for a short period, it may be due to a musculoskeletal issue or irritation from the patient's COPD. In this case, over-the-counter pain relievers such as acetaminophen or ibuprofen may help alleviate the discomfort.
+
+2. Encourage the patient to monitor their symptoms closely. If the pain worsens, becomes persistent, or is accompanied by other symptoms such as shortness of breath, cough, or fever, they should contact their healthcare provider for further evaluation.
+
+3. The patient should continue to take their prescribed medications for COPD (albuterol, tiotropium, and prednisone) as directed, as these may help manage any underlying respiratory issues that could be contributing to the chest pain.
+
+4. It is important for the patient to attend regular follow-up appointments with their oncologist to monitor for any signs of cancer recurrence or complications related to their prior cancer treatments.
+
+5. Encourage the patient to maintain a healthy lifestyle, including regular exercise, a balanced diet, and stress management techniques, as these can help improve overall well-being and potentially reduce the risk of cancer recurrence.
+
+If the patient's symptoms do not improve or worsen, they should contact their healthcare provider for further evaluation and management.",0.8806496262550354,0.824580192565918,0.8516931533813477,"caring, remorse, sadness"
+171,59,59,"Hello there, I understand your concern about having to strain during urination. This can be a common issue, especially after a prostate procedure like yours. However, it's important to discuss this further with your healthcare team to rule out any potential complications. You can speak with me about this during your next appointment. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern.
+
+Recommendations:
+
+1. It is not uncommon for men with a history of benign prostatic hyperplasia (BPH) and prostate cancer surgery to experience difficulty in urination. The straining to urinate could be related to BPH or a side effect of the surgery.
+
+2. Since the patient is already on tamsulosin and doxazosin, which are medications used to treat BPH, it is important to discuss this new symptom with the urologist. The urologist may consider adjusting the medication or exploring other treatment options to alleviate the patient's urinary symptoms.
+
+3. In the meantime, the patient should monitor his urinary symptoms and note any changes, such as increased frequency, urgency, or pain during urination. This information will be helpful during the consultation with the urologist.
+
+4. It is also important for the patient to continue attending regular follow-up appointments with the oncologist to monitor for any signs of prostate cancer recurrence.",0.8621929883956909,0.8260226845741272,0.8437203764915466,"caring, approval, neutral"
+172,60,60,"Hello there, I'm sorry to hear that you've been experiencing persistent abdominal pain and bloating. While I understand your concerns, it's important to note that everyone's experience with treatment side effects can vary. I recommend keeping a detailed log of your symptoms, including their frequency, severity, and any potential triggers. If these symptoms worsen or become unmanageable, please don't hesitate to contact me. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concerns to some extent. However, further evaluation and information may be needed to determine the exact cause of the abdominal pain and bloating.
+
+Recommendations:
+
+1. It is not uncommon for patients to experience abdominal pain and bloating after pancreatic cancer treatment, especially after a Whipple procedure. These symptoms can be related to changes in digestion and bowel function following surgery.
+
+2. However, it is essential to rule out any potential complications or recurrence of cancer. I recommend scheduling an appointment with your oncologist to discuss your symptoms in detail. They may want to perform additional tests, such as imaging studies or blood tests, to evaluate the cause of your symptoms.
+
+3. In the meantime, you can try some lifestyle modifications to help alleviate your symptoms. These may include eating smaller, more frequent meals, avoiding gas-producing foods, and staying well-hydrated. You should also discuss your symptoms with your primary care physician, who can help manage your diabetes and hypertension, as these conditions may also contribute to your abdominal discomfort.
+
+Please remember that this advice is not a substitute for a consultation with your healthcare provider. It is essential to discuss your symptoms with your oncologist and primary care physician to determine the best course of action.",0.8559132814407349,0.8335433006286621,0.8445801734924316,"caring, remorse, sadness"
+173,60,60,"Hello there, I'm sorry to hear that you've been experiencing persistent abdominal pain and bloating. While I understand your concerns, it's important to note that everyone's experience with treatment side effects can vary. I recommend keeping a detailed log of your symptoms, including their frequency, severity, and any potential triggers. If these symptoms worsen or become unmanageable, please don't hesitate to contact me. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concerns to some extent. However, further evaluation and information may be needed to determine the exact cause of the abdominal pain and bloating.
+
+Recommendations:
+
+1. It is not uncommon for patients to experience abdominal pain and bloating after pancreatic cancer treatment, especially after a Whipple procedure. These symptoms can be related to changes in digestion and bowel function following surgery.
+
+2. However, it is essential to rule out any potential complications or recurrence of cancer. I recommend scheduling an appointment with your oncologist to discuss your symptoms in detail. They may want to perform additional tests, such as imaging studies or blood tests, to evaluate the cause of your symptoms.
+
+3. In the meantime, you can try some lifestyle modifications to help alleviate your symptoms. These may include eating smaller, more frequent meals, avoiding gas-producing foods, and staying well-hydrated. You should also discuss your symptoms with your primary care physician, who can help manage your diabetes and hypertension, as these conditions may also contribute to your abdominal discomfort.
+
+Please remember that this advice is not a substitute for a consultation with your healthcare provider. It is essential to discuss your symptoms with your oncologist and primary care physician to determine the best course of action.",0.8559132814407349,0.8335433006286621,0.8445801734924316,"caring, remorse, sadness"
+174,61,61,"Hello there, I'm sorry to hear you've been experiencing persistent indigestion and heartburn. I recommend trying over-the-counter antacids or acid blockers to help alleviate your symptoms. If these do not provide relief, please let me know and we can discuss other options. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern about persistent indigestion and heartburn. However, it is important to note that any new or worsening symptoms should be discussed with the patient's healthcare team to rule out any potential complications or recurrence of cancer.
+
+Recommendations:
+
+1. Over-the-counter antacids, such as calcium carbonate (Tums) or aluminum hydroxide and magnesium carbonate (Maalox), can help provide short-term relief for indigestion and heartburn. However, these should be used as directed and not for an extended period without consulting a healthcare professional.
+
+2. H2 blockers, such as famotidine (Pepcid) or ranitidine (Zantac), can help reduce stomach acid production and may provide relief from indigestion and heartburn. These medications are available over-the-counter and can be taken as directed.
+
+3. Proton pump inhibitors (PPIs), such as omeprazole (Prilosec) or esomeprazole (Nexium), can also help reduce stomach acid production and provide relief from indigestion and heartburn. These medications are available over-the-counter and can be taken as directed.
+
+4. Lifestyle modifications, such as avoiding spicy or fatty foods, eating smaller meals, not lying down immediately after eating, and elevating the head of the bed, can help alleviate indigestion and heartburn symptoms.
+
+5. It is important for the patient to discuss these symptoms with their healthcare team during their next visit or sooner if symptoms worsen or do not improve with over-the-counter medications and lifestyle modifications. The healthcare team may want to perform additional tests or imaging to rule out any complications or recurrence of cancer.
+
+Please note that these recommendations are general and should be discussed with the patient's healthcare team before implementing any changes to their treatment plan.",0.8621835708618164,0.8040766716003418,0.832116961479187,"caring, remorse, sadness"
+175,61,61,"Hello there, I'm sorry to hear you've been experiencing persistent indigestion and heartburn. I recommend trying over-the-counter antacids or acid blockers to help alleviate your symptoms. If these do not provide relief, please let me know and we can discuss other options. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern about persistent indigestion and heartburn. However, it is important to note that any new or worsening symptoms should be discussed with the patient's healthcare team to rule out any potential complications or recurrence of cancer.
+
+Hello, 
+
+We should discuss this over the phone or in person.  Lifestyle modifications such as avoiding spicy or fatty foods, eating smaller meals, not lying down immediately after eating, and elevating the head of the bed, can help alleviate indigestion and heartburn symptoms. Or we may need to adjust your medications.",0.8574516773223877,0.8512387871742249,0.8543339967727661,"caring, remorse, sadness"
+176,62,62,"Hello there, I understand your concern about feeling fatigued and weak. These symptoms can be side effects of previous chemotherapy treatments, such as carboplatin, pemetrexed, and pembrolizumab. It's important to remember that everyone reacts differently to treatment, and these symptoms can vary in severity and duration. I recommend getting plenty of rest, staying hydrated, and maintaining a balanced diet to help manage your energy levels. If your symptoms persist or worsen, please don't hesitate to reach out to me for further discussion. Best, [Your Name]</s>","Yes, the provided information is sufficient to answer the patient's question.
+
+Dear patient,
+
+It is possible that the fatigue and weakness you are experiencing could be related to your previous chemotherapy treatment. Chemotherapy can have long-lasting side effects, and fatigue is a common one. It is important to note that there could be other factors contributing to your fatigue, such as the cancer itself, emotional stress, or other medical conditions.
+
+I recommend discussing your symptoms with your oncologist during your next visit. They can help determine if your fatigue is related to your previous chemotherapy or if there are other factors that need to be addressed. In the meantime, try to maintain a balanced diet, stay hydrated, and engage in light physical activity as tolerated to help manage your fatigue.
+
+Please do not hesitate to reach out if you have any further questions or concerns.",0.8646884560585022,0.8703411221504211,0.8675055503845215,"caring, approval, neutral"
+177,62,62,"Hello there, I understand your concern about feeling fatigued and weak. These symptoms can be side effects of previous chemotherapy treatments, such as carboplatin, pemetrexed, and pembrolizumab. It's important to remember that everyone reacts differently to treatment, and these symptoms can vary in severity and duration. I recommend getting plenty of rest, staying hydrated, and maintaining a balanced diet to help manage your energy levels. If your symptoms persist or worsen, please don't hesitate to reach out to me for further discussion. Best, [Your Name]</s>","Yes, the provided information is sufficient to answer the patient's question.
+
+Dear patient,
+
+It is possible that the fatigue and weakness you are experiencing could be related to your previous chemotherapy treatment. Chemotherapy can have long-lasting side effects, and fatigue is a common one. It is important to note that there could be other factors contributing to your fatigue, such as the cancer itself, emotional stress, or other medical conditions.
+
+I recommend discussing your symptoms with your oncologist during your next visit. They can help determine if your fatigue is related to your previous chemotherapy or if there are other factors that need to be addressed. In the meantime, try to maintain a balanced diet, stay hydrated, and engage in light physical activity as tolerated to help manage your fatigue.
+
+Please do not hesitate to reach out if you have any further questions or concerns.",0.8646884560585022,0.8703411221504211,0.8675055503845215,"caring, approval, neutral"
+178,63,63,"Hello there, I understand your concern about experiencing pain in your lower back and sides. It's important to note that everyone's experience with cancer and its related symptoms can be different. While it's natural to worry, I would recommend reaching out to your primary care provider for an evaluation. They can assess your symptoms and determine if any further testing or referral to a specialist is necessary. Best, [Your Name]</s>",It’s unclear what could be causing these symptoms and I would recommend coming in to get evaluated. We will need to some basic blood tests and potentially some imaging too.,0.848904013633728,0.8781366348266602,0.8632729053497314,"caring, approval, neutral"
+179,63,63,"Hello there, I understand your concern about experiencing pain in your lower back and sides. It's important to note that everyone's experience with cancer and its related symptoms can be different. While it's natural to worry, I would recommend reaching out to your primary care provider for an evaluation. They can assess your symptoms and determine if any further testing or referral to a specialist is necessary. Best, [Your Name]</s>","Given your history of renal cancer, these symptoms may be related to that cancer. However, at the moment I have insufficient information to determine the exact cause of your pain. I would suggest contacting your primary health care physician or your oncologist within the next day or so to discuss your symptoms and determine whether you need to come back for a consultation in the outpatient clinic. 
+In the meantime it is important to monitor your situation closely for any other new or worsening symptoms. In that case, do not hesitate to contact us again.",0.8727204203605652,0.8746892213821411,0.8737037181854248,"caring, approval, neutral"
+180,64,64,"Hello there, I understand your concern about the swelling and tenderness in your armpit. It's important to note that some treatments for breast cancer, including radiation therapy, can cause temporary swelling and tenderness in the underarm area. However, it's crucial that we monitor any changes closely. I recommend keeping a record of the size and duration of the swelling, and if it worsens or persists, please contact me for further evaluation. Best, [Your Name]</s>","Yes, the provided information is sufficient to answer the patient's question.
+
+Recommendations:
+
+1. The swelling and tenderness in your armpit could be related to your previous breast cancer treatment, specifically the axillary lymph node dissection. This can sometimes lead to a condition called lymphedema, which is a buildup of lymphatic fluid in the tissues due to damage or removal of lymph nodes.
+
+2. It is important to have this swelling and tenderness evaluated by your healthcare provider to rule out any other potential causes, such as infection or recurrence of cancer.
+
+3. In the meantime, you can try some self-care measures to help alleviate the swelling and discomfort, such as gentle massage, elevation of the affected arm, and wearing a compression sleeve if recommended by your healthcare provider.
+
+4. Continue to monitor the swelling and tenderness, and report any changes or worsening of symptoms to your healthcare provider promptly.",0.8787252306938171,0.8512251973152161,0.8647566437721252,"caring, approval, neutral"
+181,65,65,"Hello there, I understand your concern about difficulty swallowing. Based on your medical history, I recommend you speak with me about this issue during your next appointment. In the meantime, please try to consume soft foods and liquids to make swallowing easier. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern. 
+
+Recommendations:
+1. Although it is reassuring that the patient is clinically without evidence of recurrence and has regained his pretreatment weight, the recent difficulty swallowing (dysphagia) should not be ignored. It could be related to a stricture, recurrence of cancer, or other causes.
+2. The patient should contact his oncologist or primary care physician to discuss these symptoms and potentially schedule an evaluation sooner than the next planned visit. This evaluation may include a physical examination, imaging studies, or endoscopy to determine the cause of the dysphagia.
+3. In the meantime, the patient should continue taking his prescribed medications (omeprazole, ranitidine, and metoclopramide) as they may help alleviate some of the symptoms related to GERD. However, it is essential to have a proper evaluation to rule out other causes of the difficulty swallowing.",0.8538773059844971,0.8156149983406067,0.8343077301979065,"caring, approval, neutral"
+Unnamed: 0,id,question,llm_response,actual_response,bertscore_precision,bertscore_recall,bertscore_f1,emotions
+158,51,51,"Hello there, I'm sorry to hear that you've been experiencing increased shortness of breath and wheezing. Given your history of COPD and recent symptoms, it's important to closely monitor your breathing. I recommend continuing to use your oxygen as needed and keeping a record of your symptoms. If your symptoms worsen or you notice any new symptoms, please contact me or your primary care provider. Best, [Your Name]</s>","The provided information is sufficient to address the patient's immediate concern, but further evaluation is needed to determine the cause of the worsening symptoms.
+
+Recommendations:
+
+1. It's good to hear that increasing your oxygen from 2L to 4L has helped with your shortness of breath and wheezing. However, it's important to discuss this change with your healthcare team to ensure it's appropriate for your situation.
+
+2. Since you have a history of COPD, the worsening shortness of breath and wheezing could be related to a COPD exacerbation. Make sure you are using your albuterol and tiotropium as prescribed, and inform your primary care physician or pulmonologist about the change in your symptoms.
+
+3. It's also important to consider the possibility that your lung cancer could be contributing to your symptoms. Schedule an appointment with your oncologist to discuss your symptoms and determine if any additional imaging or testing is needed to evaluate your cancer status.
+
+4. In the meantime, monitor your symptoms closely and seek immediate medical attention if you experience severe shortness of breath, chest pain, or any other concerning symptoms.",0.8840007781982422,0.8534472584724426,0.8684554100036621,"caring, remorse, sadness"
+159,51,51,"Hello there, I'm sorry to hear that you've been experiencing increased shortness of breath and wheezing. Given your history of COPD and recent symptoms, it's important to closely monitor your breathing. I recommend continuing to use your oxygen as needed and keeping a record of your symptoms. If your symptoms worsen or you notice any new symptoms, please contact me or your primary care provider. Best, [Your Name]</s>","The provided information is sufficient to address the patient's immediate concern, but further evaluation is needed to determine the cause of the worsening symptoms.
+
+Hello,
+
+I think it would be best for you to come in today so that we can evaluate this and see if any additional tests or changes to medications are needed.",0.8512969017028809,0.8596524596214294,0.8554542064666748,"caring, remorse, sadness"
+160,52,52,"Hello there, I understand your concern about the swelling and tenderness in your breasts. It's important to note that these symptoms can have various causes, some of which may not be related to cancer. I recommend that you schedule an appointment with your healthcare provider to discuss these symptoms in detail. In the meantime, try to keep a record of when you first noticed these symptoms, their severity, and any other associated symptoms. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern, but it is important to note that a thorough physical examination and further diagnostic tests may be needed to confirm the cause of the swelling and tenderness.
+
+Recommendations:
+
+1. It is important for the patient to schedule an appointment with their oncologist or primary care physician to discuss the swelling and tenderness in the breasts. A physical examination can help determine if there are any concerning findings.
+
+2. The oncologist may recommend additional imaging studies, such as a mammogram or ultrasound, to further evaluate the breast tissue and look for any signs of recurrence.
+
+3. It is also possible that the swelling and tenderness are unrelated to cancer recurrence and could be due to other factors, such as hormonal changes, infection, or inflammation. The healthcare provider can help determine the cause and recommend appropriate treatment if necessary.
+
+4. The patient should continue to follow their oncologist's recommendations for routine surveillance and follow-up visits to monitor for any signs of cancer recurrence.",0.8782763481140137,0.8537286520004272,0.8658285140991211,"caring, approval, neutral"
+161,52,52,"Hello there, I understand your concern about the swelling and tenderness in your breasts. It's important to note that these symptoms can have various causes, some of which may not be related to cancer. I recommend that you schedule an appointment with your healthcare provider to discuss these symptoms in detail. In the meantime, try to keep a record of when you first noticed these symptoms, their severity, and any other associated symptoms. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern, but it is important to note that a thorough physical examination and further diagnostic tests may be needed to confirm the cause of the swelling and tenderness.
+
+Recommendations:
+
+1. It is important for you to schedule an appointment with your oncologist or primary care physician to discuss the swelling and tenderness in the breasts. A physical examination can help determine if there are any concerning findings.
+
+2. The oncologist may recommend additional imaging studies, such as a mammogram or ultrasound, to further evaluate the breast tissue and look for any signs of recurrence.
+
+3. It is also possible that the swelling and tenderness are unrelated to cancer recurrence and could be due to other factors, such as hormonal changes, infection, or inflammation. The healthcare provider can help determine the cause and recommend appropriate treatment if necessary.
+
+4. The patient should continue to follow their oncologist's recommendations for routine surveillance and follow-up visits to monitor for any signs of cancer recurrence.",0.8809271454811096,0.8551391363143921,0.8678415417671204,"caring, approval, neutral"
+162,53,53,"Hello there, I understand your concerns about new constipation and abdominal discomfort. These symptoms can sometimes be related to previous cancer treatments, especially chemotherapy. It's important to keep track of these symptoms and report them to your healthcare team. You can speak with me about this during your next appointment. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concerns to some extent. However, a more comprehensive assessment would require additional information such as the duration and severity of the constipation and abdominal discomfort, any changes in bowel habits, and any other associated symptoms.
+
+Based on the available information, it is possible that the new constipation and abdominal discomfort could be related to the patient's previous cancer treatment. Chemotherapy, such as FOLFOX, can have long-term effects on the gastrointestinal system, including constipation. However, it is important to consider other potential causes as well, such as dietary changes, stress, or other medical conditions.
+
+I recommend the patient to schedule an appointment with their oncologist or primary care physician to discuss these symptoms in more detail. The healthcare provider can then perform a thorough evaluation, including a physical examination and possibly additional tests, to determine the cause of the constipation and abdominal discomfort and recommend appropriate management.",0.8767984509468079,0.852628767490387,0.864544689655304,"caring, approval, neutral"
+163,54,54,"Hello there, I understand your concerns about bloating and abdominal pain. Based on the information available to me, it's important to note that these symptoms can have various causes, some of which may not be related to your cancer. I recommend that you keep a symptom diary to help identify patterns and discuss any concerning symptoms with me at your next appointment. Best, [Your Name]</s>","Yes, the provided information is sufficient to address the patient's concerns.
+
+Recommendations:
+
+1. It is important to note that bloating and abdominal pain can be caused by various factors, not just cancer recurrence. Some possible causes include gastrointestinal issues, constipation, or even side effects from medications.
+
+2. Although your recent imaging showed a good response to treatment with no evidence of disease progression and your CA-125 levels are stable, it is essential to monitor your symptoms and report any changes or worsening to your oncologist.
+
+3. I would recommend to schedule a follow-up appointment with your oncologist to discuss your symptoms in more detail. They may recommend additional tests or imaging to rule out any possible recurrence or other underlying causes for your bloating and abdominal pain.
+
+4. In the meantime, try to maintain a healthy lifestyle, including a balanced diet, regular exercise, and stress management, as these can help improve your overall well-being and potentially alleviate some of your symptoms.
+
+Remember, it is always important to communicate any new or concerning symptoms to your healthcare team, as they can provide the most accurate guidance based on your specific medical history and situation.",0.8814601898193359,0.8460058569908142,0.8633691668510437,"caring, approval, neutral"
+164,55,55,"Hello there, I'm sorry to hear that you're experiencing worsening urinary incontinence and new lower back pain. It's important to assess the severity of these symptoms. If you're unable to manage your symptoms at home or they're causing significant distress, I would recommend contacting your primary care provider for further evaluation. If your symptoms worsen or become severe, you can also visit the emergency room. In the meantime, try to rest and stay hydrated. Best, [Your Name]</s>","Based on the provided information, it is not possible to definitively determine the cause of the your worsening urinary incontinence and new lower back pain. However, I can provide some recommendations.
+
+Recommendations:
+1. You should contact your primary care physician or urologist as soon as possible to discuss the worsening urinary incontinence and new lower back pain. They may be able to provide guidance on whether an emergency room visit is necessary or if an outpatient appointment is more appropriate.
+2. You should monitor your symptoms closely. If the pain becomes severe, unmanageable, or is accompanied by other concerning symptoms (such as fever, chills, or significant changes in bowel or bladder function,  or muscle weakness in the legs), you should consider going to the emergency room.",0.876988410949707,0.8640097379684448,0.8704507350921631,"caring, remorse, approval"
+165,55,55,"Hello there, I'm sorry to hear that you're experiencing worsening urinary incontinence and new lower back pain. It's important to assess the severity of these symptoms. If you're unable to manage your symptoms at home or they're causing significant distress, I would recommend contacting your primary care provider for further evaluation. If your symptoms worsen or become severe, you can also visit the emergency room. In the meantime, try to rest and stay hydrated. Best, [Your Name]</s>","Based on the provided information, it is not possible to definitively determine the cause of the patient's worsening urinary incontinence and new lower back pain. However, I can provide some recommendations.
+
+Recommendations:
+1. The patient should contact their primary care physician or urologist to discuss the worsening urinary incontinence and new lower back pain. They may be able to provide guidance on whether an emergency room visit is necessary or if an outpatient appointment is more appropriate.
+2. The patient should monitor their symptoms closely. If the pain becomes severe, unmanageable, or is accompanied by other concerning symptoms (such as fever, chills, or significant changes in bowel or bladder function), they should consider going to the emergency room.
+
+Additional information that would be helpful from the EHR includes:
+1. Any recent imaging studies (e.g., CT scan, MRI, or bone scan) to assess for potential metastasis or other causes of the lower back pain.
+2. Any recent laboratory results, including PSA levels, to evaluate for potential recurrence of prostate cancer.
+3. A detailed history of the patient's urinary incontinence, including any previous treatments or interventions, and the timeline of symptom improvement and worsening.",0.8721185326576233,0.839674711227417,0.8555892109870911,"caring, remorse, approval"
+166,56,56,"Hello there, I'm sorry to hear you're experiencing severe abdominal pain and bloating. It's important to assess your symptoms carefully. Based on the information you've provided, I would recommend contacting your primary care provider or your oncologist for further evaluation. They can help determine if an emergency room visit is necessary. In the meantime, try to rest and stay hydrated. Best, [Your Name]</s>","Based on the provided information, it is not possible to definitively determine whether the patient needs to go to the emergency room. However, given the patient's history of colorectal cancer, recent bowel issues, and current symptoms of severe abdominal pain and bloating, it is important to take these symptoms seriously.
+
+I would recommend the patient to contact their primary care physician or oncologist for further evaluation and guidance. If the pain is unbearable or if there are additional concerning symptoms such as fever, vomiting, or signs of intestinal obstruction (e.g., inability to pass gas or have a bowel movement), the patient should consider going to the emergency room for immediate evaluation.",0.8844409584999084,0.8731118440628052,0.8787398934364319,"caring, approval, sadness"
+167,56,56,"Hello there, I'm sorry to hear you're experiencing severe abdominal pain and bloating. It's important to assess your symptoms carefully. Based on the information you've provided, I would recommend contacting your primary care provider or your oncologist for further evaluation. They can help determine if an emergency room visit is necessary. In the meantime, try to rest and stay hydrated. Best, [Your Name]</s>","Given your history of colorectal cancer, recent bowel issues, and current symptoms of severe abdominal pain and bloating, it is important to take these symptoms seriously.
+
+I would recommend you to contact yourprimary care physician or oncologist as soons as possible for further evaluation and guidance. If the pain becomes worse and is unbearable or if there are additional concerning symptoms such as fever, vomiting, or signs of intestinal obstruction (e.g., inability to pass gas or have a bowel movement), you should consider going to the emergency room for immediate evaluation.",0.8814513087272644,0.8679780960083008,0.8746628165245056,"caring, approval, sadness"
+168,57,57,"Hello there, I'm sorry to hear that you've been experiencing palpitations and feeling that your pants are loose. These symptoms can be concerning, but it's important to remember that they don't necessarily indicate a serious problem. However, I'd recommend keeping a record of when these symptoms occur and any other associated symptoms. If they persist or worsen, please bring this information to your next appointment. Best, [Your Name]</s>","The provided information is not sufficient to definitively answer the patient's question. While it is reassuring that the patient is clinically and radiographically without evidence of disease recurrence, the new onset of palpitations and weight loss warrant further evaluation.
+
+To better assess the patient's concerns, I would need additional information from the EHR, such as:
+
+1. Vital signs, including heart rate and blood pressure.
+2. Any recent laboratory results, including thyroid function tests, electrolyte levels, and complete blood count.
+3. A detailed review of systems, including any other symptoms the patient may be experiencing.
+4. Any history of cardiac issues or arrhythmias in the patient or their family.
+
+Based on the available information, I would recommend the patient to contact their primary care physician or oncologist to discuss these new symptoms. They may need further evaluation, including a physical examination, an electrocardiogram (ECG), and additional laboratory tests to determine the cause of the palpitations and weight loss.",0.8479816317558289,0.824073314666748,0.8358564972877502,"caring, remorse, approval"
+169,58,58,"Hello there, I'm sorry to hear that you're experiencing chest discomfort. Based on your description, it might be helpful to try over-the-counter pain relievers like acetaminophen or ibuprofen. If the pain persists or worsens, please contact me for further evaluation. Best, [Your Name]</s>","Yes, the provided information is sufficient to answer the patient's question.
+
+Recommendations:
+
+1. It is important to first assess the severity and duration of the pain. If the pain is mild and has been present for a short period, it may be due to a musculoskeletal issue or irritation from the patient's COPD. In this case, over-the-counter pain relievers such as acetaminophen or ibuprofen may help alleviate the discomfort.
+
+2. Encourage the patient to monitor their symptoms closely. If the pain worsens, becomes persistent, or is accompanied by other symptoms such as shortness of breath, cough, or fever, they should contact their healthcare provider for further evaluation.
+
+3. The patient should continue to take their prescribed medications for COPD (albuterol, tiotropium, and prednisone) as directed, as these may help manage any underlying respiratory issues that could be contributing to the chest pain.
+
+4. It is important for the patient to attend regular follow-up appointments with their oncologist to monitor for any signs of cancer recurrence or complications related to their prior cancer treatments.
+
+5. Encourage the patient to maintain a healthy lifestyle, including regular exercise, a balanced diet, and stress management techniques, as these can help improve overall well-being and potentially reduce the risk of cancer recurrence.
+
+If the patient's symptoms do not improve or worsen, they should contact their healthcare provider for further evaluation and management.",0.8806496262550354,0.824580192565918,0.8516931533813477,"caring, remorse, sadness"
+170,58,58,"Hello there, I'm sorry to hear that you're experiencing chest discomfort. Based on your description, it might be helpful to try over-the-counter pain relievers like acetaminophen or ibuprofen. If the pain persists or worsens, please contact me for further evaluation. Best, [Your Name]</s>","Yes, the provided information is sufficient to answer the patient's question.
+
+Recommendations:
+
+1. It is important to first assess the severity and duration of the pain. If the pain is mild and has been present for a short period, it may be due to a musculoskeletal issue or irritation from the patient's COPD. In this case, over-the-counter pain relievers such as acetaminophen or ibuprofen may help alleviate the discomfort.
+
+2. Encourage the patient to monitor their symptoms closely. If the pain worsens, becomes persistent, or is accompanied by other symptoms such as shortness of breath, cough, or fever, they should contact their healthcare provider for further evaluation.
+
+3. The patient should continue to take their prescribed medications for COPD (albuterol, tiotropium, and prednisone) as directed, as these may help manage any underlying respiratory issues that could be contributing to the chest pain.
+
+4. It is important for the patient to attend regular follow-up appointments with their oncologist to monitor for any signs of cancer recurrence or complications related to their prior cancer treatments.
+
+5. Encourage the patient to maintain a healthy lifestyle, including regular exercise, a balanced diet, and stress management techniques, as these can help improve overall well-being and potentially reduce the risk of cancer recurrence.
+
+If the patient's symptoms do not improve or worsen, they should contact their healthcare provider for further evaluation and management.",0.8806496262550354,0.824580192565918,0.8516931533813477,"caring, remorse, sadness"
+171,59,59,"Hello there, I understand your concern about having to strain during urination. This can be a common issue, especially after a prostate procedure like yours. However, it's important to discuss this further with your healthcare team to rule out any potential complications. You can speak with me about this during your next appointment. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern.
+
+Recommendations:
+
+1. It is not uncommon for men with a history of benign prostatic hyperplasia (BPH) and prostate cancer surgery to experience difficulty in urination. The straining to urinate could be related to BPH or a side effect of the surgery.
+
+2. Since the patient is already on tamsulosin and doxazosin, which are medications used to treat BPH, it is important to discuss this new symptom with the urologist. The urologist may consider adjusting the medication or exploring other treatment options to alleviate the patient's urinary symptoms.
+
+3. In the meantime, the patient should monitor his urinary symptoms and note any changes, such as increased frequency, urgency, or pain during urination. This information will be helpful during the consultation with the urologist.
+
+4. It is also important for the patient to continue attending regular follow-up appointments with the oncologist to monitor for any signs of prostate cancer recurrence.",0.8621929883956909,0.8260226845741272,0.8437203764915466,"caring, approval, neutral"
+172,60,60,"Hello there, I'm sorry to hear that you've been experiencing persistent abdominal pain and bloating. While I understand your concerns, it's important to note that everyone's experience with treatment side effects can vary. I recommend keeping a detailed log of your symptoms, including their frequency, severity, and any potential triggers. If these symptoms worsen or become unmanageable, please don't hesitate to contact me. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concerns to some extent. However, further evaluation and information may be needed to determine the exact cause of the abdominal pain and bloating.
+
+Recommendations:
+
+1. It is not uncommon for patients to experience abdominal pain and bloating after pancreatic cancer treatment, especially after a Whipple procedure. These symptoms can be related to changes in digestion and bowel function following surgery.
+
+2. However, it is essential to rule out any potential complications or recurrence of cancer. I recommend scheduling an appointment with your oncologist to discuss your symptoms in detail. They may want to perform additional tests, such as imaging studies or blood tests, to evaluate the cause of your symptoms.
+
+3. In the meantime, you can try some lifestyle modifications to help alleviate your symptoms. These may include eating smaller, more frequent meals, avoiding gas-producing foods, and staying well-hydrated. You should also discuss your symptoms with your primary care physician, who can help manage your diabetes and hypertension, as these conditions may also contribute to your abdominal discomfort.
+
+Please remember that this advice is not a substitute for a consultation with your healthcare provider. It is essential to discuss your symptoms with your oncologist and primary care physician to determine the best course of action.",0.8559132814407349,0.8335433006286621,0.8445801734924316,"caring, remorse, sadness"
+173,60,60,"Hello there, I'm sorry to hear that you've been experiencing persistent abdominal pain and bloating. While I understand your concerns, it's important to note that everyone's experience with treatment side effects can vary. I recommend keeping a detailed log of your symptoms, including their frequency, severity, and any potential triggers. If these symptoms worsen or become unmanageable, please don't hesitate to contact me. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concerns to some extent. However, further evaluation and information may be needed to determine the exact cause of the abdominal pain and bloating.
+
+Recommendations:
+
+1. It is not uncommon for patients to experience abdominal pain and bloating after pancreatic cancer treatment, especially after a Whipple procedure. These symptoms can be related to changes in digestion and bowel function following surgery.
+
+2. However, it is essential to rule out any potential complications or recurrence of cancer. I recommend scheduling an appointment with your oncologist to discuss your symptoms in detail. They may want to perform additional tests, such as imaging studies or blood tests, to evaluate the cause of your symptoms.
+
+3. In the meantime, you can try some lifestyle modifications to help alleviate your symptoms. These may include eating smaller, more frequent meals, avoiding gas-producing foods, and staying well-hydrated. You should also discuss your symptoms with your primary care physician, who can help manage your diabetes and hypertension, as these conditions may also contribute to your abdominal discomfort.
+
+Please remember that this advice is not a substitute for a consultation with your healthcare provider. It is essential to discuss your symptoms with your oncologist and primary care physician to determine the best course of action.",0.8559132814407349,0.8335433006286621,0.8445801734924316,"caring, remorse, sadness"
+174,61,61,"Hello there, I'm sorry to hear you've been experiencing persistent indigestion and heartburn. I recommend trying over-the-counter antacids or acid blockers to help alleviate your symptoms. If these do not provide relief, please let me know and we can discuss other options. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern about persistent indigestion and heartburn. However, it is important to note that any new or worsening symptoms should be discussed with the patient's healthcare team to rule out any potential complications or recurrence of cancer.
+
+Recommendations:
+
+1. Over-the-counter antacids, such as calcium carbonate (Tums) or aluminum hydroxide and magnesium carbonate (Maalox), can help provide short-term relief for indigestion and heartburn. However, these should be used as directed and not for an extended period without consulting a healthcare professional.
+
+2. H2 blockers, such as famotidine (Pepcid) or ranitidine (Zantac), can help reduce stomach acid production and may provide relief from indigestion and heartburn. These medications are available over-the-counter and can be taken as directed.
+
+3. Proton pump inhibitors (PPIs), such as omeprazole (Prilosec) or esomeprazole (Nexium), can also help reduce stomach acid production and provide relief from indigestion and heartburn. These medications are available over-the-counter and can be taken as directed.
+
+4. Lifestyle modifications, such as avoiding spicy or fatty foods, eating smaller meals, not lying down immediately after eating, and elevating the head of the bed, can help alleviate indigestion and heartburn symptoms.
+
+5. It is important for the patient to discuss these symptoms with their healthcare team during their next visit or sooner if symptoms worsen or do not improve with over-the-counter medications and lifestyle modifications. The healthcare team may want to perform additional tests or imaging to rule out any complications or recurrence of cancer.
+
+Please note that these recommendations are general and should be discussed with the patient's healthcare team before implementing any changes to their treatment plan.",0.8621835708618164,0.8040766716003418,0.832116961479187,"caring, remorse, sadness"
+175,61,61,"Hello there, I'm sorry to hear you've been experiencing persistent indigestion and heartburn. I recommend trying over-the-counter antacids or acid blockers to help alleviate your symptoms. If these do not provide relief, please let me know and we can discuss other options. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern about persistent indigestion and heartburn. However, it is important to note that any new or worsening symptoms should be discussed with the patient's healthcare team to rule out any potential complications or recurrence of cancer.
+
+Hello, 
+
+We should discuss this over the phone or in person.  Lifestyle modifications such as avoiding spicy or fatty foods, eating smaller meals, not lying down immediately after eating, and elevating the head of the bed, can help alleviate indigestion and heartburn symptoms. Or we may need to adjust your medications.",0.8574516773223877,0.8512387871742249,0.8543339967727661,"caring, remorse, sadness"
+176,62,62,"Hello there, I understand your concern about feeling fatigued and weak. These symptoms can be side effects of previous chemotherapy treatments, such as carboplatin, pemetrexed, and pembrolizumab. It's important to remember that everyone reacts differently to treatment, and these symptoms can vary in severity and duration. I recommend getting plenty of rest, staying hydrated, and maintaining a balanced diet to help manage your energy levels. If your symptoms persist or worsen, please don't hesitate to reach out to me for further discussion. Best, [Your Name]</s>","Yes, the provided information is sufficient to answer the patient's question.
+
+Dear patient,
+
+It is possible that the fatigue and weakness you are experiencing could be related to your previous chemotherapy treatment. Chemotherapy can have long-lasting side effects, and fatigue is a common one. It is important to note that there could be other factors contributing to your fatigue, such as the cancer itself, emotional stress, or other medical conditions.
+
+I recommend discussing your symptoms with your oncologist during your next visit. They can help determine if your fatigue is related to your previous chemotherapy or if there are other factors that need to be addressed. In the meantime, try to maintain a balanced diet, stay hydrated, and engage in light physical activity as tolerated to help manage your fatigue.
+
+Please do not hesitate to reach out if you have any further questions or concerns.",0.8646884560585022,0.8703411221504211,0.8675055503845215,"caring, approval, neutral"
+177,62,62,"Hello there, I understand your concern about feeling fatigued and weak. These symptoms can be side effects of previous chemotherapy treatments, such as carboplatin, pemetrexed, and pembrolizumab. It's important to remember that everyone reacts differently to treatment, and these symptoms can vary in severity and duration. I recommend getting plenty of rest, staying hydrated, and maintaining a balanced diet to help manage your energy levels. If your symptoms persist or worsen, please don't hesitate to reach out to me for further discussion. Best, [Your Name]</s>","Yes, the provided information is sufficient to answer the patient's question.
+
+Dear patient,
+
+It is possible that the fatigue and weakness you are experiencing could be related to your previous chemotherapy treatment. Chemotherapy can have long-lasting side effects, and fatigue is a common one. It is important to note that there could be other factors contributing to your fatigue, such as the cancer itself, emotional stress, or other medical conditions.
+
+I recommend discussing your symptoms with your oncologist during your next visit. They can help determine if your fatigue is related to your previous chemotherapy or if there are other factors that need to be addressed. In the meantime, try to maintain a balanced diet, stay hydrated, and engage in light physical activity as tolerated to help manage your fatigue.
+
+Please do not hesitate to reach out if you have any further questions or concerns.",0.8646884560585022,0.8703411221504211,0.8675055503845215,"caring, approval, neutral"
+178,63,63,"Hello there, I understand your concern about experiencing pain in your lower back and sides. It's important to note that everyone's experience with cancer and its related symptoms can be different. While it's natural to worry, I would recommend reaching out to your primary care provider for an evaluation. They can assess your symptoms and determine if any further testing or referral to a specialist is necessary. Best, [Your Name]</s>",It’s unclear what could be causing these symptoms and I would recommend coming in to get evaluated. We will need to some basic blood tests and potentially some imaging too.,0.848904013633728,0.8781366348266602,0.8632729053497314,"caring, approval, neutral"
+179,63,63,"Hello there, I understand your concern about experiencing pain in your lower back and sides. It's important to note that everyone's experience with cancer and its related symptoms can be different. While it's natural to worry, I would recommend reaching out to your primary care provider for an evaluation. They can assess your symptoms and determine if any further testing or referral to a specialist is necessary. Best, [Your Name]</s>","Given your history of renal cancer, these symptoms may be related to that cancer. However, at the moment I have insufficient information to determine the exact cause of your pain. I would suggest contacting your primary health care physician or your oncologist within the next day or so to discuss your symptoms and determine whether you need to come back for a consultation in the outpatient clinic. 
+In the meantime it is important to monitor your situation closely for any other new or worsening symptoms. In that case, do not hesitate to contact us again.",0.8727204203605652,0.8746892213821411,0.8737037181854248,"caring, approval, neutral"
+180,64,64,"Hello there, I understand your concern about the swelling and tenderness in your armpit. It's important to note that some treatments for breast cancer, including radiation therapy, can cause temporary swelling and tenderness in the underarm area. However, it's crucial that we monitor any changes closely. I recommend keeping a record of the size and duration of the swelling, and if it worsens or persists, please contact me for further evaluation. Best, [Your Name]</s>","Yes, the provided information is sufficient to answer the patient's question.
+
+Recommendations:
+
+1. The swelling and tenderness in your armpit could be related to your previous breast cancer treatment, specifically the axillary lymph node dissection. This can sometimes lead to a condition called lymphedema, which is a buildup of lymphatic fluid in the tissues due to damage or removal of lymph nodes.
+
+2. It is important to have this swelling and tenderness evaluated by your healthcare provider to rule out any other potential causes, such as infection or recurrence of cancer.
+
+3. In the meantime, you can try some self-care measures to help alleviate the swelling and discomfort, such as gentle massage, elevation of the affected arm, and wearing a compression sleeve if recommended by your healthcare provider.
+
+4. Continue to monitor the swelling and tenderness, and report any changes or worsening of symptoms to your healthcare provider promptly.",0.8787252306938171,0.8512251973152161,0.8647566437721252,"caring, approval, neutral"
+181,65,65,"Hello there, I understand your concern about difficulty swallowing. Based on your medical history, I recommend you speak with me about this issue during your next appointment. In the meantime, please try to consume soft foods and liquids to make swallowing easier. Best, [Your Name]</s>","The provided information is sufficient to address the patient's concern. 
+
+Recommendations:
+1. Although it is reassuring that the patient is clinically without evidence of recurrence and has regained his pretreatment weight, the recent difficulty swallowing (dysphagia) should not be ignored. It could be related to a stricture, recurrence of cancer, or other causes.
+2. The patient should contact his oncologist or primary care physician to discuss these symptoms and potentially schedule an evaluation sooner than the next planned visit. This evaluation may include a physical examination, imaging studies, or endoscopy to determine the cause of the dysphagia.
+3. In the meantime, the patient should continue taking his prescribed medications (omeprazole, ranitidine, and metoclopramide) as they may help alleviate some of the symptoms related to GERD. However, it is essential to have a proper evaluation to rule out other causes of the difficulty swallowing.",0.8538773059844971,0.8156149983406067,0.8343077301979065,"caring, approval, neutral"

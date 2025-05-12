@@ -19,7 +19,7 @@ responses_df = pd.read_csv('responses_aim.csv')
 merged_df = questions_df.merge(responses_df[['id', 'doc_change']], left_on='pin', right_on='id', how='inner')
 
 os.makedirs("evaluation", exist_ok=True)
-output_path = os.path.join("evaluation", "llm_evaluation_results_llama.csv")
+output_path = os.path.join("evaluation", "llm_evaluation_results_deepseek-r1.csv")
 
 if not os.path.exists(output_path):
     with open(output_path, mode='w', newline='', encoding='utf-8') as f:

@@ -531,11 +531,13 @@ type Rating = number;
 type Feedback = string;
 type Instruction = string;
 
+type AIEditLevel = 'high' | 'low';
+
 interface AIEditOptions {
-  grammar: boolean;
-  empathy: boolean;
-  clarity: boolean;
-  professionalism: boolean;
+  grammar: AIEditLevel;
+  empathy: AIEditLevel;
+  clarity: AIEditLevel;
+  professionalism: AIEditLevel;
 }
 
 // logic to implement geenrated rpely function differ for both modes todo--integration not yet started
@@ -607,10 +609,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
 
   const [showAIEditModal, setShowAIEditModal] = useState<boolean>(false);
   const [aiEditOptions, setAIEditOptions] = useState<AIEditOptions>({
-    grammar: true,
-    empathy: true,
-    clarity: true,
-    professionalism: true
+    grammar: 'high',
+    empathy: 'high',
+    clarity: 'high',
+    professionalism: 'high',
   });
 
   const [cmdPressed, setCmdPressed] = useState(false);
@@ -630,9 +632,18 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   const [generatedReplies, setGeneratedReplies] = useState<{ [key: string]: string }>({}); 
   const [isAIEditApplied, setIsAIEditApplied] = useState(false);
 
-  const handleAIEditOptionChange = (option: keyof AIEditOptions): void => {
-    setAIEditOptions(prev => ({...prev, [option]: !prev[option]}));  //toggle
+  const handleAIEditOptionChange = (
+    option: keyof AIEditOptions,
+    value: AIEditLevel
+  ) => {
+    setAIEditOptions(prev => ({
+      ...prev,
+      [option]: value,
+    }));
   };
+
+
+  
 
   // update but no fix
   const handleAIEditSubmit = async (): Promise<void> => {
@@ -1382,7 +1393,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     console.log("Edited Text:", editedText);
   
     const highlightedText = highlightDifferences(originalText, editedText);
-  
+
     return (
       <div className="px-2 mt-10">
         <div className="mt-4 px-2">
@@ -1412,6 +1423,41 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   if (!entryData) {
     return <div className="p-6 text-gray-700">Message not found.</div>;
   }
+
+  interface OptionToggleProps {
+  label: string;
+  optionKey: keyof AIEditOptions;
+}
+
+  const OptionToggle: React.FC<OptionToggleProps> = ({ label, optionKey }) => (
+    <div className="flex items-center justify-between mb-2">
+      <span>{label}</span>
+      <div className="flex">
+        <button
+          type="button"
+          className={`px-3 py-1 rounded-l border border-purple-600 ${
+            aiEditOptions[optionKey] === 'low'
+              ? 'bg-purple-600 text-white'
+              : 'bg-white text-purple-600'
+          }`}
+          onClick={() => handleAIEditOptionChange(optionKey, 'low')}
+        >
+          Low
+        </button>
+        <button
+          type="button"
+          className={`px-3 py-1 rounded-r border border-purple-600 ${
+            aiEditOptions[optionKey] === 'high'
+              ? 'bg-purple-600 text-white'
+              : 'bg-white text-purple-600'
+          }`}
+          onClick={() => handleAIEditOptionChange(optionKey, 'high')}
+        >
+          High
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="h-full flex flex-col bg-white overflow-auto">
@@ -1623,22 +1669,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         >
           Send Reply
         </button>
-        <button
-          onClick={() =>{
-            handleRegenerateReply_mode1(
-              activeTab, 
-              generatedReplies[mrn || ""] || "", 
-              entryData?.subject || "", 
-              entry.aiReplies[activeTab - 1]?.content || "", 
-              entryData?.message || "",
-              entryData?.emrData || ""
-            )
-            console.log("flip", generatedReplies)}
-          }
-          className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-        >
-          Regenerate
-        </button>
 
 
         {showAIFeatures && (
@@ -1752,21 +1782,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         >
           Send Reply
         </button>
-        <button
-        className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-        onClick={() =>
-          handleRegenerateReply_mode1(
-            activeTab, 
-            entry.aiReplies[activeTab]?.content || "", 
-            entry.subject || "", 
-            entry.aiReplies[activeTab - 1]?.content || "", 
-            entryData?.message || "",
-            entryData?.emrData || ""
-          )
-        }
-      >
-        Regenerate
-      </button>
 
         <button
           onClick={() => {
@@ -1944,23 +1959,16 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
               <div className="bg-white p-6 rounded shadow-lg w-80">
                 <h2 className="text-lg font-bold mb-4">AI Edit Options</h2>
                 <div className="space-y-2">
-                  <label className="flex items-center">
-                    <input type="checkbox" className="form-checkbox" checked={aiEditOptions.grammar} onChange={() => handleAIEditOptionChange('grammar')} />
-                    <span className="ml-2">Grammar</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="form-checkbox" checked={aiEditOptions.empathy} onChange={() => handleAIEditOptionChange('empathy')} />
-                    <span className="ml-2">Empathy</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="form-checkbox" checked={aiEditOptions.clarity} onChange={() => handleAIEditOptionChange('clarity')} />
-                    <span className="ml-2">Clarity</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="form-checkbox" checked={aiEditOptions.professionalism} onChange={() => handleAIEditOptionChange('professionalism')} />
-                    <span className="ml-2">Professionalism</span>
-                  </label>
+                  {(((activeTab === 3) && (!showAIFeatures)) || ((activeTab === 0 && showAIFeatures))) && (
+                    <OptionToggle label="Grammar" optionKey="grammar" />
+                  )}
+                  <OptionToggle label="Empathy" optionKey="empathy" />
+                  {(((activeTab === 3) && (!showAIFeatures)) || ((activeTab === 0 && showAIFeatures))) && (
+                    <OptionToggle label="Clarity" optionKey="clarity" />
+                  )}
+                  <OptionToggle label="Professionalism" optionKey="professionalism" />
                 </div>
+
                 <div className="mt-4 flex justify-end">
                   <button
                     onClick={handleAIEditSubmit}

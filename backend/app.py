@@ -98,7 +98,7 @@ def get_ai_data():
         Categories: ["High Urgency", "Medium Urgency", "Low Urgency", "Medication", "Symptoms", "Test-Related", "Medical Questions", "Acknowledgments", "More Than One Issue"]
         Provide a comma-separated list of the most relevant categories. Return at most 3 and don't include anything else in your response.
         Provide at least 1 category. 
-        Always provide one urgency level (High, Medium, or Low).
+        Always provide one urgency level (High, Medium, or Low). Only assign high urgency if the patient needs to be scheduled an appointment with a provider as soon as possible i.e., worsening conditions. If the message only contains harmful words or hate speech or is calling the provider names but no health issues, do not assign high urgency. If the patient is expressing negative feelings to another person do not assign high priority. Only assign high priority if they are experiencing very negative and worsening condtions.
     """
 
     # mon april 7th on cmpus
@@ -356,7 +356,7 @@ def edit_ai_reply():
         Patient Message: "{patient_message}"
         Current AI Reply: "{ai_reply}"
         
-        Provide an updated reply that adheres strictly to these instructions. Do not repeat the same reply. Do not include anything else in your response.
+        Provide an updated reply that adheres strictly to these instructions. Do not repeat the same reply. Do not include anything else in your response. If no instructions are provided, simply improve the message to be more clear, understandable, and direct while maintaining professionalism.
     """
 
     try:

@@ -151,7 +151,7 @@ Summary of most recent oncology visit (4 weeks ago): 72-year-old female with sta
       lastName: "Patel",
       firstName: "Ravi",
       dob: "05/05/1985",
-      subject: "Shortness of Breath",
+      subject: "Exception for the Covid test",
       dateReceived: "04/05/2025",
       fromUser: "Patient",
       message:

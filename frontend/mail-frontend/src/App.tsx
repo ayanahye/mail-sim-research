@@ -531,7 +531,7 @@ type Rating = number;
 type Feedback = string;
 type Instruction = string;
 
-type AIEditLevel = 'high' | 'low';
+type AIEditLevel = 'high' | 'low' | "";
 
 interface AIEditOptions {
   grammar: AIEditLevel;
@@ -609,10 +609,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
 
   const [showAIEditModal, setShowAIEditModal] = useState<boolean>(false);
   const [aiEditOptions, setAIEditOptions] = useState<AIEditOptions>({
-    grammar: 'high',
-    empathy: 'high',
-    clarity: 'high',
-    professionalism: 'high',
+    grammar: '',
+    empathy: '',
+    clarity: '',
+    professionalism: '',
   });
 
   const [cmdPressed, setCmdPressed] = useState(false);

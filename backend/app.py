@@ -40,6 +40,8 @@ client = OpenAI(
     api_key="fake-key",
 )
 
+# none of the prompts seem to stop it from mentioning 'wearing a wig' or using 'gentle shampoo'. So i am just not returning a response if it does that.
+
 def parse_responses(raw_replies):
     raw_replies = clean_response(raw_replies)
     sections = re.split(r"(Hello there,)", raw_replies)
@@ -60,6 +62,10 @@ def parse_responses(raw_replies):
         
         content_match = re.search(r"(.*?) Best,", response)
         content = content_match.group(1).strip() if content_match else response
+
+        content_lower = content.lower()
+        if "gentle shampoo" in content_lower or (("wearing" in content_lower or "wear" in content_lower or "try wearing" in content_lower) and "wig" in content_lower):
+            content = "No response provided for this response"
         
         parsed_responses.append({
             "label": labels[i],
@@ -128,6 +134,8 @@ def get_ai_data():
 
         DO NOT EVER ASK THEM TO CONTACT THE HEALTHCARE TEAM. YOU ARE THE PROVIDER AND THE HEALTHCARE TEAM SO TRY TO MAKE SUGGESTIONS YOURSELF.
 
+        DO NOT EVER MENTION "SHAMPOO" OR "WIGS".
+
         If the message is simply a thank you or does not contain a clear question, do not provide a full reply; just politely acknowledge it.
 
         If the patient asks about scheduling, respond with:
@@ -139,7 +147,7 @@ def get_ai_data():
 
         {EMR_details}
 
-        Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure for all 3 response types:
+        Now, respond to the following message from an upset and angry patient as if you were their provider and YOU ARE THE HEALTHCARE TEAM SO DO NOT MENTION ANOTHER TEAM. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure for all 3 response types:
 
         1. **Tone**: Maintain a professional, empathetic, and supportive tone at all times.
         2. **No placeholders**: Do not use any placeholders like `(your reply here)` in your response. The response must directly address the patient's concerns or queries. Don't as the patient to schedule and appointment unless it is deemed necessary.
@@ -240,6 +248,8 @@ def regenerate_ai_reply():
 
         DO NOT EVER SAY THAT YOU ARE AN AI. Instead, you should say nothing so the provider can fill in that information if you are unable to do so.
 
+        DO NOT EVER ASK THEM TO CONTACT OR SPEAK TO THE HEALTHCARE TEAM. YOU ARE THE PROVIDER AND THE HEALTHCARE TEAM SO TRY TO MAKE SUGGESTIONS YOURSELF.
+
         If the message is simply a thank you or does not contain a clear question, do not provide a full reply; just politely acknowledge it.
 
         If the patient asks about scheduling, respond with:
@@ -251,7 +261,7 @@ def regenerate_ai_reply():
 
         {EMR_details}
 
-        Now, respond to the following message from an upset and angry patient as if you were their provider. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
+        Now, respond to the following message from an upset and angry patient as if you were their provider and you are the healthcare team. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must strictly adhere to the following structure:
 
         1. **Template**: "Hello there, (your reply here), Best, ___."
         2. **Tone**: Maintain a professional, empathetic, and supportive tone at all times.
@@ -335,12 +345,14 @@ def edit_ai_reply():
 
         DO NOT EVER SAY THAT YOU ARE AN AI. Instead, you should say nothing so the provider can fill in that information if you are unable to do so.
 
+        DO NOT EVER ASK THEM TO CONTACT THE HEALTHCARE TEAM. YOU ARE THE PROVIDER AND THE HEALTHCARE TEAM SO TRY TO MAKE SUGGESTIONS YOURSELF.
+
         If the message is simply a thank you or does not contain a clear question, do not provide a full reply; just politely acknowledge it.
 
         If the patient asks about scheduling, respond with:
         “Please check for available appointment times in the Message Portal or call our office.”
 
-        In writing your response, feel free to make recommendations as if you were the attending healthcare provider (since your response will be approved by the healthcare provider). Do not mention the patient should contact their provider, since you are acting as the provider.
+        In writing your response, feel free to make recommendations as if you were the attending healthcare provider (since your response will be approved by the healthcare provider). Do not mention the patient should contact their provider, since you are acting as the provider. **Specifically, do not suggest the use of wigs, scarves, or recommend gentle shampoos.**
 
         **Here are the patient details**:
 
@@ -357,7 +369,7 @@ def edit_ai_reply():
 
         Patient Message: "{patient_message}"
         Current AI Reply: "{ai_reply}"
-        
+
         Provide an updated reply that adheres strictly to these instructions. Do not repeat the same reply. Do not include anything else in your response. If no instructions are provided, simply improve the message to be more clear, understandable, and direct while maintaining professionalism.
     """
 
@@ -370,7 +382,12 @@ def edit_ai_reply():
         raw_reply = completion.choices[0].message.content.strip()
 
         raw_reply = clean_response(raw_reply)
-        print(raw_reply)
+        print(f"Raw Reply: {raw_reply}") 
+
+        lower_reply = raw_reply.lower()
+        if "gentle shampoo" in lower_reply or (("wearing" in lower_reply or "wear" in lower_reply or "try wearing" in lower_reply) and "wig" in lower_reply):
+            print("Filtered out reply containing restricted terms.") 
+            return jsonify({"editedReply": {"content": "No edit available."}})
 
         formatted_reply = {"content": raw_reply + " Note: This email was drafted with AI assistance and reviewed/approved by the provider."}
 
@@ -420,6 +437,8 @@ def provide_instructions():
 
         DO NOT EVER SAY THAT YOU ARE AN AI. Instead, you should say nothing so the provider can fill in that information if you are unable to do so.
 
+        DO NOT EVER ASK THEM TO CONTACT THE HEALTHCARE TEAM. YOU ARE THE PROVIDER AND THE HEALTHCARE TEAM SO TRY TO MAKE SUGGESTIONS YOURSELF.
+        
         If the message is simply a thank you or does not contain a clear question, do not provide a full reply; just politely acknowledge it.
 
         If the patient asks about scheduling, respond with:
@@ -455,6 +474,10 @@ def provide_instructions():
 
         raw_reply = clean_response(raw_reply)
         print(raw_reply)
+
+        lower_reply = raw_reply.lower()
+        if "gentle shampoo" in lower_reply or (("wearing" in lower_reply or "wear" in lower_reply or "try wearing" in lower_reply) and "wig" in lower_reply):
+            return jsonify({"generatedReply": {"content": "No edit available."}})
 
         formatted_reply = {"content": raw_reply + " Note: This email was drafted with AI assistance and reviewed/approved by the provider."}
 

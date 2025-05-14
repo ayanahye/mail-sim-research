@@ -75,7 +75,7 @@ function App() {
       lastName: "Smith",
       firstName: "John",
       dob: "01/01/1980",
-      subject: "Fatigue",
+      subject: "Severe Exhaustion and Need Hospice",
       dateReceived: "04/01/2025",
       fromUser: "Patient",
       message:
@@ -94,7 +94,7 @@ Summary of most recent oncology visit (1 week ago): 55-year-old male with newly 
       lastName: "Taylor",
       firstName: "Emily",
       dob: "02/02/1985",
-      subject: "Hair Loss",
+      subject: "Questions About More Frequent Hair Loss",
       dateReceived: "04/02/2025",
       fromUser: "Patient",
       message:
@@ -113,7 +113,7 @@ Summary of most recent oncology visit (3 weeks ago): 47-year-old female with a h
       lastName: "Garcia",
       firstName: "Luis",
       dob: "03/03/1969",
-      subject: "Diarrhea",
+      subject: "Questions About Severe Diarrhea",
       dateReceived: "04/03/2025",
       fromUser: "Patient",
       message:
@@ -132,7 +132,7 @@ Summary of most recent oncology visit (6 weeks ago): 68-year-old male with newly
       lastName: "Nguyen",
       firstName: "Linh",
       dob: "04/04/1977",
-      subject: "Abdominal Bloating",
+      subject: "Your are a horrible person",
       dateReceived: "04/04/2025",
       fromUser: "Patient",
       message:

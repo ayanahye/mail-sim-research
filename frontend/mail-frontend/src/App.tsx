@@ -290,7 +290,7 @@ return (
                     }
                     context?.setShowAIFeatures(!context.showAIFeatures);
                   }} 
-                  label="AI Features Mode 2" 
+                  label="Advanced Mode" 
                 />
               )}
             </TabContext.Consumer>
@@ -641,9 +641,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       [option]: value,
     }));
   };
-
-
-  
 
   // update but no fix
   const handleAIEditSubmit = async (): Promise<void> => {
@@ -1955,31 +1952,38 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
           </div>
         )}
         {showAIEditModal && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded shadow-lg w-80">
-                <h2 className="text-lg font-bold mb-4">AI Edit Options</h2>
-                <div className="space-y-2">
-                  {(((activeTab === 3) && (!showAIFeatures)) || ((activeTab === 0 && showAIFeatures))) && (
-                    <OptionToggle label="Grammar" optionKey="grammar" />
-                  )}
-                  <OptionToggle label="Empathy" optionKey="empathy" />
-                  {(((activeTab === 3) && (!showAIFeatures)) || ((activeTab === 0 && showAIFeatures))) && (
-                    <OptionToggle label="Clarity" optionKey="clarity" />
-                  )}
-                  <OptionToggle label="Professionalism" optionKey="professionalism" />
-                </div>
-
-                <div className="mt-4 flex justify-end">
-                  <button
-                    onClick={handleAIEditSubmit}
-                    className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-                  >
-                    Apply Edits
-                  </button>
-                </div>
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded shadow-lg w-80 relative">
+              <button
+                type="button"
+                onClick={() => setShowAIEditModal(false)}
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold"
+                aria-label="Close"
+              >
+                ×
+              </button>
+              <h2 className="text-lg font-bold mb-4">AI Edit Options</h2>
+              <div className="space-y-2">
+                {(((activeTab === 3) && (!showAIFeatures)) || ((activeTab === 0 && showAIFeatures))) && (
+                  <OptionToggle label="Grammar" optionKey="grammar" />
+                )}
+                <OptionToggle label="Empathy" optionKey="empathy" />
+                {(((activeTab === 3) && (!showAIFeatures)) || ((activeTab === 0 && showAIFeatures))) && (
+                  <OptionToggle label="Clarity" optionKey="clarity" />
+                )}
+                <OptionToggle label="Professionalism" optionKey="professionalism" />
+              </div>
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={handleAIEditSubmit}
+                  className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+                >
+                  Apply Edits
+                </button>
               </div>
             </div>
-          )}
+          </div>
+           )}
           </div>
           )};
       </div>

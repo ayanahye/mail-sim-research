@@ -579,7 +579,9 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   //const [blankReply, setBlankReply] = useState("");
 
   const [blankReplyAI, setBlankReplyAI] = useState<{ [mrn: string]: string }>({});
-  const [blankReplyManual, setBlankReplyManual] = useState(""); 
+  //const [blankReplyManual, setBlankReplyManual] = useState(""); 
+
+  const [blankReplyManual, setBlankReplyManual] = useState<{ [mrn: string]: string }>({});
 
   const [isBold, setIsBold] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
@@ -705,13 +707,21 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         };
       } else if (!showAIFeatures && activeTab === 3) {
          // case 4 - blank mode 1
-        originalText = blankReplyManual;
-        aiReply = blankReplyManual;
+         if (!mrn) {
+          console.error("MRN is undefined");
+          return;
+        }
+        originalText = blankReplyManual[mrn];
+        aiReply = blankReplyManual[mrn];
   
-        setOriginalBlankReplyManual(blankReplyManual);
+        setOriginalBlankReplyManual(blankReplyManual[mrn]);
   
         updateStateCallback = (editedReply: string) => {
-          setBlankReplyManual(editedReply); 
+          setBlankReplyManual(prev => ({
+            ...prev,
+            [mrn]: editedReply
+          
+        })); 
           setEditedText(editedReply); 
         };
       } else {
@@ -900,13 +910,13 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   
         setEntry({ ...entry, aiReplies: updatedReplies });
       }
-  
-      if (showAIFeatures && activeTab === 0) {
 
         if (!mrn) {
           console.error("MRN is undefined");
           return;
         }
+  
+      if (showAIFeatures && activeTab === 0) {
 
 
         setBlankReplyAI(prev => ({
@@ -915,7 +925,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         })); 
 
       } else if (!showAIFeatures && activeTab === 3) {
-        setBlankReplyManual(""); 
+        setBlankReplyManual(prev => ({
+          ...prev,
+          [mrn]: ""
+        })); 
       }
   
       setShowModal(true); 
@@ -951,7 +964,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         [mrn]: ""
       })); 
     } else if (!showAIFeatures && activeTab === 3) {
-      setBlankReplyManual(""); 
+      setBlankReplyManual(prev => ({
+        ...prev,
+        [mrn]: ""
+      })); 
     }
   
     setIsBold(false); 
@@ -975,7 +991,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       setOriginalText(newValue); 
       console.log('AI Blank Reply:', newValue);
     } else if (!showAIFeatures && activeTab === 3) {
-      setBlankReplyManual(newValue); 
+      setBlankReplyManual(prev => ({
+        ...prev,
+        [mrn]: newValue
+    })); 
       setOriginalText(newValue); 
       console.log('Manual Blank Reply:', newValue);
     } else {
@@ -1174,13 +1193,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   // prevInstructionsReply
 
   const handleAccept = () => {
-    if ((!showAIFeatures && activeTab < 3) || (showAIFeatures && activeTab === 0)) {
-      if (showAIFeatures && activeTab === 0) {
-        // blank
-        if (!mrn) {
+     if (!mrn) {
           console.error("MRN is undefined");
           return;
         }
+    if ((!showAIFeatures && activeTab < 3) || (showAIFeatures && activeTab === 0)) {
+      
+      if (showAIFeatures && activeTab === 0) {
+        // blank
 
         setOriginalBlankReplyAI(blankReplyAI[mrn]); 
         setPrevBlankReply(blankReplyAI[mrn]);
@@ -1209,9 +1229,12 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       setGeneratedReply(editedTextWithSpaces); 
     } else if (!showAIFeatures && activeTab === 3) {
       // blank manual
-      setOriginalBlankReplyManual(blankReplyManual); 
-      setPrevBlankReply(blankReplyManual); 
-      setBlankReplyManual(editedTextWithSpaces); 
+      setOriginalBlankReplyManual(blankReplyManual[mrn]); 
+      setPrevBlankReply(blankReplyManual[mrn]); 
+      setBlankReplyManual(prev => ({
+        ...prev,
+        [mrn]: editedTextWithSpaces
+    })); 
     } else {
       console.error("Unhandled case in handleAccept");
     }
@@ -1264,7 +1287,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       setGeneratedReply(originalGeneratedReply); // Update state for 
     } else if (!showAIFeatures && activeTab === 3) {
       // blank
-      setBlankReplyManual(originalBlankReplyManual); 
+      setBlankReplyManual(prev => ({
+        ...prev,
+        [mrn]: originalBlankReplyManual
+    })); 
     } else {
       console.error("Unhandled case in handleRevert");
     }
@@ -1445,7 +1471,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     } else if (!showAIFeatures && activeTab === 3) {
     
       originalText = originalBlankReplyManual; 
-      editedText = editedTextWithSpaces || blankReplyManual; 
+      editedText = editedTextWithSpaces || blankReplyManual[mrn]; 
     } else {
       console.error("Unhandled case for Show Diff");
       return null; 
@@ -1904,7 +1930,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         <textarea
         id="blankReplyTextarea"
         className="w-full h-40 p-2 border rounded"
-        value={blankReplyManual} 
+        value={blankReplyManual[mrn]} 
         onChange={handleBlankReplyChange}
         onSelect={handleTextSelect}
         placeholder="Write your reply here..."
@@ -1912,7 +1938,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
 
         <div className="mt-2 flex gap-2">
         <button
-        onClick={() => handleSendReply(blankReplyManual)}
+        onClick={() => handleSendReply(blankReplyManual[mrn])}
         className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
         >
         Send Reply

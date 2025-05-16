@@ -578,7 +578,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   const [showRatingModal, setShowRatingModal] = useState(false);
   //const [blankReply, setBlankReply] = useState("");
 
-  const [blankReplyAI, setBlankReplyAI] = useState(""); 
+  const [blankReplyAI, setBlankReplyAI] = useState<{ [mrn: string]: string }>({});
   const [blankReplyManual, setBlankReplyManual] = useState(""); 
 
   const [isBold, setIsBold] = useState(false);
@@ -655,14 +655,23 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       let updateStateCallback: (editedReply: string) => void;
   
       if (showAIFeatures && activeTab === 0) {
+        if (!mrn) {
+          console.error("MRN is undefined");
+          return;
+        }
+
         // case - blank
-        originalText = blankReplyAI; 
-        aiReply = blankReplyAI;
+        originalText = blankReplyAI[mrn]; 
+        aiReply = blankReplyAI[mrn];
   
-        setOriginalBlankReplyAI(blankReplyAI);
+        setOriginalBlankReplyAI(blankReplyAI[mrn]);
   
         updateStateCallback = (editedReply: string) => {
-          setBlankReplyAI(editedReply); 
+          setBlankReplyAI(prev => ({
+            ...prev,
+            [mrn]: editedReply,
+          }));
+          
           setEditedText(editedReply); 
         };
       } else if (showAIFeatures && activeTab === -2) {
@@ -893,7 +902,18 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       }
   
       if (showAIFeatures && activeTab === 0) {
-        setBlankReplyAI(""); 
+
+        if (!mrn) {
+          console.error("MRN is undefined");
+          return;
+        }
+
+
+        setBlankReplyAI(prev => ({
+          ...prev,
+          [mrn]: ""
+        })); 
+
       } else if (!showAIFeatures && activeTab === 3) {
         setBlankReplyManual(""); 
       }
@@ -919,8 +939,17 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   const handleStartBlank = () => {
     setShowBlankReplyForm(!showBlankReplyForm);
   
+    if (!mrn) {
+      console.error("MRN is undefined");
+      return;
+    }
+
+
     if (showAIFeatures && activeTab === 0) {
-      setBlankReplyAI(""); 
+      setBlankReplyAI(prev => ({
+        ...prev,
+        [mrn]: ""
+      })); 
     } else if (!showAIFeatures && activeTab === 3) {
       setBlankReplyManual(""); 
     }
@@ -933,8 +962,16 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   const handleBlankReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
   
+    if (!mrn) {
+      console.error("MRN is undefined");
+      return;
+    }
+
     if (showAIFeatures && activeTab === 0) {
-      setBlankReplyAI(newValue); 
+      setBlankReplyAI(prev => ({
+        ...prev,
+        [mrn]: newValue,
+      })); 
       setOriginalText(newValue); 
       console.log('AI Blank Reply:', newValue);
     } else if (!showAIFeatures && activeTab === 3) {
@@ -1133,9 +1170,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600"></div>
     </div>
   );
-  
-
-
 
   // prevInstructionsReply
 
@@ -1143,9 +1177,17 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     if ((!showAIFeatures && activeTab < 3) || (showAIFeatures && activeTab === 0)) {
       if (showAIFeatures && activeTab === 0) {
         // blank
-        setOriginalBlankReplyAI(blankReplyAI); 
-        setPrevBlankReply(blankReplyAI);
-        setBlankReplyAI(editedTextWithSpaces); 
+        if (!mrn) {
+          console.error("MRN is undefined");
+          return;
+        }
+
+        setOriginalBlankReplyAI(blankReplyAI[mrn]); 
+        setPrevBlankReply(blankReplyAI[mrn]);
+         setBlankReplyAI(prev => ({
+          ...prev,
+          [mrn]: editedTextWithSpaces,
+        }));
       } else {
         // tabs
         //setPrevOriginalText(editedTextWithSpaces); 
@@ -1178,16 +1220,22 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     setShowDiff(false);
   };
   
-  
-  
-  
   const handleRevert = () => {
     console.log("Reverting changes...");
+
+    if (!mrn) {
+      console.error("MRN is undefined");
+      return;
+    }
+
   
     if ((!showAIFeatures && activeTab < 3) || (showAIFeatures && activeTab === 0)) {
       if (showAIFeatures && activeTab === 0) {
        // blank
-        setBlankReplyAI(originalBlankReplyAI); 
+        setBlankReplyAI(prev => ({
+          ...prev,
+          [mrn]: originalBlankReplyAI,
+        })); 
       } else {
          // tabs
         const updatedReplies = [...entry.aiReplies];
@@ -1264,6 +1312,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     };
   }, [isDragging]);
 
+  useEffect(() => {
+    setShowReplySection(false);
+  }, [mrn]);
+
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditedText(e.target.value);
   };
@@ -1326,6 +1378,13 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     return diffResult;
   };
 
+
+  if (!mrn) {
+    console.error("MRN is undefined");
+    return;
+  }
+
+
   // Simplified LCS function  --debug
   const findLCS = (arr1: string[], arr2: string[]) => {
     const m = arr1.length;
@@ -1364,9 +1423,15 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     let originalText = "";
     let editedText = "";
   
+    if (!mrn) {
+      console.error("MRN is undefined");
+      return;
+    }
+
+
     if (showAIFeatures && activeTab === 0) {
       originalText = originalBlankReplyAI; 
-      editedText = editedTextWithSpaces || blankReplyAI; 
+      editedText = editedTextWithSpaces || blankReplyAI[mrn]; 
     } else if (showAIFeatures && activeTab === -2) {
       originalText = originalGeneratedReply;
       //originalText = generatedReplies[mrn || ""] || ""; 
@@ -1610,7 +1675,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         <textarea
         id="blankReplyTextarea"
         className="w-full h-40 p-2 border rounded"
-        value={blankReplyAI}
+        value={blankReplyAI[mrn]}
         onChange={handleBlankReplyChange}
         onSelect={handleTextSelect}
         placeholder="Write your reply here..."
@@ -1618,7 +1683,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
 
         <div className="mt-2 flex gap-2">
         <button
-          onClick={() => handleSendReply(blankReplyAI)}
+          onClick={() => handleSendReply(blankReplyAI[mrn || ""])}
           className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
         >
           Send Reply

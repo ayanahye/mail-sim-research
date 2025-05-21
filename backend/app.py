@@ -484,8 +484,6 @@ def provide_instructions():
 
     if not predefined_instructions:
         return jsonify({"error": "At least one instruction must be provided."}), 400
-
-    all_instructions = ", ".join(predefined_instructions)
     
     prompt = f"""
         You are writing an email for a healthcare provider to send in response to a patient email. The responses should be empathetic, polite, and concise, and should only address the patient's specific question or request. Before generating the responses, review the following information:
@@ -496,7 +494,7 @@ def provide_instructions():
 
     	You should take the provided point form content of the email and create a structured and coherent email encompassing all of these details.
 
-        {all_instructions}
+        Create the email reply based on all of these points: {predefined_instructions}
 
         If information is missing or clinical context is unclear, do not guess. Instead, politely ask the patient for more information.
 
@@ -531,6 +529,8 @@ def provide_instructions():
         raw_reply = completion.choices[0].message.content.strip()
 
         raw_reply = clean_response(raw_reply)
+        print(prompt)
+        print("="*50)
         print(raw_reply)
 
         lower_reply = raw_reply.lower()

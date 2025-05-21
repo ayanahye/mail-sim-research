@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, useMemo } from 'react';
+import { useState, useEffect, createContext, useContext, useMemo, useRef, ChangeEvent, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 
 /*
@@ -1010,59 +1010,57 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   };
 
   const handleGenerateReplyClick = async () => {
-    try {
-      setIsLoading(true);
-      if (!customInstruction.trim() && selectedInstructions.length === 0) {
-        console.error("At least one instruction must be provided");
-        return;
-      }
-  
-      let updatedSelectedInstructions = [...selectedInstructions];
-  
-      if (customInstruction.trim() && !updatedSelectedInstructions.includes(customInstruction)) {
-        updatedSelectedInstructions.push(customInstruction); 
-        setInstructionOptions((prev) => [...prev, customInstruction]); 
-        setCustomInstruction(""); 
-      }
-  
-      const response = await fetch(`${BACKEND_URL}/api/provide-instructions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          instructions: updatedSelectedInstructions, 
+      try {
+        setIsLoading(true);
+
+        const currentInput = bulletInputs[contextKey] ?? exampleInput;
+
+        if (!currentInput.trim()) {
+          console.error("Please provide your instructions as bullet points.");
+          setIsLoading(false);
+          return;
+        }
+
+        const payload = {
+          instructions: currentInput,
           patientMessage: entryData?.message || "",
           emrDets: entryData?.emrData || ""
-        }),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to generate reply");
+        };
+
+        const response = await fetch(`${BACKEND_URL}/api/provide-instructions`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to generate reply");
+        }
+
+        const result = await response.json();
+        const generatedReply = result?.generatedReply?.content;
+
+        if (!generatedReply) {
+          console.error("No reply received from backend");
+          setIsLoading(false);
+          return;
+        }
+
+        setGeneratedReplies((prevReplies) => ({
+          ...prevReplies,
+          [mrn || contextKey || ""]: generatedReply,
+        }));
+
+        setPrevInstructionsReply(generatedReply);
+        setGenerateClicked(true);
+        handleTabClick(-2);
+
+      } catch (error) {
+        console.error("Error generating reply:", error);
+      } finally {
+        setIsLoading(false);
       }
-  
-      const result = await response.json();
-      const generatedReply = result?.generatedReply?.content;
-  
-      if (!generatedReply) {
-        console.error("No reply received from backend");
-        return;
-      }
-  
-      setGeneratedReplies((prevReplies) => ({
-        ...prevReplies,
-        [mrn || ""]: generatedReply, 
-      }));
-  
-      setPrevInstructionsReply(generatedReply); 
-      setGenerateClicked(true); 
-      handleTabClick(-2); 
-  
-    } catch (error) {
-      console.error("Error generating reply:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };  
-  
+    };
 
   const BACKEND_URL = "http://127.0.0.1:5000";
 
@@ -1182,6 +1180,96 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
 
   const toggleReplySection = () => {
     setShowReplySection(!showReplySection);
+  };
+
+  const exampleInput = `
+    • Purpose: New lab requisition for follow-up on recent symptoms (fatigue)
+    • Tests Needed: CBC, iron panel, vitamin D
+    • Instructions: Go to any LifeLabs location
+    • Important: Bring requisition form (attached)
+    • Deadline: Within 2 weeks
+    • Next Steps: Results will be discussed at next appointment
+    • Additional Info: Patient has history of anemia`;
+
+    const exampleLabels = [
+      "Purpose:",
+      "Tests Needed:",
+      "Instructions:",
+      "Important:",
+      "Deadline:",
+      "Next Steps:",
+      "Additional Info:"
+    ];
+
+    const placeholderText = exampleLabels.map(label => `• ${label}`).join('\n');
+
+    const [inputValue, setInputValue] = useState<string>(exampleInput); // testing for 1 reply
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const [bulletInputs, setBulletInputs] = useState<{ [key: string]: string }>({});
+
+    const [hasEdited, setHasEdited] = useState(null);
+
+
+    const handleBulletInputChange = (mrn: string, value: string) => {
+      setBulletInputs(prev => ({
+        ...prev,
+        [mrn]: value
+      }));
+    };
+
+
+    const handleKeyDown = (e: ReactKeyboardEvent<HTMLTextAreaElement>) => {
+      const value = bulletInputs[contextKey] ?? exampleInput;
+
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const { selectionStart, selectionEnd } = e.currentTarget;
+        const before = value.slice(0, selectionStart);
+        const after = value.slice(selectionEnd);
+        const newValue = before + '\n• ' + after;
+        setBulletInputs(prev => ({
+          ...prev,
+          [contextKey]: newValue,
+        }));
+
+        setTimeout(() => {
+          if (textareaRef.current) {
+            textareaRef.current.selectionStart = textareaRef.current.selectionEnd = selectionStart + 3;
+          }
+        }, 0);
+      }
+      if (
+        e.key === 'Tab' &&
+        textareaRef.current &&
+        value[textareaRef.current.selectionStart - 1] === '*'
+      ) {
+        e.preventDefault();
+        const { selectionStart, selectionEnd } = e.currentTarget;
+        const before = value.slice(0, selectionStart - 1);
+        const after = value.slice(selectionEnd);
+        const newValue = before + '• ' + after;
+        setBulletInputs(prev => ({
+          ...prev,
+          [contextKey]: newValue,
+        }));
+
+        setTimeout(() => {
+          if (textareaRef.current) {
+            textareaRef.current.selectionStart = textareaRef.current.selectionEnd = selectionStart;
+          }
+        }, 0);
+      }
+    };
+
+
+  const contextKey = mrn || ""; 
+
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setBulletInputs(prev => ({
+      ...prev,
+      [contextKey]: e.target.value,
+    }));
   };
 
   const LoadingSpinner = () => (
@@ -1811,45 +1899,31 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         </div>
         )}
 
-        {showAIFeatures && (activeTab === -1) && (
+        {showAIFeatures && activeTab === -1 && (
         <div className="bg-white p-4 border rounded">
-        <h3 className="font-semibold text-gray-600 mb-2">Set AI Instructions</h3>
-        <div
-        className="space-y-2"
-        style={{
-        maxHeight: '100px',
-        overflowY: 'auto', 
-        }}
-        >
-        {instructionOptions.map((instruction, index) => (
-        <label key={index} className="flex items-center">
-          <input
-            type="checkbox"
-            className="form-checkbox"
-            checked={selectedInstructions.includes(instruction)}
-            onChange={() => handleInstructionToggle(instruction)}
+          <h3 className="font-semibold text-gray-600 mb-2">Points-to-Email</h3>
+          <p className="text-gray-500 mb-2 text-sm">
+            Please provide bullet points for the AI to transform into an Email. Use <b>Enter</b> for a new bullet, or type <b>*</b> then <b>Tab</b> for a bullet. You can refer to the example below.
+          </p>
+          <textarea
+            ref={textareaRef}
+            className="w-full p-2 border rounded mt-2"
+            rows={10}
+            placeholder={placeholderText}
+            value={bulletInputs[contextKey] ?? exampleInput}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
           />
-          <span className="ml-2">{instruction}</span>
-        </label>
-        ))}
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={handleGenerateReplyClick}
+              className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Generate AI Reply
+            </button>
+          </div>
         </div>
-        <textarea
-        className="w-full p-2 border rounded mt-4"
-        placeholder="Add your own instruction..."
-        value={customInstruction}
-        onChange={(e) => setCustomInstruction(e.target.value)}
-        />
-        <div className="flex gap-2 mt-2">
-        <button
-        onClick={handleGenerateReplyClick}
-        className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-        Generate AI Reply
-        </button>
-
-        </div>
-        </div>
-        )}
+      )}
         {!showAIFeatures && activeTab < entry.aiReplies.length && (
         <>
         {

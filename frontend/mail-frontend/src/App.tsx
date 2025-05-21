@@ -1101,6 +1101,57 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       }
     };
 
+    const handleGeneratePointsClick = async (instructionsSource: string) => {
+      try {
+        setIsLoading(true);
+
+        if (!instructionsSource.trim()) {
+          console.error("Please provide your instructions as bullet points.");
+          setIsLoading(false);
+          return;
+        }
+
+        const payload = {
+          instructions: instructionsSource,
+          patientMessage: entryData?.message || "",
+          emrDets: entryData?.emrData || ""
+        };
+
+        const response = await fetch(`${BACKEND_URL}/api/provide-instructions`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to generate reply");
+        }
+
+        const result = await response.json();
+        const generatedReply = result?.generatedReply?.content;
+
+        if (!generatedReply) {
+          console.error("No reply received from backend");
+          setIsLoading(false);
+          return;
+        }
+
+        setGeneratedReplies((prevReplies) => ({
+          ...prevReplies,
+          [mrn || contextKey || ""]: generatedReply,
+        }));
+
+        setPrevInstructionsReply(generatedReply);
+        setGenerateClicked(true);
+        handleTabClick(-2);
+
+      } catch (error) {
+        console.error("Error generating reply:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
   const BACKEND_URL = "http://127.0.0.1:5000";
 
   const handleRegenerateReply_mode1 = async (
@@ -1784,7 +1835,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
                 : "text-gray-500 hover:text-gray-700"
             }`}
           >
-            AI Points to Email
+            AI Points-to-Email
           </button>
         <button
         onClick={() => generateClicked ? handleTabClick(-2) : null}
@@ -1950,10 +2001,15 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
 
         {showAIFeatures && activeTab === -3 && (
         <div className="bg-gray-50 p-4 rounded border mt-4">
-          <h4 className="font-semibold mb-2">AI-Generated Points for Email</h4>
-          <pre className="whitespace-pre-wrap text-gray-700">
+          <h4 className="font-semibold text-gray-600 mb-2">Create Email from AI-Generated Points</h4>
+          <pre className="whitespace-pre-wrap text-gray-700 text-sm font-sans">
             {entryData?.aiPoints || "Loading..."}
           </pre>
+          <button
+          onClick={() => handleGeneratePointsClick(entryData?.aiPoints || "")}
+          className='px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 mt-2'>
+            Generate AI Reply
+          </button>
         </div>
       )}
 

@@ -1952,7 +1952,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         <div className="bg-gray-50 p-4 rounded border mt-4">
           <h4 className="font-semibold mb-2">AI-Generated Points for Email</h4>
           <pre className="whitespace-pre-wrap text-gray-700">
-            {entry.aiPoints || "Loading..."}
+            {entryData?.aiPoints || "Loading..."}
           </pre>
         </div>
       )}

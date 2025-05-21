@@ -519,7 +519,7 @@ def provide_instructions():
         Patient Message: {patient_message}
 	    EMR Details: "{EMR_details}"
 
-        Now, respond to the following message from an upset and angry patient as if you were their provider and YOU ARE THE HEALTHCARE TEAM SO DO NOT MENTION ANOTHER TEAM. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must only return the fully formatted email and nothing else. Write like a standard email format please with Hello {Patient} and blank provider sign off. Do not include any other words aside from the email.
+        Now, respond to the following message from an upset and angry patient as if you were their provider and YOU ARE THE HEALTHCARE TEAM SO DO NOT MENTION ANOTHER TEAM. BE CONCISE. The patient’s message may include frustration, concerns, or questions because they are upset. Your response must only return the fully formatted email and nothing else. Write like a standard email format please with Hello Patient and blank provider sign off. Do not include any other words aside from the email.
     """
 
     try:

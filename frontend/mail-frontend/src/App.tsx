@@ -65,7 +65,7 @@ function App() {
 
   const [inboxWidth, setInboxWidth] = useState(40); // 40% as default
   const [data, setData] = useState<InboxEntry[]>([]);
-  const [queue, setQueue] = useState<Omit<InboxEntry, "categories" | "aiReplies">[]>([]);
+  const [queue, setQueue] = useState<InboxEntry[]>([]);
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -183,7 +183,35 @@ Summary of most recent oncology visit (2 weeks ago): 39-year-old male with newly
     document.removeEventListener("mouseup", handleMouseUp);
   };
 
-  const fetchCategoriesAndReplies = async (email: Omit<InboxEntry, "categories" | "aiReplies">) => {
+  const fetchAIPoints = async (email: Omit<InboxEntry, "aiPoints">) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/get-ai-points`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ patientMessage: email.message, emrDets: email.emrData }),
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch AI points");
+
+      const result = await response.json();
+
+      const newEntry: InboxEntry = {
+        ...email,
+        aiPoints: result.aiPoints, 
+      };
+
+      setData((prevData) =>
+        prevData.map((entry) =>
+          entry.mrn === email.mrn ? newEntry : entry
+        )
+      );
+    } catch (error) {
+      console.error("Error fetching AI points:", error);
+    }
+  };
+
+
+  const fetchCategoriesAndReplies = async (email: InboxEntry) => {
     try {
       
       const response = await fetch(`${BACKEND_URL}/api/get-ai-data`, {
@@ -221,20 +249,22 @@ Summary of most recent oncology visit (2 weeks ago): 39-year-old male with newly
       ...message,
       categories: [],
       aiReplies: [], 
+      aiPoints: "",
     }));
 
 
     setData(initializedMessages);
 
-    setQueue(newMessages);
+    setQueue(initializedMessages);
   }, []);
 
   useEffect(() => {
     if (queue.length === 0) return; 
 
-    const message = queue[0]; 
+    const message: InboxEntry = queue[0];
 
     fetchCategoriesAndReplies(message); 
+    fetchAIPoints(message);
 
     setQueue((prevQueue) => prevQueue.slice(1)); 
   }, [queue]);
@@ -365,6 +395,7 @@ type InboxEntry = {
   emrData: string;
   categories: string[]; 
   aiReplies: AIReply[];
+  aiPoints?: string;
 };
 
 type InboxProps = {
@@ -525,6 +556,7 @@ type EntryState = {
   subject: string;
   reply: string;
   aiReplies: AIReply[];
+  aiPoints?: string;
 };
 
 type Rating = number; 
@@ -1735,8 +1767,18 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
             : "text-gray-500 hover:text-gray-700"
         }`}
         >
-        Provide Instructions
+        Custom Points-to-Email
         </button>
+        <button
+            onClick={() => handleTabClick(-3)}
+            className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+              activeTab === -3
+                ? "border-b-2 border-green-600 text-green-600"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            AI Points to Email
+          </button>
         <button
         onClick={() => generateClicked ? handleTabClick(-2) : null}
         disabled={!generateClicked}
@@ -1899,9 +1941,18 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
         </div>
         )}
 
+        {showAIFeatures && activeTab === -3 && (
+        <div className="bg-gray-50 p-4 rounded border mt-4">
+          <h4 className="font-semibold mb-2">AI-Generated Points for Email</h4>
+          <pre className="whitespace-pre-wrap text-gray-700">
+            {entry.aiPoints || "Loading..."}
+          </pre>
+        </div>
+      )}
+
         {showAIFeatures && activeTab === -1 && (
         <div className="bg-white p-4 border rounded">
-          <h3 className="font-semibold text-gray-600 mb-2">Points-to-Email</h3>
+          <h3 className="font-semibold text-gray-600 mb-2">Create Email from Bullet Points</h3>
           <p className="text-gray-500 mb-2 text-sm">
             Please provide bullet points for the AI to transform into an Email. Use <b>Enter</b> for a new bullet, or type <b>*</b> then <b>Tab</b> for a bullet. You can refer to the example below.
           </p>

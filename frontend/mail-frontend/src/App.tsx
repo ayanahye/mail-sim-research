@@ -202,7 +202,8 @@ Summary of most recent oncology visit (2 weeks ago): 39-year-old male with newly
 
       setData((prevData) =>
         prevData.map((entry) =>
-          entry.mrn === email.mrn ? newEntry : entry
+          entry.mrn === email.mrn 
+          ? {...entry, aiPoints: result.aiPoints} : entry
         )
       );
     } catch (error) {
@@ -236,7 +237,13 @@ Summary of most recent oncology visit (2 weeks ago): 39-year-old male with newly
 
       setData((prevData) =>
         prevData.map((entry) =>
-          entry.mrn === email.mrn ? newEntry : entry
+          entry.mrn === email.mrn 
+          ? {...entry, categories: result.categories, aiReplies: result.aiReplies.map((reply:any) => ({
+            label: reply.label,
+            content: reply.content,
+            AIEdits: reply.AIEdits || {content: ""},
+          })) }
+          : entry
         )
       );
     } catch (error) {

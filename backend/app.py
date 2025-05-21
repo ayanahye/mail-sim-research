@@ -141,6 +141,7 @@ def get_ai_points():
 
         Output only the bullet points, nothing else.
     """
+    print(patient_message)
 
     try:
         completion = client.chat.completions.create(
@@ -148,6 +149,7 @@ def get_ai_points():
             model="llama3"
         )
         ai_points = completion.choices[0].message.content.strip()
+        print(ai_points)
         return jsonify({"aiPoints": ai_points})
     except Exception as e:
         print("AI Points Error:", str(e))

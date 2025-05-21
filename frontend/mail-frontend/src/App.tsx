@@ -577,6 +577,7 @@ interface AIEditOptions {
   empathy: AIEditLevel;
   clarity: AIEditLevel;
   professionalism: AIEditLevel;
+  healthLiteracy: AIEditLevel;
 }
 
 // logic to implement geenrated rpely function differ for both modes todo--integration not yet started
@@ -654,6 +655,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     empathy: '',
     clarity: '',
     professionalism: '',
+    healthLiteracy: '',
   });
 
   const [cmdPressed, setCmdPressed] = useState(false);
@@ -1102,6 +1104,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     };
 
     const handleGeneratePointsClick = async (instructionsSource: string) => {
+
+      console.log("test")
+      console.log(instructionsSource);
+
       try {
         setIsLoading(true);
 
@@ -1300,6 +1306,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
 
     const [hasEdited, setHasEdited] = useState(null);
 
+    const [userAddedPoints, setUserAddedPoints] = useState<string>("");
 
     const handleBulletInputChange = (mrn: string, value: string) => {
       setBulletInputs(prev => ({
@@ -2005,11 +2012,24 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
           <pre className="whitespace-pre-wrap text-gray-700 text-sm font-sans">
             {entryData?.aiPoints || "Loading..."}
           </pre>
+          <textarea
+            className='w-full p-2 border rounded mb-2'
+            rows={5}
+            placeholder='Add more instructions or points here...'
+            value={userAddedPoints}
+            onChange={e => setUserAddedPoints(e.target.value)}
+            />
           <button
-          onClick={() => handleGeneratePointsClick(entryData?.aiPoints || "")}
-          className='px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 mt-2'>
-            Generate AI Reply
-          </button>
+          onClick={() => {
+            const combinedInstructions =
+              (entryData?.aiPoints || "") +
+              (userAddedPoints ? "\n" + userAddedPoints : ""); 
+            handleGeneratePointsClick(combinedInstructions);
+          }}
+          className='px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 mt-2'
+        >
+          Generate AI Reply
+        </button>
         </div>
       )}
 
@@ -2251,6 +2271,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
                   <OptionToggle label="Clarity" optionKey="clarity" />
                 )}
                 <OptionToggle label="Professionalism" optionKey="professionalism" />
+                <OptionToggle label="Health Literacy" optionKey="healthLiteracy" />
               </div>
               <div className="mt-4 flex justify-end">
                 <button

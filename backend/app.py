@@ -2,6 +2,9 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from openai import OpenAI
 
+import re
+import ast
+
 ############ to define: EMR DETS ############
 '''
 *** NOTE ***
@@ -80,12 +83,64 @@ def clean_response(raw_response):
     cleaned_response = re.sub(r"<.*?>", "", raw_response)
     return cleaned_response.strip() 
 
+# simplify this later on if possible...
 
-def extract_categories(raw_categories):
-    pattern = r'\b(High Urgency|Medium Urgency|Low Urgency|Medication|Symptoms|Test-Related|Medical Questions|Acknowledgments|More Than One Issue)\b'
-    matches = re.findall(pattern, raw_categories)
-    return list(set(matches))  
+def extract_categories(raw_categories_str):
+    print("\n")
+    print("Input:", raw_categories_str) 
 
+    urgency_pattern = r'\b(High Urgency|Medium Urgency|Low Urgency)\b'
+    all_extracted_items = []
+
+    try:
+        parsed_data = ast.literal_eval(raw_categories_str)
+        if isinstance(parsed_data, tuple):
+            for item in parsed_data:
+                if isinstance(item, list):
+                    all_extracted_items.extend(item)
+                elif isinstance(item, str):
+                    all_extracted_items.append(item)
+        elif isinstance(parsed_data, list):
+            all_extracted_items.extend(parsed_data)
+
+        elif isinstance(parsed_data, str):
+            all_extracted_items.append(parsed_data)
+
+    except (ValueError, SyntaxError):
+
+        raw_categories_str_cleaned_for_fallback = re.sub(r'</s>', '', raw_categories_str).strip()
+        all_extracted_items = re.split(r'[,\n;]+', raw_categories_str_cleaned_for_fallback)
+
+    cleaned_categories = []
+    seen_categories = set()
+
+    final_urgency_matches = []
+    for item in all_extracted_items:
+
+        cleaned_item = re.sub(r'</s>', '', item)
+     
+        cleaned_item = re.sub(r'["\'\[\]\<\>\\\/]', '', cleaned_item).strip()
+
+        if cleaned_item: 
+            if re.match(urgency_pattern, cleaned_item): 
+                if cleaned_item not in final_urgency_matches:
+                    final_urgency_matches.append(cleaned_item)
+            else:
+                if cleaned_item not in seen_categories:
+                    cleaned_categories.append(cleaned_item)
+                    seen_categories.add(cleaned_item)
+    combined_list = []
+
+    for urgency_tag in final_urgency_matches:
+        if urgency_tag not in combined_list:
+            combined_list.append(urgency_tag)
+
+    for cat in cleaned_categories:
+        if cat not in combined_list:
+            combined_list.append(cat)
+
+    print("all categories :", combined_list) 
+    return combined_list
 
 @app.route('/api/get-ai-points', methods=['POST'])
 def get_ai_points():
@@ -169,10 +224,12 @@ def get_ai_data():
     category_prompt = f"""
         Categorize the following patient message into relevant tags:
         Message: "{patient_message}"
-        Categories: ["High Urgency", "Medium Urgency", "Low Urgency", "Medication", "Symptoms", "Test-Related", "Medical Questions", "Acknowledgments", "More Than One Issue"]
+        Urgency Categories: ["High Urgency", "Medium Urgency", "Low Urgency"]
+        Add 1-2 categories that are keyword summaries of the patient message.
         Provide a comma-separated list of the most relevant categories. Return at most 3 and don't include anything else in your response.
         Provide at least 1 category. 
         Always provide one urgency level (High, Medium, or Low). Only assign high urgency if the patient needs to be scheduled an appointment with a provider as soon as possible i.e., worsening conditions. If the message only contains harmful words or hate speech or is calling the provider names but no health issues, do not assign high urgency. If the patient is expressing negative feelings to another person do not assign high priority. Only assign high priority if they are experiencing very negative and worsening condtions.
+        Only return the categories as an array and no other text or explanations. For example output the categories like: [Category 1, Category 2, etc.]
     """
 
     # mon april 7th on cmpus

@@ -1149,10 +1149,21 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
       }
     };
 
-    const handleGeneratePointsClick = async (instructionsSource: string) => {
+    const handleGenerateClick = async (instructionsSource: string) => {
 
       console.log("test")
       console.log(instructionsSource);
+
+      const uncheckedPoints = aiPointsList.filter((_, idx) => !checkedPoints[idx]);
+
+      const instructionsToSend = (uncheckedPoints.length ? uncheckedPoints.join('\n'): "") + 
+      (userAddedPoints ? "\n" + userAddedPoints : "")
+
+      handleGeneratePointsClick(instructionsToSend.trim())
+    
+    }
+
+    const handleGeneratePointsClick = async (instructionsSource: string) => {
 
       try {
         setIsLoading(true);
@@ -1375,6 +1386,11 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
     const aiPointsList: string[] = extractPoints(entryData?.aiPoints);
     const userPointsList: string[] = extractPoints(userAddedPoints);
     const allPoints: string[] = [...aiPointsList, ...userPointsList];
+
+    const uncheckedPoints = aiPointsList.filter((_, idx) => !checkedPoints[idx]);
+
+    const instructionsTosend = (uncheckedPoints.length ? uncheckedPoints.join('\n') : "") +
+    (uncheckedPoints ? '\n' + userAddedPoints : "");
 
     const handleBulletInputChange = (mrn: string, value: string) => {
       setBulletInputs(prev => ({
@@ -2078,7 +2094,7 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
         {showAIFeatures && activeTab === -3 && (
         <div className="bg-gray-50 p-4 rounded border mt-4">
           <h4 className="font-semibold text-gray-600 mb-2">
-            Create Email from AI-Generated Points
+            Create Email from AI-Generated Points (check to delete from points)
           </h4>
           <div className="mb-3">
             {aiPointsList.length ? (
@@ -2106,11 +2122,6 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
               <span className="text-gray-500">No points to display.</span>
             )}
           </div>
-
-          {/* keep original for tests */}
-          <pre className="whitespace-pre-wrap text-gray-700 text-sm font-sans">
-            {entryData?.aiPoints || "Loading..."}
-          </pre>
           <textarea
             className='w-full p-2 border rounded mb-2'
             rows={5}
@@ -2123,7 +2134,7 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
               const combinedInstructions =
                 (entryData?.aiPoints || "") +
                 (userAddedPoints ? "\n" + userAddedPoints : "");
-              handleGeneratePointsClick(combinedInstructions);
+              handleGenerateClick(combinedInstructions);
             }}
             className='px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 mt-2'
           >

@@ -580,6 +580,7 @@ interface AIEditOptions {
   clarity: AIEditLevel;
   professionalism: AIEditLevel;
   healthLiteracy: AIEditLevel;
+  messageLength: AIEditLevel;
 }
 
 // logic to implement geenrated rpely function differ for both modes todo--integration not yet started
@@ -660,6 +661,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
     clarity: '',
     professionalism: '',
     healthLiteracy: '',
+    messageLength: '',
   });
 
   const [cmdPressed, setCmdPressed] = useState(false);
@@ -1153,13 +1155,15 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
 
       console.log("test")
       console.log(instructionsSource);
+      if (mrn) {
 
-      const uncheckedPoints = aiPointsList.filter((_, idx) => !checkedPoints[idx]);
+      const uncheckedPoints = aiPointsList.filter((_, idx) => !checkedPoints[mrn]?.[idx]);
 
       const instructionsToSend = (uncheckedPoints.length ? uncheckedPoints.join('\n'): "") + 
-      (userAddedPoints ? "\n" + userAddedPoints : "")
+      (userAddedPoints[mrn] ? "\n" + userAddedPoints[mrn] : "")
 
       handleGeneratePointsClick(instructionsToSend.trim())
+      }
     
     }
 
@@ -1336,13 +1340,13 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
   };
 
   const exampleInput = `
-    • Purpose: New lab requisition for follow-up on recent symptoms (fatigue)
-    • Tests Needed: CBC, iron panel, vitamin D
-    • Instructions: Go to any LifeLabs location
-    • Important: Bring requisition form (attached)
-    • Deadline: Within 2 weeks
-    • Next Steps: Results will be discussed at next appointment
-    • Additional Info: Patient has history of anemia`;
+• Purpose: New lab requisition for follow-up on recent symptoms (fatigue)
+• Tests Needed: CBC, iron panel, vitamin D
+• Instructions: Go to any LifeLabs location
+• Important: Bring requisition form (attached)
+• Deadline: Within 2 weeks
+• Next Steps: Results will be discussed at next appointment
+• Additional Info: Patient has history of anemia`;
 
     const exampleLabels = [
       "Purpose:",
@@ -1363,9 +1367,9 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
 
     const [hasEdited, setHasEdited] = useState(null);
 
-    const [userAddedPoints, setUserAddedPoints] = useState<string>("");
+    const [userAddedPoints, setUserAddedPoints] = useState<Record<string, string>>({});
 
-    const [checkedPoints, setCheckedPoints] = useState<Record<number, boolean>>({});
+    const [checkedPoints, setCheckedPoints] = useState<Record<string, Record<number, boolean>>>({});
 
     function extractPoints(text: string | undefined): string[] {
         if (!text) return [];
@@ -1384,19 +1388,31 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
     }
 
     const aiPointsList: string[] = extractPoints(entryData?.aiPoints);
-    const userPointsList: string[] = extractPoints(userAddedPoints);
+    const userPointsList: string[] = extractPoints(userAddedPoints[mrn || ""]);
     const allPoints: string[] = [...aiPointsList, ...userPointsList];
 
     const uncheckedPoints = aiPointsList.filter((_, idx) => !checkedPoints[idx]);
 
     const instructionsTosend = (uncheckedPoints.length ? uncheckedPoints.join('\n') : "") +
-    (uncheckedPoints ? '\n' + userAddedPoints : "");
+    (uncheckedPoints ? '\n' + userAddedPoints[mrn || ""] : "");
 
     const handleBulletInputChange = (mrn: string, value: string) => {
       setBulletInputs(prev => ({
         ...prev,
         [mrn]: value
       }));
+    };
+
+    const handleCheckboxChange = (idx: number) => {
+      if (mrn) {
+      setCheckedPoints(prev => ({
+        ...prev,
+        [mrn]: {
+          ...prev[mrn],
+          [idx]: !prev[mrn]?.[idx]
+        }
+      }))
+      }
     };
 
 
@@ -2103,16 +2119,12 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
                   <li key={idx} className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={!!checkedPoints[idx]}
-                      onChange={() =>
-                        setCheckedPoints(prev => ({
-                          ...prev,
-                          [idx]: !prev[idx],
-                        }))
+                      checked={!!checkedPoints[mrn]?.[idx]}
+                      onChange={() => handleCheckboxChange(idx)
                       }
                       className="mr-2"
                     />
-                    <span className={checkedPoints[idx] ? "line-through text-gray-400" : ""}>
+                    <span className={checkedPoints[mrn]?.[idx] ? "line-through text-gray-400" : ""}>
                       {pt}
                     </span>
                   </li>
@@ -2126,14 +2138,17 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
             className='w-full p-2 border rounded mb-2'
             rows={5}
             placeholder='Add more instructions or points here...'
-            value={userAddedPoints}
-            onChange={e => setUserAddedPoints(e.target.value)}
+            value={userAddedPoints[mrn]}
+            onChange={e => setUserAddedPoints(prev => ({
+              ...prev,
+              [mrn]: e.target.value
+            }))}
           />
           <button
             onClick={() => {
               const combinedInstructions =
                 (entryData?.aiPoints || "") +
-                (userAddedPoints ? "\n" + userAddedPoints : "");
+                (userAddedPoints[mrn] ? "\n" + userAddedPoints[mrn] : "");
               handleGenerateClick(combinedInstructions);
             }}
             className='px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 mt-2'
@@ -2393,6 +2408,7 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
                 )}
                 <OptionToggle label="Professionalism" optionKey="professionalism" />
                 <OptionToggle label="Health Literacy" optionKey="healthLiteracy" />
+                <OptionToggle label="Message Length" optionKey="messageLength" />
               </div>
               <div className="mt-4 flex justify-end">
                 <button

@@ -825,6 +825,13 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
 const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
   const { transcript, listening, browserSupportsSpeechRecognition, resetTranscript } = useSpeechRecognition();
 
+  useEffect(() => {
+    if (listening) {
+      onChange(transcript);
+    }
+  }, [transcript, listening])
+
+
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
@@ -846,7 +853,7 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
         type="button"
         onClick={() => {
           SpeechRecognition.stopListening();
-          onChange(transcript); 
+          //onChange(transcript); 
         }}
         className="px-4 py-1 bg-gray-200 rounded"
         disabled={!listening}
@@ -2170,7 +2177,7 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
               onChange={(transcript) =>
                 setBulletInputs(prev => ({
                   ...prev,
-                  [contextKey]: (prev[contextKey] ?? exampleInput) + transcript,
+                  [contextKey]: transcript,
                 }))
               }
             />

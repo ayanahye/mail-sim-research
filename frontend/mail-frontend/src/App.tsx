@@ -649,6 +649,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   const [originalTabbedReply, setOriginalTabbedReply] = useState("");
 
 
+
+  
   // updated one
 
   const [showAIEditModal, setShowAIEditModal] = useState<boolean>(false);
@@ -836,7 +838,7 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
         className="px-4 py-1 bg-gray-200 rounded"
         disabled={listening}
       >
-        Start
+        Start Mic
       </button>
       <button
         type="button"
@@ -847,7 +849,7 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
         className="px-4 py-1 bg-gray-200 rounded"
         disabled={!listening}
       >
-        Stop
+        Stop Mic
       </button>
     </div>
   );
@@ -1351,6 +1353,28 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
     const [hasEdited, setHasEdited] = useState(null);
 
     const [userAddedPoints, setUserAddedPoints] = useState<string>("");
+
+    const [checkedPoints, setCheckedPoints] = useState<Record<number, boolean>>({});
+
+    function extractPoints(text: string | undefined): string[] {
+        if (!text) return [];
+        return text
+          .split('\n')
+          .map(line => line.trim())
+          .filter(line => /^(\d+\.)|^[-*•]/.test(line))
+          .map(line => line.replace(/^(\d+\.)|^[-*•]\s?/, '').trim());
+    }
+
+    function togglePoint(idx: number) {
+      setCheckedPoints(prev => ({
+        ...prev,
+        [idx]: !prev[idx]
+      }));
+    }
+
+    const aiPointsList: string[] = extractPoints(entryData?.aiPoints);
+    const userPointsList: string[] = extractPoints(userAddedPoints);
+    const allPoints: string[] = [...aiPointsList, ...userPointsList];
 
     const handleBulletInputChange = (mrn: string, value: string) => {
       setBulletInputs(prev => ({
@@ -2053,7 +2077,37 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
 
         {showAIFeatures && activeTab === -3 && (
         <div className="bg-gray-50 p-4 rounded border mt-4">
-          <h4 className="font-semibold text-gray-600 mb-2">Create Email from AI-Generated Points</h4>
+          <h4 className="font-semibold text-gray-600 mb-2">
+            Create Email from AI-Generated Points
+          </h4>
+          <div className="mb-3">
+            {aiPointsList.length ? (
+              <ul className="space-y-2">
+                {aiPointsList.map((pt, idx) => (
+                  <li key={idx} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={!!checkedPoints[idx]}
+                      onChange={() =>
+                        setCheckedPoints(prev => ({
+                          ...prev,
+                          [idx]: !prev[idx],
+                        }))
+                      }
+                      className="mr-2"
+                    />
+                    <span className={checkedPoints[idx] ? "line-through text-gray-400" : ""}>
+                      {pt}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span className="text-gray-500">No points to display.</span>
+            )}
+          </div>
+
+          {/* keep original for tests */}
           <pre className="whitespace-pre-wrap text-gray-700 text-sm font-sans">
             {entryData?.aiPoints || "Loading..."}
           </pre>
@@ -2063,20 +2117,20 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
             placeholder='Add more instructions or points here...'
             value={userAddedPoints}
             onChange={e => setUserAddedPoints(e.target.value)}
-            />
+          />
           <button
-          onClick={() => {
-            const combinedInstructions =
-              (entryData?.aiPoints || "") +
-              (userAddedPoints ? "\n" + userAddedPoints : ""); 
-            handleGeneratePointsClick(combinedInstructions);
-          }}
-          className='px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 mt-2'
-        >
-          Generate AI Reply
-        </button>
+            onClick={() => {
+              const combinedInstructions =
+                (entryData?.aiPoints || "") +
+                (userAddedPoints ? "\n" + userAddedPoints : "");
+              handleGeneratePointsClick(combinedInstructions);
+            }}
+            className='px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 mt-2'
+          >
+            Generate AI Reply
+          </button>
         </div>
-      )}
+        )}
 
         {showAIFeatures && activeTab === -1 && (
         <div className="bg-white p-4 border rounded">

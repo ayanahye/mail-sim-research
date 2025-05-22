@@ -1,5 +1,7 @@
 import { useState, useEffect, createContext, useContext, useMemo, useRef, ChangeEvent, KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+
 
 /*
 type ApiResponse = {
@@ -809,8 +811,50 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
   };
   
   
-  
-  
+  // adding code for speech to text testing
+
+  type SpeechToTextProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+const SpeechToText: React.FC<SpeechToTextProps> = ({ value, onChange }) => {
+  const { transcript, listening, browserSupportsSpeechRecognition, resetTranscript } = useSpeechRecognition();
+
+  if (!browserSupportsSpeechRecognition) {
+    return <span>Browser doesn't support speech recognition.</span>;
+  }
+
+  return (
+    <div className="flex gap-2 mt-2">
+      <button
+        type="button"
+        onClick={() => {
+          resetTranscript();
+          SpeechRecognition.startListening({ continuous: true });
+        }}
+        className="px-4 py-1 bg-gray-200 rounded"
+        disabled={listening}
+      >
+        Start
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          SpeechRecognition.stopListening();
+          onChange(transcript); 
+        }}
+        className="px-4 py-1 bg-gray-200 rounded"
+        disabled={!listening}
+      >
+        Stop
+      </button>
+    </div>
+  );
+};
+
+
+    
   
   const handleInstructionToggle = (instruction: string): void => {
     setSelectedInstructions(prev =>
@@ -1731,6 +1775,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
       </div>
     </div>
   );
+  
 
   return (
     <div className="h-full flex flex-col bg-white overflow-auto">
@@ -2039,6 +2084,17 @@ const MessageDetail: React.FC<MessageDetailProps> = ({ dummyData, isLoading, set
           <p className="text-gray-500 mb-2 text-sm">
             Please provide bullet points for the AI to transform into an Email. Use <b>Enter</b> for a new bullet, or type <b>*</b> then <b>Tab</b> for a bullet. You can refer to the example below.
           </p>
+          
+          <SpeechToText
+              value={bulletInputs[contextKey] ?? exampleInput}
+              onChange={(transcript) =>
+                setBulletInputs(prev => ({
+                  ...prev,
+                  [contextKey]: (prev[contextKey] ?? exampleInput) + transcript,
+                }))
+              }
+            />
+
           <textarea
             ref={textareaRef}
             className="w-full p-2 border rounded mt-2"

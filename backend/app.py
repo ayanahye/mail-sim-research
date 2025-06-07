@@ -4,6 +4,7 @@ from openai import OpenAI
 
 import re
 import ast
+import requests
 
 ############ to define: EMR DETS ############
 '''
@@ -38,10 +39,23 @@ from openai import OpenAI, OpenAIError
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173"]}})
 
-client = OpenAI(
-    base_url="http://127.0.0.1:8080/v1",
-    api_key="fake-key",
-)
+def query_ollama(prompt, model="phi3"):
+    print("\n")
+    print(prompt)
+    response = requests.post(
+        "http://localhost:11434/api/generate",  
+        json={
+            "model": model,
+            "prompt": prompt,       
+            "stream": False
+        }
+    )
+    response.raise_for_status()
+    res_json = response.json()
+    print("Response from model:")
+    print(res_json.get("response", "").strip())
+    return res_json.get("response", "").strip()
+
 
 # none of the prompts seem to stop it from mentioning 'wearing a wig' or using 'gentle shampoo'. So i am just not returning a response if it does that.
 
@@ -89,7 +103,7 @@ def extract_categories(raw_categories_str):
     print("\n")
     print("Input:", raw_categories_str) 
 
-    urgency_pattern = r'\b(High Urgency|Medium Urgency|Low Urgency)\b'
+    urgency_pattern = r'\b(Immediate|Emergent|Urgent|Less Urgent|Nonurgent)\b'
     all_extracted_items = []
 
     try:
@@ -199,11 +213,14 @@ def get_ai_points():
     print(patient_message)
 
     try:
+        '''
         completion = client.chat.completions.create(
             messages=[{"role": "user", "content": point_form_prompt}],
             model="llama3"
         )
         ai_points = completion.choices[0].message.content.strip()
+        '''
+        ai_points = query_ollama(point_form_prompt).strip()
         print(ai_points)
         return jsonify({"aiPoints": ai_points})
     except Exception as e:
@@ -224,11 +241,12 @@ def get_ai_data():
     category_prompt = f"""
         Categorize the following patient message into relevant tags:
         Message: "{patient_message}"
-        Urgency Categories: ["High Urgency", "Medium Urgency", "Low Urgency"]
+        Urgency Categories: ["Immediate", "Emergent", "Urgent", "Less Urgent", "Nonurgent"]
         Add 1-2 categories that are keyword summaries of the patient message.
         Provide a comma-separated list of the most relevant categories. Return at most 3 and don't include anything else in your response.
         Provide at least 1 category. 
-        Always provide one urgency level (High, Medium, or Low). Only assign high urgency if the patient needs to be scheduled an appointment with a provider as soon as possible i.e., worsening conditions. If the message only contains harmful words or hate speech or is calling the provider names but no health issues, do not assign high urgency. If the patient is expressing negative feelings to another person do not assign high priority. Only assign high priority if they are experiencing very negative and worsening condtions.
+        Only assign "Immediate" or "Emergent" if the patient is experiencing severe and worsening symptoms that require a provider to intervene as soon as possible. Do not assign high urgency if the message only contains harmful language, hate speech, or insults directed at the provider without any mention of health concerns.
+        Do not assign higher urgency for emotional or social distress unless it is linked with physical symptoms that are severe and worsening.
         Only return the categories as an array and no other text or explanations. For example output the categories like: [Category 1, Category 2, etc.]
     """
 
@@ -293,14 +311,16 @@ def get_ai_data():
     '''
 
     try:
+        '''
         category_completion = client.chat.completions.create(
             messages=[{"role": "user", "content": category_prompt}],
             model="llama3"
         )
 
+        '''
         print(2)
         
-        raw_categories = category_completion.choices[0].message.content.strip()
+        raw_categories = query_ollama(category_prompt).strip()
         categories = extract_categories(raw_categories)  
         print(1)
         print(categories)
@@ -409,12 +429,13 @@ def regenerate_ai_reply():
     """
 
     try:
+        '''
         completion = client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
             model="llama3"
         )
-
-        raw_reply = completion.choices[0].message.content.strip()
+        '''
+        raw_reply = query_ollama(prompt).strip()
 
         raw_reply = clean_response(raw_reply)
 
@@ -504,12 +525,14 @@ def edit_ai_reply():
     """
 
     try:
+        '''
         completion = client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
             model="llama3"
         )
+        '''
 
-        raw_reply = completion.choices[0].message.content.strip()
+        raw_reply = query_ollama(prompt).strip()
 
         raw_reply = clean_response(raw_reply)
         print(f"Raw Reply: {raw_reply}") 
@@ -578,12 +601,14 @@ def provide_instructions():
     """
 
     try:
+        '''
         completion = client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
             model="llama3"
         )
+        '''
 
-        raw_reply = completion.choices[0].message.content.strip()
+        raw_reply = query_ollama(prompt).strip()
 
         raw_reply = clean_response(raw_reply)
         print(prompt)

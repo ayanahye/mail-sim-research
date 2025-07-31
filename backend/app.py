@@ -144,7 +144,6 @@ def extract_categories(raw_categories_str):
     print("all categories:", combined_list)
     return combined_list
 
-
 @app.route('/api/get-ai-points', methods=['POST'])
 def get_ai_points():
     data = request.json
@@ -203,13 +202,6 @@ def get_ai_points():
     print(patient_message)
 
     try:
-        '''
-        completion = client.chat.completions.create(
-            messages=[{"role": "user", "content": point_form_prompt}],
-            model="llama3"
-        )
-        ai_points = completion.choices[0].message.content.strip()
-        '''
         ai_points = query_ollama(point_form_prompt).strip()
         print(ai_points)
         return jsonify({"aiPoints": ai_points})
@@ -240,8 +232,6 @@ def get_ai_data():
         Only return the categories as an array and no other text or explanations. For example output the categories like: [Category 1, Category 2, etc.]
         Do not include anything else your response should be only max 3 words which are the categories. Do not say anything else
         """
-
-    # mon april 7th on cmpus
 
     reply_prompt = f"""
         You are drafting 3 concise messages for a provider to send in response to a patient message. The responses should be empathetic, polite, and concise, and should only address the patient's specific question or request. Before generating the responses, review the following information:
@@ -300,14 +290,6 @@ def get_ai_data():
     """
 
     try:
-        '''
-        category_completion = client.chat.completions.create(
-            messages=[{"role": "user", "content": category_prompt}],
-            model="llama3"
-        )
-
-        '''
-
         # categories
 
         raw_categories = query_ollama(category_prompt).strip()
@@ -330,8 +312,6 @@ def get_ai_data():
 
         print(raw_replies)
 
-        #categories = extract_categories(raw_categories)
-
         print(4)
 
         parsed_replies = parse_responses(raw_replies)
@@ -347,8 +327,6 @@ def get_ai_data():
         ]
 
         print(formatted_replies)
-
-        #return jsonify({"categories": categories, "aiReplies": []})
         return jsonify({"categories": categories, "aiReplies": formatted_replies})
 
     except OpenAIError as e:
@@ -531,13 +509,6 @@ def edit_ai_reply():
         """
 
     try:
-        '''
-        completion = client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
-            model="llama3"
-        )
-        '''
-
         raw_reply = query_ollama(prompt).strip()
 
         raw_reply = clean_response(raw_reply)
@@ -607,13 +578,6 @@ def provide_instructions():
     """
 
     try:
-        '''
-        completion = client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
-            model="llama3"
-        )
-        '''
-
         raw_reply = query_ollama(prompt).strip()
         raw_reply = clean_response(raw_reply)
         print(prompt)

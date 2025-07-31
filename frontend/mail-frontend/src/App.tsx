@@ -105,14 +105,15 @@ function App() {
       fromUser: "Patient",
       message:
         "I am in real trouble. I am in so much pain, I am in tears. I can barely walk, im passing out all over my house from severe exhaustion. My feet and legs feel like they are going to split open. My thighs, lower back and kidneys are in so much pain. My upper back is just aching badly. My whole body is in such incredible pain. My Cluster Headaches are killing me. Just had the worst attack I can remember. I feel like what ever is happening to me is going to kill me. My arms are swollen and my left arm/elbow feels like it is fractured. Dr.Smith office said I need to do a rest and exercise test. Doc I can't go anywhere let alone any appointments. I can barely walk. Smith can bare witness to the severe suffering I'm in. I have never been in this much pain in my life. I need help badly. I need to be back on hospice now",
-      emrData: `Age: 55 years
-Gender: Male
-Cancer diagnosis: Stage III non-small cell lung cancer (NSCLC)
-PMH: hypertension, hyperlipidemia
-Prior cancer treatments: None
-Current cancer treatments: radiotherapy with concurrent cisplatin (started 2 weeks ago)
-Current medication list: lisinopril, amlodipine, simvastatin, aspirin, pantoprazole
-Summary of most recent oncology visit (1 week ago): 55-year-old male with newly diagnosed stage III NSCLC. He is on chemoradiation and tolerating treatment well. No significant side effects were reported. Will continue treatment as planned.`,
+      emrData: `Age: 55 years  
+Gender: Male  
+Cancer diagnosis: Stage III non-small cell lung cancer (NSCLC)  
+PMH: hypertension, hyperlipidemia, chronic cluster headaches, possible chronic pain syndrome  
+Prior cancer treatments: None  
+Current cancer treatments: Radiotherapy with concurrent cisplatin (started 2 weeks ago)  
+Current medication list: lisinopril, amlodipine, simvastatin, aspirin, pantoprazole, PRN sumatriptan  
+Summary of most recent oncology visit (1 week ago):  
+55-year-old male with newly diagnosed stage III NSCLC on chemoradiation. He reported **increased fatigue and generalized body aches**, but was able to attend the visit. Complained of **exacerbation of chronic cluster headaches**. Was referred for a cardiopulmonary exercise test to assess baseline endurance. Encouraged to continue treatment, but follow-up visit scheduled sooner to monitor for worsening side effects.`,
     },
     {
       mrn: "234567",
@@ -181,14 +182,14 @@ Summary of most recent oncology visit (4 weeks ago): 72-year-old female with sta
       fromUser: "Patient",
       message:
         "So I have to tell you I’m pretty perturbed by this whole thing. I don’t care what the rules are, I think it’s pretty cra**y, that there couldn’t have been an exception regarding having the Covid test the morning before the procedure, considering all this cra* that could have been avoided, by you giving me the exact info, and your staff taking care of the insurance deal. Two trips up there again is a bit much. Why don’t you see what you can do about it? If not, why don’t you have one of these upper ups that make these rules give me a call.",
-      emrData: `Age: 39 years
-Gender: Male
-Cancer diagnosis: Stage IIA Hodgkin lymphoma
-PMH: None
-Prior cancer treatments: None
-Current cancer treatments: ABVD (started 1 month ago)
-Current medication list: None
-Summary of most recent oncology visit (2 weeks ago): 39-year-old male with newly diagnosed stage IIA Hodgkin lymphoma. He is on ABVD and tolerating treatment well. Will continue treatment as planned.`,
+      emrData: `Age: 39 years  
+Gender: Male  
+Cancer diagnosis: Stage IIA Hodgkin lymphoma  
+PMH: None  
+Prior cancer treatments: None  
+Current cancer treatments: ABVD (started 1 month ago)  
+Current medication list: None  
+Summary of most recent oncology visit (2 weeks ago): 39-year-old male with newly diagnosed stage IIA Hodgkin lymphoma. Currently receiving first-line ABVD chemotherapy and appears to be tolerating treatment without major side effects. Patient expressed some frustration during the visit regarding pre-procedure logistics and communication around insurance coverage and COVID testing protocols. Discussed process and rationale; provided reassurance and contact information for scheduling and billing support. Will continue treatment as planned.`,
     },
   ];
 
@@ -747,44 +748,28 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [showRating, setShowRating] = useState<{ [key: number]: boolean }>({});
-  //const [activeTab, setActiveTab] = useState<number>(0);
   const [showRatingModal, setShowRatingModal] = useState(false);
-  //const [blankReply, setBlankReply] = useState("");
 
   const [blankReplyAI, setBlankReplyAI] = useState<{ [mrn: string]: string }>(
     {}
   );
-  //const [blankReplyManual, setBlankReplyManual] = useState("");
 
   const [blankReplyManual, setBlankReplyManual] = useState<{
     [mrn: string]: string;
   }>({});
 
-  const [isBold, setIsBold] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
   const [showBlankReplyForm, setShowBlankReplyForm] = useState(false);
   const [generateClicked, setGenerateClicked] = useState<boolean>(false);
 
   const [selectedText, setSelectedText] = useState({ start: 0, end: 0 });
 
-  const [customInstruction, setCustomInstruction] = useState<string>("");
-  const [selectedInstructions, setSelectedInstructions] = useState<
-    Instruction[]
-  >([]);
-
-  const [editedReply, setEditedReply] = useState<string>(
-    entry.aiReplies[activeTab]?.content || ""
-  );
   const [aiEditedContent, setAiEditedContent] = useState<string>("");
 
   const [originalBlankReplyAI, setOriginalBlankReplyAI] = useState("");
   const [originalBlankReplyManual, setOriginalBlankReplyManual] = useState("");
 
-  // cant find a easier way
   const [originalGeneratedReply, setOriginalGeneratedReply] = useState("");
   const [originalTabbedReply, setOriginalTabbedReply] = useState("");
-
-  // updated one
 
   const [showAIEditModal, setShowAIEditModal] = useState<boolean>(false);
   const [aiEditOptions, setAIEditOptions] = useState<AIEditOptions>({
@@ -801,18 +786,10 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
   const [showSplitView, setShowSplitView] = useState(false);
 
   const [isAIEditButtonClicked, setIsAIEditButtonClicked] = useState(false);
-  // pre
-  const [instructionOptions, setInstructionOptions] = useState([
-    "Provide updates on the status of tests or results.",
-    "Follow up on referrals or consultations with other departments.",
-    "Clarify any next steps or actions for the patient.",
-    "Confirm appointment details or reschedule if necessary.",
-  ]);
 
   const [generatedReplies, setGeneratedReplies] = useState<{
     [key: string]: string;
   }>({});
-  const [isAIEditApplied, setIsAIEditApplied] = useState(false);
 
   const handleAIEditOptionChange = (
     option: keyof AIEditOptions,
@@ -998,14 +975,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
     );
   };
 
-  const handleInstructionToggle = (instruction: string): void => {
-    setSelectedInstructions((prev) =>
-      prev.includes(instruction)
-        ? prev.filter((item) => item !== instruction)
-        : [...prev, instruction]
-    );
-  };
-
   const handleSplitView = (index: number) => {
     setSplitViewTab(index);
     setShowSplitView(true);
@@ -1016,15 +985,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
 
     const currentTabContent = entry.aiReplies[activeTab].content;
     const selectedTabContent = entry.aiReplies[splitViewTab as number].content;
-
-    /*
-  const handleTabClick = (tabIndex: number) => {
-    setActiveTab(tabIndex);
-    setShowSplitView(false);
-    setShowDiff(false);
-    setIsAIEditButtonClicked(false);
-  };
-  */
 
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -1094,13 +1054,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
     }
     setShowDiff(false);
     setIsAIEditButtonClicked(false);
-  };
-
-  const handleRateButtonClick = (index: number) => {
-    setShowRating((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
   };
 
   const handleSubmitRating = () => {
@@ -1209,9 +1162,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
         [mrn]: "",
       }));
     }
-
-    setIsBold(false);
-    setIsUnderline(false);
   };
 
   const handleBlankReplyChange = (
@@ -1469,7 +1419,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
   const [editedText, setEditedText] = useState(
     entry.aiReplies[activeTab]?.AIEdits?.content || ""
   );
-  const [isAiEditClicked, setIsAiEditClicked] = useState(false);
 
   const editedTextWithSpaces = editedText.replace(/([.,!?;])/g, "$1 ");
   console.log("edited text here: ", editedTextWithSpaces);
@@ -1503,14 +1452,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
 
   const placeholderText = exampleLabels.map((label) => `• ${label}`).join("\n");
 
-  const [inputValue, setInputValue] = useState<string>(exampleInput); // testing for 1 reply
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [bulletInputs, setBulletInputs] = useState<{ [key: string]: string }>(
     {}
   );
-
-  const [hasEdited, setHasEdited] = useState(null);
 
   const [userAddedPoints, setUserAddedPoints] = useState<string>("");
 
@@ -1527,23 +1473,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
       .map((line) => line.replace(/^(\d+\.)|^[-*•]\s?/, "").trim());
   }
 
-  function togglePoint(idx: number) {
-    setCheckedPoints((prev) => ({
-      ...prev,
-      [idx]: !prev[idx],
-    }));
-  }
-
   const aiPointsList: string[] = extractPoints(entryData?.aiPoints);
-  const userPointsList: string[] = extractPoints(userAddedPoints);
-  const allPoints: string[] = [...aiPointsList, ...userPointsList];
-
-  const handleBulletInputChange = (mrn: string, value: string) => {
-    setBulletInputs((prev) => ({
-      ...prev,
-      [mrn]: value,
-    }));
-  };
 
   const handleKeyDown = (e: ReactKeyboardEvent<HTMLTextAreaElement>) => {
     const value = bulletInputs[contextKey] ?? exampleInput;
@@ -1627,7 +1557,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
         }));
       } else {
         // tabs
-        //setPrevOriginalText(editedTextWithSpaces);
         const updatedReplies = [...entry.aiReplies];
         updatedReplies[activeTab] = {
           ...updatedReplies[activeTab],
@@ -1637,8 +1566,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
           ...prevState,
           aiReplies: updatedReplies,
         }));
-
-        //setOriginalTabbedReply(entry.aiReplies[activeTab]?.content || "");
       }
     } else if (showAIFeatures && activeTab === -2) {
       // gen
@@ -1723,13 +1650,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
   const [startY, setStartY] = useState(0);
   const [categoriesHeight, setCategoriesHeight] = useState(200);
 
-  const handleResizeStart = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    setIsDragging(true);
-    setStartY(e.clientY);
-  };
-
   const handleResizeEnd = () => {
     setIsDragging(false);
   };
@@ -1760,14 +1680,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
   useEffect(() => {
     setShowReplySection(false);
   }, [mrn]);
-
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setEditedText(e.target.value);
-  };
-
-  const normalizeText = (text: string) => {
-    return text.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
-  };
 
   const highlightDifferences = (original: string, edited: string) => {
     const originalWords = original.trim().replace(/\s+/g, " ").split(/\s+/);
@@ -1844,7 +1756,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
     return;
   }
 
-  // Simplified LCS function  --debug
   const findLCS = (arr1: string[], arr2: string[]) => {
     const m = arr1.length;
     const n = arr2.length;
@@ -1894,7 +1805,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
       editedText = editedTextWithSpaces || blankReplyAI[mrn];
     } else if (showAIFeatures && activeTab === -2) {
       originalText = originalGeneratedReply;
-      //originalText = generatedReplies[mrn || ""] || "";
       console.log("ogtext2", originalText);
       editedText = editedTextWithSpaces || generatedReplies[mrn || ""] || "";
       console.log("edt2", editedText);
@@ -2029,8 +1939,17 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
             );
           })}
         </div>
-        <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-700 whitespace-pre-wrap font-mono shadow-inner">
-          {entryData?.emrData}
+        <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-700 font-mono shadow-inner space-y-1">
+          {entryData?.emrData?.split("\n").map((line, idx) => {
+            const [label, ...rest] = line.split(":");
+            if (!rest.length) return <div key={idx}>{line}</div>;
+            return (
+              <div key={idx}>
+                <span className="font-bold">{label}:</span>
+                <span>{rest.join(":")}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
       {!showReplySection && (
@@ -2339,7 +2258,6 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
                     const combinedInstructions =
                       checkedAIPoints +
                       (userAddedPoints ? "\n" + userAddedPoints : "");
-                    //console.log("Sending only checked points:", combinedInstructions);
                     handleGeneratePointsClick(combinedInstructions);
                   }}
                   className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"

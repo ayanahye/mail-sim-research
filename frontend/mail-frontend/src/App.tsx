@@ -2228,8 +2228,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
                           <span
                             className={
                               checkedPoints[entryData.mrn]?.[idx]
-                                ? "line-through text-gray-400"
-                                : ""
+                                ? "font-semibold text-black"
+                                : "text-gray-700"
                             }
                           >
                             {pt}
@@ -2253,7 +2253,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
                 <button
                   onClick={() => {
                     const checkedAIPoints = aiPointsList
-                      .filter((pt, idx) => !checkedPoints[entryData.mrn]?.[idx])
+                      .filter((pt, idx) => checkedPoints[entryData.mrn]?.[idx])
                       .join("\n");
                     const combinedInstructions =
                       checkedAIPoints +

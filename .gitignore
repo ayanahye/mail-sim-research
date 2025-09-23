@@ -1,0 +1,12 @@
+
+# Python venv
+.venv/
+
+# Byte-compiled / cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# mac
+.DS_Store

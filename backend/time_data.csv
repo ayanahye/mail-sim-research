@@ -1,0 +1,31 @@
+Model Size,Prompt Size,Task,Time (seconds)
+Small,Small,Generating 3 replies,19.03
+Small,Small,Generating category,5.60
+Small,Small,Regenerating,8.47
+Small,Small,AI Edit,9.38
+Small,Small,Provide Instructions,8.57
+Small,Long,Generating category,4.45
+Small,Long,Generating 3 replies,23.67
+Small,Long,Regenerating,17.28
+Small,Long,AI Edit,17.29
+Small,Long,Provide Instructions,18.25
+Medium,Short,Generating category,10.17
+Medium,Short,Generating 3 replies,29.55
+Medium,Short,Regenerating,26.30
+Medium,Short,AI Edit,30.65
+Medium,Short,Provide Instructions,17.49
+Medium,Long,Generating category,8.65
+Medium,Long,Generating 3 replies,38.44
+Medium,Long,Regenerating,40.43
+Medium,Long,AI Edit,51.77
+Medium,Long,Provide Instructions,44.67
+Big,Short,Generating category,19.91
+Big,Short,Generating 3 replies,121.00
+Big,Short,Regenerating,41.19
+Big,Short,AI Edit,58.73
+Big,Short,Provide Instructions,62.10
+Big,Long,Generating category,20.22
+Big,Long,Generating 3 replies,130.00
+Big,Long,Regenerating,112.69
+Big,Long,AI Edit,105.78
+Big,Long,Provide Instructions,107.54

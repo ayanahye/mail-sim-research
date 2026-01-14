@@ -115,376 +115,211 @@ Current medication list: lisinopril, amlodipine, simvastatin, aspirin, pantopraz
 Summary of most recent oncology visit (1 week ago):  
 55-year-old male with newly diagnosed stage III NSCLC on chemoradiation. He reported **increased fatigue and generalized body aches**, but was able to attend the visit. Complained of **exacerbation of chronic cluster headaches**. Was referred for a cardiopulmonary exercise test to assess baseline endurance. Encouraged to continue treatment, but follow-up visit scheduled sooner to monitor for worsening side effects.`,
     },
-    {
-      mrn: "234567",
-      lastName: "Taylor",
-      firstName: "Emily",
-      dob: "02/02/1985",
-      subject: "Questions About More Frequent Hair Loss",
-      dateReceived: "04/02/2025",
-      fromUser: "Patient",
-      message:
-        "I've noticed that my hair has started falling out more than usual. Is this a side effect of my treatment? What can I do to minimize hair loss?",
-      emrData: `Age: 47 years
-Gender: Female
-Cancer diagnosis: Stage II invasive ductal carcinoma of the breast
-PMH: asthma, obesity
-Prior cancer treatments: lumpectomy (completed 2 months ago)
-Current cancer treatments: adjuvant doxorubicin/cyclophosphamide (started 1 month ago)
-Current medication list: albuterol, montelukast, metformin, aspirin, atorvastatin, vitamin D
-Summary of most recent oncology visit (3 weeks ago): 47-year-old female with a history of stage II breast cancer s/p lumpectomy. She is on adjuvant doxorubicin/cyclophosphamide and tolerating treatment well. Will continue treatment as planned.`,
+    { 
+      mrn: "234567", 
+      lastName: "Doe", 
+      firstName: "Jane", 
+      dob: "02/02/1985", 
+      subject: "Prescription", 
+      dateReceived: "12/17/2024", 
+      fromUser: "Patient", 
+      message: "This situation with my missing prescription has been absolutely unacceptable. I’ve been without my medication for several days now, and it’s causing me serious distress. This medication isn’t optional for me—it’s something I rely on every day to manage my condition. I feel like I’m being completely ignored. No one seems to understand how urgent this is, and I’m starting to feel like I can’t trust the system to take care of me. I need answers, and I need someone to take responsibility for fixing this immediately. I shouldn’t have to beg for something so basic and essential to my health.",
+      categories: ["Prescription Issue", "High Urgency", "Follow-up"],
+      aiReplies: [
+        { 
+          label: "Empathetic Reply", 
+          content: "Dear Jane,\n\nI’m so sorry for the distress and inconvenience this has caused. I completely understand how important your medication is and how frustrating delays can be. I’m looking into this immediately and will ensure it is resolved as quickly as possible. Your trust is very important to us, and we’ll do everything we can to make this right.\n\nSincerely,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*",
+          AIEdits: {
+            content: "Dear Jane,\n\nI’m truly sorry to hear about the distress you’re experiencing. I understand how critical this medication is for you, and I deeply regret the inconvenience this delay has caused. I am personally addressing this issue and will ensure that it’s resolved promptly. Your well-being and trust are our top priority, and we’re committed to making this right.\n\nSincerely,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          }
+        },
+        { 
+          label: "Direct Reply", 
+          content: "Hi Jane,\n\nI understand how critical your medication is, and I apologize for the delay. I’ve already reached out to the pharmacy and will follow up with you as soon as I have an update. Thank you for bringing this to my attention.\n\nBest regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*",
+          AIEdits: {
+            content: "Hi Jane,\n\nI completely understand the urgency of this matter, and I sincerely apologize for the delay. I’ve reached out to the pharmacy and am closely following up to ensure the issue is resolved quickly. I will keep you informed with updates as soon as I have them. Thank you for your patience and understanding.\n\nBest regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          }
+        },
+        { 
+          label: "Reassurance Reply", 
+          content: "Hello Jane,\n\nI completely understand your frustration and want to assure you that we’re working to resolve this issue as a top priority. I’m in contact with the pharmacy to ensure your medication is sent out immediately. Thank you for your patience as we address this.\n\nKind regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*",
+          AIEdits: {
+            content: "Hello Jane,\n\nI understand how distressing this situation is, and I want to assure you that it’s being prioritized. I’m actively working with the pharmacy to ensure your medication is sent to you as soon as possible. Your patience and trust are greatly appreciated as we resolve this.\n\nKind regards,\nNurse Joy\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Joy.*"
+          }
+        }
+      ]
     },
-    {
-      mrn: "345678",
-      lastName: "Garcia",
-      firstName: "Luis",
-      dob: "03/03/1969",
-      subject: "Questions About Severe Diarrhea",
-      dateReceived: "04/03/2025",
-      fromUser: "Patient",
-      message:
-        "I've been experiencing severe diarrhea for the past three days. I've tried over-the-counter medications, but they don't seem to help. What should I do?",
-      emrData: `Age: 68 years
-Gender: Male
-Cancer diagnosis: Stage IV colorectal cancer with liver metastases
-PMH: coronary artery disease, type 2 diabetes
-Prior cancer treatments: None
-Current cancer treatments: FOLFIRI + bevacizumab (started 2 months ago)
-Current medication list: metformin, aspirin, atorvastatin, metoprolol, lisinopril
-Summary of most recent oncology visit (6 weeks ago): 68-year-old male with newly diagnosed stage IV colorectal cancer with liver metastases. He is on first-line FOLFIRI + bevacizumab and tolerating treatment well. Will continue treatment as planned.`,
+    { 
+      mrn: "345678", 
+      lastName: "Brown", 
+      firstName: "Charlie", 
+      dob: "03/03/1990", 
+      subject: "Message", 
+      dateReceived: "12/16/2024", 
+      fromUser: "Patient", 
+      message: "I don’t know what’s going on with my condition, and the lack of communication has been unbearable. I’m constantly on edge, wondering if I’ve been forgotten or if something has gone wrong. The anxiety is making it hard for me to function in my daily life. I don’t understand why it’s so hard to get updates. I’ve tried to be patient, but it feels like I’m being left in the dark with no regard for how this is affecting me emotionally. I need someone to step up and provide me with the information I’ve been waiting for because I can’t take this silence anymore.",
+      categories: ["General Inquiry", "Medium Urgency", "Clarification Needed"],
+      aiReplies: [
+        { 
+          label: "Empathetic Reply", 
+          content: "Hi Charlie,\n\nI’m so sorry for the anxiety this is causing you. It’s absolutely understandable to feel this way, and I want to reassure you that your case is important to us. I’m reviewing your file now and will provide you with an update as soon as I have more information. You are not being forgotten.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Hi Charlie,\n\nI completely understand the anxiety you must be feeling, and I want to assure you that you are not being forgotten. Your concerns are very important to us. I’m reviewing your file now and will provide you with an update as soon as possible. Please know that we’re here for you during this challenging time.\n\nWarm regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          }
+        },
+        { 
+          label: "Direct Reply", 
+          content: "Hi Charlie,\n\nI’m so sorry for the delay in communication. We are currently reviewing your case and will provide you with an update as soon as possible. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Hi Charlie,\n\nI’m so sorry for the delay in i hate u so much. We are currently reviewing your case and will provide you with an update as soon as possible. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          }
+        },
+        { 
+          label: "Reassurance Reply", 
+          content: "Hello Charlie,\n\nI know it’s been tough, and I want to assure you that we’re on top of your case. I’m actively reviewing your situation and will update you soon. We value your trust and appreciate your patience.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Hello Charlie,\n\nI truly understand how stressful this situation is, and I want to reassure you that we’re reviewing your case carefully. You are not being overlooked, and we’re working to provide you with the information you need. Thank you for your patience during this time.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*"
+          }
+        }
+      ]
     },
-    {
-      mrn: "456789",
-      lastName: "Nguyen",
-      firstName: "Linh",
-      dob: "04/04/1977",
-      subject: "Your are a horrible person",
-      dateReceived: "04/04/2025",
-      fromUser: "Patient",
-      message:
-        "Well I am not a religious person, I hope and expect that you will spend eternity in hell. You are an abusive, nasty, cheap person.",
-      emrData: `Age: 72 years
-Gender: Female
-Cancer diagnosis: Stage III ovarian cancer
-PMH: osteoporosis, hypothyroidism
-Prior cancer treatments: debulking surgery (completed 3 months ago)
-Current cancer treatments: paclitaxel/carboplatin (started 2 months ago)
-Current medication list: levothyroxine, alendronate, calcium, vitamin D
-Summary of most recent oncology visit (4 weeks ago): 72-year-old female with stage III ovarian cancer s/p debulking surgery. She is on adjuvant paclitaxel/carboplatin and tolerating treatment well. Will continue treatment as planned.`,
-    },
-    {
-      mrn: "567890",
-      lastName: "Patel",
-      firstName: "Ravi",
-      dob: "05/05/1985",
-      subject: "Exception for the Covid test",
-      dateReceived: "04/05/2025",
-      fromUser: "Patient",
-      message:
-        "So I have to tell you I’m pretty perturbed by this whole thing. I don’t care what the rules are, I think it’s pretty cra**y, that there couldn’t have been an exception regarding having the Covid test the morning before the procedure, considering all this cra* that could have been avoided, by you giving me the exact info, and your staff taking care of the insurance deal. Two trips up there again is a bit much. Why don’t you see what you can do about it? If not, why don’t you have one of these upper ups that make these rules give me a call.",
-      emrData: `Age: 39 years  
-Gender: Male  
-Cancer diagnosis: Stage IIA Hodgkin lymphoma  
-PMH: None  
-Prior cancer treatments: None  
-Current cancer treatments: ABVD (started 1 month ago)  
-Current medication list: None  
-Summary of most recent oncology visit (2 weeks ago): 39-year-old male with newly diagnosed stage IIA Hodgkin lymphoma. Currently receiving first-line ABVD chemotherapy and appears to be tolerating treatment without major side effects. Patient expressed some frustration during the visit regarding pre-procedure logistics and communication around insurance coverage and COVID testing protocols. Discussed process and rationale; provided reassurance and contact information for scheduling and billing support. Will continue treatment as planned.`,
-    },
+    { 
+      mrn: "567890", 
+      lastName: "Lee", 
+      firstName: "Chris", 
+      dob: "05/05/2000", 
+      subject: "Document", 
+      dateReceived: "12/14/2024", 
+      fromUser: "Patient", 
+      message: "I submitted all of my documents over a week ago, and I haven’t heard a single word back. I’m starting to feel like no one is even paying attention to my case, and it’s making me incredibly anxious. I keep wondering if something went wrong—were my documents lost, or did I miss a step? The uncertainty is driving me crazy, and I feel completely ignored. I just need someone to confirm that everything is in order and let me know what’s going on. This is so important to me, and I can’t understand why it’s taking so long to get even a simple acknowledgment.",
+      categories: ["Document Submission", "Low Urgency", "Follow-up"],
+      aiReplies: [
+        { 
+          label: "Empathetic Reply", 
+          content: "Dear Chris,\n\nI understand how stressful it can be to wait for confirmation. Thank you for letting me know. I’ll review your documents immediately and confirm everything for you. Please don’t worry—we’ll make sure everything is in order.\n\nSincerely,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Some edited content here"
+          }
+        },
+        { 
+          label: "Direct Reply", 
+          content: "Hi Chris,\n\nYour documents have been received and are currently under review. I’ll notify you as soon as everything is processed. Thank you for your patience.\n\nBest regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Some edited content here"
+          }
+        },
+        { 
+          label: "Reassurance Reply", 
+          content: "Hello Chris,\n\nI want to let you know that your documents have been received and everything looks great. You’ll hear from us soon regarding the next steps. Thank you for keeping us updated.\n\nKind regards,\nNurse Anna\n\n*This email was drafted with AI assistance and reviewed/approved by Nurse Anna.*",
+          AIEdits: {
+            content: "Some edited content here"
+          }
+        }
+      ]
+    }
   ];
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    const newWidth = (e.clientX / window.innerWidth) * 100;
-    setInboxWidth(Math.min(Math.max(newWidth, 20), 80));
-  };
-
-  const handleMouseUp = () => {
-    document.removeEventListener("mousemove", handleMouseMove);
-    document.removeEventListener("mouseup", handleMouseUp);
-  };
-
-  const fetchAIPoints = async (email: Omit<InboxEntry, "aiPoints">) => {
-    try {
-      const response = await fetch(`${BACKEND_URL}/api/get-ai-points`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          patientMessage: email.message,
-          emrDets: email.emrData,
-        }),
-      });
-
-      if (!response.ok) throw new Error("Failed to fetch AI points");
-
-      const result = await response.json();
-
-      const newEntry: InboxEntry = {
-        ...email,
-        aiPoints: result.aiPoints,
-      };
-
-      setData((prevData) =>
-        prevData.map((entry) =>
-          entry.mrn === email.mrn
-            ? { ...entry, aiPoints: result.aiPoints }
-            : entry
-        )
-      );
-    } catch (error) {
-      console.error("Error fetching AI points:", error);
-    }
-  };
-
-  const fetchCategoriesAndReplies = async (email: InboxEntry) => {
-    try {
-      const response = await fetch(`${BACKEND_URL}/api/get-ai-data`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          patientMessage: email.message,
-          emrDets: email.emrData,
-        }),
-      });
-
-      if (!response.ok) throw new Error("failed to fetch AI-generated data");
-
-      const result = await response.json();
-
-      const newEntry: InboxEntry = {
-        ...email,
-        categories: result.categories,
-        aiReplies: result.aiReplies.map((reply: any) => ({
-          label: reply.label,
-          content: reply.content,
-          AIEdits: reply.AIEdits || { content: "" },
-        })),
-      };
-
-      setData((prevData) =>
-        prevData.map((entry) =>
-          entry.mrn === email.mrn
-            ? {
-                ...entry,
-                categories: result.categories,
-                aiReplies: result.aiReplies.map((reply: any) => ({
-                  label: reply.label,
-                  content: reply.content,
-                  AIEdits: reply.AIEdits || { content: "" },
-                })),
-              }
-            : entry
-        )
-      );
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    const initializedMessages: InboxEntry[] = newMessages.map((message) => ({
-      ...message,
-      categories: [],
-      aiReplies: [],
-      aiPoints: "",
-    }));
-
-    setData(initializedMessages);
-
-    setQueue(initializedMessages);
-  }, []);
-
-  useEffect(() => {
-    if (queue.length === 0) return;
-
-    const message: InboxEntry = queue[0];
-
-    fetchCategoriesAndReplies(message);
-    fetchAIPoints(message);
-
-    setQueue((prevQueue) => prevQueue.slice(1));
-  }, [queue]);
-
-  // notes:
-  return (
-    <TabProvider>
-      <Router>
-        <div className="min-h-screen flex flex-col bg-white">
-          <header className="bg-white text-black p-2 flex justify-between items-center border-b fixed top-0 left-0 right-0 z-10 shadow-sm">
-            <div className="flex items-center space-x-4">
-              <button className="text-gray-600 hover:text-black">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-              <h1 className="text-lg font-semibold">Tangent Mail</h1>
-            </div>
-            <div className="flex-grow max-w-xl mx-4">
-              <input
-                type="text"
-                placeholder="Search"
-                className="w-full p-2 rounded-md bg-gray-100 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
-            <nav className="flex items-center space-x-4">
-              <button className="text-gray-600 hover:text-black">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  />
-                </svg>
-              </button>
-              <button className="text-gray-600 hover:text-black">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </button>
-              <button className="text-gray-600 hover:text-black">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </button>
-              <div className="flex items-center space-x-6">
-                <TabContext.Consumer>
-                  {(context) => (
-                    <ToggleSwitch
-                      isOn={context?.showAIFeatures ?? false}
-                      onToggle={() => {
-                        if (context?.showAIFeatures) {
-                          context.setActiveTab(0);
-                        }
-                        context?.setShowAIFeatures(!context.showAIFeatures);
-                      }}
-                      label="Advanced Mode"
-                    />
-                  )}
-                </TabContext.Consumer>
-              </div>
-            </nav>
-          </header>
-
-          <div className="flex flex-1 pt-14">
-            <aside className="w-64 bg-gray-100 text-black p-4 min-h-screen border-r">
-              <nav className="space-y-1">
-                {[
-                  "Inbox",
-                  "Drafts",
-                  "Sent Items",
-                  "Deleted Items",
-                  "Junk Email",
-                  "Archive",
-                  "Notes",
-                ].map((folder, index) => (
-                  <button
-                    key={index}
-                    className="block w-full p-2 text-left hover:bg-blue-100 rounded-md transition duration-200 flex items-center"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                    {folder}
-                  </button>
-                ))}
-              </nav>
-            </aside>
-
-            <main className="flex-1 bg-white overflow-hidden flex relative h-screen">
-              <div
-                className="border-r overflow-y-auto"
-                style={{ width: `${inboxWidth}%`, height: "100%" }}
-              >
-                <Inbox dummyData={data} />
-              </div>
-              <div
-                className="w-1 bg-gray-300 cursor-col-resize absolute h-full"
-                style={{ left: `${inboxWidth}%` }}
-                onMouseDown={handleMouseDown}
-              ></div>
-              <div
-                className="overflow-y-auto"
-                style={{ width: `${100 - inboxWidth}%`, height: "100%" }}
-              >
-                <Routes>
-                  <Route
-                    path="/message/:mrn"
-                    element={
-                      <MessageDetail
-                        dummyData={data}
-                        isLoading={isLoading}
-                        setIsLoading={setIsLoading}
-                      />
-                    }
-                  />
-                </Routes>
-              </div>
-            </main>
+  
+  
+  
+// notes:
+return (
+  <TabProvider>
+    <Router>
+      <div className="min-h-screen flex flex-col bg-white">
+        <header className="bg-white text-black p-2 flex justify-between items-center border-b fixed top-0 left-0 right-0 z-10 shadow-sm">
+          <div className="flex items-center space-x-4">
+            <button className="text-gray-600 hover:text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <h1 className="text-lg font-semibold">Tangent Mail</h1>
           </div>
+          <div className="flex-grow max-w-xl mx-4">
+            <input 
+              type="text" 
+              placeholder="Search"
+              className="w-full p-2 rounded-md bg-gray-100 text-black border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+          <nav className="flex items-center space-x-4">
+            <button className="text-gray-600 hover:text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+            </button>
+            <button className="text-gray-600 hover:text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
+            <button className="text-gray-600 hover:text-black">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+            <div className='flex items-center space-x-6'>
+            <TabContext.Consumer>
+              {context => (
+                <ToggleSwitch 
+                  isOn={context?.showAIFeatures ?? false} 
+                  onToggle={() => {
+                    if (context?.showAIFeatures) {
+                      context.setActiveTab(0);
+                    }
+                    context?.setShowAIFeatures(!context.showAIFeatures);
+                  }} 
+                  label="AI Features Mode 2" 
+                />
+              )}
+            </TabContext.Consumer>
+          </div>
+          </nav>
+        </header>
+        
+        <div className="flex flex-1 pt-14">
+          <aside className="w-64 bg-gray-100 text-black p-4 min-h-screen border-r">
+            <nav className="space-y-1">
+              {["Inbox", "Drafts", "Sent Items", "Deleted Items", "Junk Email", "Archive", "Notes"].map((folder, index) => (
+                <button
+                  key={index}
+                  className="block w-full p-2 text-left hover:bg-blue-100 rounded-md transition duration-200 flex items-center"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  {folder}
+                </button>
+              ))}
+            </nav>
+          </aside>
+          
+          <main className="flex-1 bg-white overflow-hidden flex relative h-screen">
+            <div 
+              className="border-r overflow-y-auto"
+              style={{ width: `${inboxWidth}%`, height: '100%' }}
+            >
+              <Inbox dummyData={dummyData} />
+            </div>
+            <div 
+              className="w-1 bg-gray-300 cursor-col-resize absolute h-full"
+              style={{ left: `${inboxWidth}%` }}
+              onMouseDown={handleMouseDown}
+            ></div>
+            <div 
+              className="overflow-y-auto"
+              style={{ width: `${100 - inboxWidth}%`, height: '100%' }}
+            >
+              <Routes>
+                <Route path="/message/:mrn" element={<MessageDetail dummyData={dummyData} />} />
+              </Routes>
+            </div>
+          </main>
         </div>
-      </Router>
-    </TabProvider>
+      </div>
+    </Router>
+  </TabProvider>
   );
 }
 
@@ -510,7 +345,6 @@ type InboxEntry = {
   emrData: string;
   categories: string[];
   aiReplies: AIReply[];
-  aiPoints?: string;
 };
 
 type InboxProps = {
@@ -1917,58 +1751,30 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
             </svg>
           </div>
           <div className="mr-4 mt-2 mb-5">To: {entry.to}</div>
-        </div>
-        <div className="flex flex-wrap">
-          {entryData?.categories.map((category, index) => {
-            let colorClass = "bg-blue-100 text-blue-800";
-
-            if (category === "High Urgency") {
-              colorClass = "bg-red-100 text-red-800";
-            } else if (category === "Medium Urgency") {
-              colorClass = "bg-orange-100 text-orange-800";
-            } else if (category === "Low Urgency") {
-              colorClass = "bg-yellow-100 text-yellow-800";
-            }
-            return (
-              <span
-                key={index}
-                className={`inline-block ${colorClass} text-xs font-medium mr-2 px-2 py-1 rounded-full mb-2`}
-              >
-                {category}
-              </span>
-            );
-          })}
-        </div>
-        <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-700 font-mono shadow-inner space-y-1">
-          {entryData?.emrData?.split("\n").map((line, idx) => {
-            const [label, ...rest] = line.split(":");
-            if (!rest.length) return <div key={idx}>{line}</div>;
-            return (
-              <div key={idx}>
-                <span className="font-bold">{label}:</span>
-                <span>{rest.join(":")}</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      {!showReplySection && (
-        <div className="border rounded-lg bg-white shadow-sm p-4 mb-6">
-          <div className="flex items-center mb-2">
-            <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-bold mr-3">
-              {entryData?.fromUser.charAt(0).toUpperCase()}
+         </div>
+            <div className="flex flex-wrap">
+              {entryData?.categories.map((category, index) => {
+                let colorClass = "bg-blue-100 text-blue-800";
+  
+                if (category === "High Urgency") {
+                  colorClass = "bg-red-100 text-red-800";
+                } else if (category === "Medium Urgency") {
+                  colorClass = "bg-orange-100 text-orange-800";
+                } else if (category === "Low Urgency") {
+                  colorClass = "bg-yellow-100 text-yellow-800";
+                }
+                return (
+                  <span
+                    key={index}
+                    className={`inline-block ${colorClass} text-xs font-medium mr-2 px-2 py-1 rounded-full mb-2`}
+                  >
+                    {category}
+                  </span>
+                );
+              })}
             </div>
-            <div>
-              <p className="font-semibold">{entryData?.fromUser}</p>
-              <p className="text-xs text-gray-500">
-                {new Date(entryData?.dateReceived).toLocaleString()}
-              </p>
-            </div>
-          </div>
-          <p className="text-sm text-gray-800">{entryData?.message}</p>
         </div>
-      )}
-      {showReplySection && (
+        {showReplySection && (
         <div>
           <div className="items-center px-4 pt-4">
             <h3 className="font-semibold text-gray-600 pb-2">
@@ -2078,425 +1884,307 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
                   placeholder="Write your reply here..."
                 />
 
-                <div className="mt-2 flex gap-2">
-                  <button
-                    onClick={() => handleSendReply(blankReplyAI[mrn || ""])}
-                    className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-                  >
-                    Send Reply
-                  </button>
-                  <button
-                    onClick={handleStartBlank}
-                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
-                  >
-                    Clear
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowAIEditModal(true);
-                      setIsAIEditButtonClicked(true);
-                    }}
-                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                  >
-                    AI Edit
-                  </button>
-                </div>
-              </div>
-            )}
+        <div className="mt-2 flex gap-2">
+        <button
+          onClick={() => handleSendReply(blankReply)}
+          className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+        >
+          Send Reply
+        </button>
+        <button
+          onClick={handleStartBlank}
+          className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
+        >
+          Clear
+        </button>
+        <button
+          onClick={() => {
+            setShowAIEditModal(true);
+            setIsAIEditButtonClicked(true);
+          }}
+          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+        >
+          AI Edit
+        </button>
+        </div>
+        </div>
+        )}
 
-            {showAIFeatures && activeTab === -2 && generateClicked && (
-              <div className="bg-white p-4 border rounded">
-                <h3 className="font-semibold text-gray-600 mb-2">
-                  Generated AI Reply
-                </h3>
-                {isAIEditButtonClicked && (
-                  <button
-                    className="pb-2 text-red-600"
-                    onClick={() => {
-                      console.log("testing123");
-                      setShowDiff(!showDiff);
-                    }}
-                  >
-                    Show Diff
-                  </button>
-                )}
-                <textarea
-                  className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
-                  value={generatedReplies[mrn || ""] || ""}
-                  onChange={(e) =>
-                    mrn &&
-                    setGeneratedReplies((prevReplies) => ({
-                      ...prevReplies,
-                      [mrn]: e.target.value,
-                    }))
-                  }
-                  readOnly={!showAIFeatures}
-                />
+        {showAIFeatures && activeTab === -2 && generateClicked && (
+        <div className="bg-white p-4 border rounded">
+        <h3 className="font-semibold text-gray-600 mb-2">Generated AI Reply</h3>
+        {isAIEditButtonClicked && (
+        <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
+        )}
+        <textarea
+        className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
+        value={generatedReply} 
+        onChange={(e) => handleAIReplyChange(-2, e.target.value)} 
+        readOnly 
+        />
+        <button
+          onClick={() => handleSendReply(generatedReply)}
+          className="bg-blue-600 text-white px-4 py-1 mr-2 rounded hover:bg-blue-700"
+        >
+          Send Reply
+        </button>
+        <button
+          className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+        >
+          Regenerate
+        </button>
+        {showAIFeatures && (
+        <button
+        onClick={() => {
+          setShowAIEditModal(true);
+          setIsAIEditButtonClicked(true);
+        }}
+        className="ml-2 bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+        >
+        AI Edit
+        </button>          
+        )}
+        <div className="relative mt-3">
+        
+        </div>
+        {showRating[activeTab] && (
+        <>
+          <div className="mt-3">
+            <label className="text-sm font-medium text-gray-700">Rating:</label>
+            <div className="flex gap-1 mt-1">
+              {[1, 2, 3, 4, 5].map((star) => (
                 <button
-                  onClick={() =>
-                    handleSendReply(generatedReplies[mrn || ""] || "")
-                  }
-                  className="bg-blue-600 text-white px-4 py-1 mr-2 rounded hover:bg-blue-700"
+                  key={star}
+                  onClick={() => handleRatingChange(activeTab, star)}
+                  className={`text-xl ${ratings[activeTab] >= star ? "text-yellow-500" : "text-gray-300"}`}
                 >
-                  Send Reply
+                  ★
                 </button>
-
-                {showAIFeatures && (
-                  <button
-                    onClick={() => {
-                      setShowAIEditModal(true);
-                      setIsAIEditButtonClicked(true);
-                    }}
-                    className="ml-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                  >
-                    AI Edit
-                  </button>
-                )}
-                <div className="relative mt-3"></div>
-                {showRating[activeTab] && (
-                  <>
-                    <div className="mt-3">
-                      <label className="text-sm font-medium text-gray-700">
-                        Rating:
-                      </label>
-                      <div className="flex gap-1 mt-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            onClick={() => handleRatingChange(activeTab, star)}
-                            className={`text-xl ${
-                              ratings[activeTab] >= star
-                                ? "text-yellow-500"
-                                : "text-gray-300"
-                            }`}
-                          >
-                            ★
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="mt-3">
-                      <label className="text-sm font-medium text-gray-700">
-                        Provide detailed feedback:
-                      </label>
-                      <textarea
-                        className="w-full p-2 border rounded mt-1 bg-gray-50"
-                        value={feedback[activeTab]}
-                        onChange={(e) =>
-                          handleFeedbackChange(activeTab, e.target.value)
-                        }
-                        placeholder="Optional: Share more thoughts..."
-                      />
-                    </div>
-                    <div className="mt-3">
-                      <button
-                        onClick={handleSubmitRating}
-                        className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
-
-            {showAIFeatures && activeTab === -3 && (
-              <div className="bg-gray-50 p-4 rounded border mt-4">
-                <h4 className="font-semibold text-gray-600 mb-2">
-                  Create Email from AI-Generated Points
-                </h4>
-                <div className="mb-3">
-                  {aiPointsList.length ? (
-                    <ul className="space-y-2">
-                      {aiPointsList.map((pt, idx) => (
-                        <li key={idx} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            checked={!!checkedPoints[entryData.mrn]?.[idx]}
-                            onChange={() => {
-                              setCheckedPoints((prev) => ({
-                                ...prev,
-                                [entryData.mrn]: {
-                                  ...prev[entryData.mrn],
-                                  [idx]: !prev[entryData.mrn]?.[idx],
-                                },
-                              }));
-                            }}
-                            className="mr-2"
-                          />
-                          <span
-                            className={
-                              checkedPoints[entryData.mrn]?.[idx]
-                                ? "font-semibold text-black"
-                                : "text-gray-700"
-                            }
-                          >
-                            {pt}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <span className="text-gray-500">No points to display.</span>
-                  )}
-                </div>
-
-                <textarea
-                  className="w-full p-2 border rounded mb-2"
-                  rows={5}
-                  placeholder="Add more instructions or points here..."
-                  value={userAddedPoints}
-                  onChange={(e) => setUserAddedPoints(e.target.value)}
-                />
-
-                <button
-                  onClick={() => {
-                    const checkedAIPoints = aiPointsList
-                      .filter((pt, idx) => checkedPoints[entryData.mrn]?.[idx])
-                      .join("\n");
-                    const combinedInstructions =
-                      checkedAIPoints +
-                      (userAddedPoints ? "\n" + userAddedPoints : "");
-                    handleGeneratePointsClick(combinedInstructions);
-                  }}
-                  className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                  Generate AI Reply
-                </button>
-              </div>
-            )}
-
-            {showAIFeatures && activeTab === -1 && (
-              <div className="bg-white p-4 border rounded">
-                <h3 className="font-semibold text-gray-600 mb-2">
-                  Create Email from Bullet Points
-                </h3>
-                <p className="text-gray-500 mb-2 text-sm">
-                  Please provide bullet points for the AI to transform into an
-                  Email. Use <b>Enter</b> for a new bullet, or type <b>*</b>{" "}
-                  then <b>Tab</b> for a bullet. You can refer to the example
-                  below.
-                </p>
-
-                <SpeechToText
-                  value={bulletInputs[contextKey] ?? exampleInput}
-                  onChange={(transcript) =>
-                    setBulletInputs((prev) => ({
-                      ...prev,
-                      [contextKey]:
-                        (prev[contextKey] ?? exampleInput) + transcript,
-                    }))
-                  }
-                />
-
-                <textarea
-                  ref={textareaRef}
-                  className="w-full p-2 border rounded mt-2"
-                  rows={10}
-                  placeholder={placeholderText}
-                  value={bulletInputs[contextKey] ?? exampleInput}
-                  onChange={handleChange}
-                  onKeyDown={handleKeyDown}
-                />
-                <div className="flex gap-2 mt-2">
-                  <button
-                    onClick={handleGenerateReplyClick}
-                    className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  >
-                    Generate AI Reply
-                  </button>
-                </div>
-              </div>
-            )}
-            {!showAIFeatures && activeTab < entry.aiReplies.length && (
-              <>
-                {isAIEditButtonClicked && (
-                  <button
-                    className="pb-2 text-red-600"
-                    onClick={() => {
-                      console.log("testing123");
-                      setShowDiff(!showDiff);
-                    }}
-                  >
-                    Show Diff
-                  </button>
-                )}
-                <textarea
-                  className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
-                  value={aiEditedContent || entry.aiReplies[activeTab]?.content}
-                  onChange={(e) =>
-                    handleAIReplyChange(activeTab, e.target.value)
-                  }
-                  readOnly={aiEditedContent ? true : false}
-                />
-                <div className="flex gap-2 mt-2">
-                  <button
-                    onClick={() =>
-                      handleSendReply(entry.aiReplies[activeTab].content, true)
-                    }
-                    className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                  >
-                    Send Reply
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setShowAIEditModal(true);
-                      setIsAIEditButtonClicked(true);
-                    }}
-                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                  >
-                    AI Edit
-                  </button>
-                </div>
-                <div className="relative mt-3"></div>
-                {showRating[activeTab] && (
-                  <>
-                    <div className="mt-3">
-                      <label className="text-sm font-medium text-gray-700">
-                        Rating:
-                      </label>
-                      <div className="flex gap-1 mt-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            onClick={() => handleRatingChange(activeTab, star)}
-                            className={`text-xl ${
-                              ratings[activeTab] >= star
-                                ? "text-yellow-500"
-                                : "text-gray-300"
-                            }`}
-                          >
-                            ★
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="mt-3">
-                      <label className="text-sm font-medium text-gray-700">
-                        Provide detailed feedback:
-                      </label>
-                      <textarea
-                        className="w-full p-2 border rounded mt-1 bg-gray-50"
-                        value={feedback[activeTab]}
-                        onChange={(e) =>
-                          handleFeedbackChange(activeTab, e.target.value)
-                        }
-                        placeholder="Optional: Share more thoughts..."
-                      />
-                    </div>
-                    <div className="mt-3">
-                      <button
-                        onClick={handleSubmitRating}
-                        className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </>
-                )}
-              </>
-            )}
-            {!showAIFeatures && activeTab == 3 && (
-              <div className="bg-white p-4 border rounded">
-                <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
-                {isAIEditButtonClicked && (
-                  <button
-                    className="pb-2 text-red-600"
-                    onClick={() => {
-                      console.log("testing123");
-                      setShowDiff(!showDiff);
-                    }}
-                  >
-                    Show Diff
-                  </button>
-                )}
-                <textarea
-                  id="blankReplyTextarea"
-                  className="w-full h-40 p-2 border rounded"
-                  value={blankReplyManual[mrn]}
-                  onChange={handleBlankReplyChange}
-                  onSelect={handleTextSelect}
-                  placeholder="Write your reply here..."
-                />
-
-                <div className="mt-2 flex gap-2">
-                  <button
-                    onClick={() => handleSendReply(blankReplyManual[mrn])}
-                    className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-                  >
-                    Send Reply
-                  </button>
-                  <button
-                    onClick={handleStartBlank}
-                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
-                  >
-                    Clear
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowAIEditModal(true);
-                      setIsAIEditButtonClicked(true);
-                    }}
-                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                  >
-                    AI Edit
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="flex-grow p-4 overflow-auto bg-gray-100">
-            {sentReplies.length > 0 && (
-              <div className="mb-6">
-                <h3 className="font-semibold text-gray-600 mb-4 text-lg">
-                  Replies
-                </h3>
-                {sentReplies
-                  .filter((sent) => sent.emailId === entryData?.mrn)
-                  .sort(
-                    (a, b) =>
-                      new Date(b.timestamp).getTime() -
-                      new Date(a.timestamp).getTime()
-                  )
-                  .map((sent, index) => (
-                    <div
-                      key={index}
-                      className="border rounded-lg bg-white shadow-sm p-4 mb-3 hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-center mb-2">
-                        <div className="w-10 h-10 rounded-full bg-pink-400 flex items-center justify-center text-white font-bold mr-3">
-                          T
-                        </div>
-                        <div>
-                          <p className="font-semibold">You</p>
-                          <p className="text-xs text-gray-500">
-                            {new Date(sent.timestamp).toLocaleString()}
-                          </p>
-                        </div>
-                      </div>
-                      <p className="text-sm text-gray-800">{sent.content}</p>
-                    </div>
-                  ))}
-              </div>
-            )}
-            <div className="border rounded-lg bg-white shadow-sm p-4 mb-6">
-              <div className="flex items-center mb-2">
-                <div className="w-10 h-10 rounded-full bg-red-400 flex items-center justify-center text-white font-bold mr-3">
-                  {entryData?.fromUser.charAt(0).toUpperCase()}
-                </div>
-                <div>
-                  <p className="font-semibold">{entryData?.fromUser}</p>
-                  <p className="text-xs text-gray-500">
-                    {new Date(entryData?.dateReceived).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-              <p className="text-sm text-gray-800">{entryData?.message}</p>
+              ))}
             </div>
           </div>
+          <div className="mt-3">
+            <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
+            <textarea
+              className="w-full p-2 border rounded mt-1 bg-gray-50"
+              value={feedback[activeTab]}
+              onChange={(e) => handleFeedbackChange(activeTab, e.target.value)}
+              placeholder="Optional: Share more thoughts..."
+            />
+          </div>
+          <div className="mt-3">
+            <button
+              onClick={handleSubmitRating}
+              className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+            >
+              Submit
+            </button>
+          </div>
+        </>
+        )}
+        </div>
+        )}
+
+        {showAIFeatures && (activeTab === -1) && (
+        <div className="bg-white p-4 border rounded">
+        <h3 className="font-semibold text-gray-600 mb-2">Set AI Instructions</h3>
+        <div
+        className="space-y-2"
+        style={{
+        maxHeight: '100px',
+        overflowY: 'auto', 
+        }}
+        >
+        {instructionOptions.map((instruction, index) => (
+        <label key={index} className="flex items-center">
+          <input
+            type="checkbox"
+            className="form-checkbox"
+            checked={selectedInstructions.includes(instruction)}
+            onChange={() => handleInstructionToggle(instruction)}
+          />
+          <span className="ml-2">{instruction}</span>
+        </label>
+        ))}
+        </div>
+        <textarea
+        className="w-full p-2 border rounded mt-4"
+        placeholder="Add your own instruction..."
+        value={customInstruction}
+        onChange={(e) => setCustomInstruction(e.target.value)}
+        />
+        <div className="flex gap-2 mt-2">
+        <button
+        onClick={handleGenerateReplyClick}
+        className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+        Generate AI Reply
+        </button>
+
+        </div>
+        </div>
+        )}
+        {!showAIFeatures && activeTab < entry.aiReplies.length && (
+        <>
+        {
+        isAIEditButtonClicked && (
+          <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
+        )
+        }
+        <textarea
+        className="w-full h-40 p-2 border rounded mt-1 bg-gray-50 mb-1"
+        value={aiEditedContent || entry.aiReplies[activeTab]?.content}
+        onChange={(e) => handleAIReplyChange(activeTab, e.target.value)}
+        readOnly={aiEditedContent ? true : false}
+        />
+        <div className="flex gap-2 mt-2">
+        <button
+          onClick={() => handleSendReply(entry.aiReplies[activeTab].content, true)}
+          className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+        >
+          Send Reply
+        </button>
+        <button
+          className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+        >
+          Regenerate
+        </button>
+        <button
+          onClick={() => {
+            setShowAIEditModal(true);
+            setIsAIEditButtonClicked(true);
+          }}
+          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+        >
+          AI Edit
+        </button>
+        </div>
+        <div className="relative mt-3">
+       
+        </div>
+        {showRating[activeTab] && (
+        <>
+          <div className="mt-3">
+            <label className="text-sm font-medium text-gray-700">Rating:</label>
+            <div className="flex gap-1 mt-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => handleRatingChange(activeTab, star)}
+                  className={`text-xl ${ratings[activeTab] >= star ? "text-yellow-500" : "text-gray-300"}`}
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="mt-3">
+            <label className="text-sm font-medium text-gray-700">Provide detailed feedback:</label>
+            <textarea
+              className="w-full p-2 border rounded mt-1 bg-gray-50"
+              value={feedback[activeTab]}
+              onChange={(e) => handleFeedbackChange(activeTab, e.target.value)}
+              placeholder="Optional: Share more thoughts..."
+            />
+          </div>
+          <div className="mt-3">
+            <button
+              onClick={handleSubmitRating}
+              className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+            >
+              Submit
+            </button>
+          </div>
+        </>
+        )}
+        </>
+        )}
+        {!showAIFeatures && activeTab==3 && (
+        <div className="bg-white p-4 border rounded">
+        <h3 className="font-semibold text-gray-600 mb-2">New Reply</h3>
+        {isAIEditButtonClicked && (
+        <button className="pb-2 text-red-600" onClick={() => {console.log("testing123"); setShowDiff(!showDiff)}}>Show Diff</button>
+        )}
+        <textarea
+        id="blankReplyTextarea"
+        className="w-full h-40 p-2 border rounded"
+        value={blankReply}
+        onChange={handleBlankReplyChange}
+        onSelect={handleTextSelect}
+        placeholder="Write your reply here..."
+        />
+
+        <div className="mt-2 flex gap-2">
+        <button
+        onClick={() => handleSendReply(blankReply)}
+        className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+        >
+        Send Reply
+        </button>
+        <button
+        onClick={handleStartBlank}
+        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
+        >
+        Clear
+        </button>
+        <button
+          onClick={() => {
+            setShowAIEditModal(true);
+            setIsAIEditButtonClicked(true);
+          }}
+          className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+        >
+          AI Edit
+        </button>
+        </div>
+
+        </div>
+        )}
+        </div>
+
+        <div className="flex-grow p-4 overflow-auto bg-gray-100">
+          {sentReplies.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold text-gray-600 mb-4 text-lg">Replies</h3>
+              {sentReplies
+                .filter((sent) => sent.emailId === entryData?.mrn)
+                .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+                .map((sent, index) => (
+                  <div
+                    key={index}
+                    className="border rounded-lg bg-white shadow-sm p-4 mb-3 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-center mb-2">
+                      <div className="w-10 h-10 rounded-full bg-pink-400 flex items-center justify-center text-white font-bold mr-3">
+                        T
+                      </div>
+                      <div>
+                        <p className="font-semibold">You</p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(sent.timestamp).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-800">{sent.content}</p>
+                  </div>
+                ))}
+            </div>
+          )}
+          <div className="border rounded-lg bg-white shadow-sm p-4 mb-6">
+            <div className="flex items-center mb-2">
+              <div className="w-10 h-10 rounded-full bg-purple-400 flex items-center justify-center text-white font-bold mr-3">
+                {entryData?.fromUser.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <p className="font-semibold">{entryData?.fromUser}</p>
+                <p className="text-xs text-gray-500">
+                  {new Date(entryData?.dateReceived).toLocaleString()}
+                </p>
+              </div>
+            </div>
+            <p className="text-sm text-gray-800">{entryData?.message}</p>
+          </div>
+        </div>
           <div className="mt-10">
             <Link to="/" className="ml-5 text-blue-500 hover:underline">
               Back to Inbox

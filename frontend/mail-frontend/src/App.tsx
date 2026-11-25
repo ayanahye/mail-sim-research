@@ -30,6 +30,7 @@ interface ToggleSwitchProps {
   isOn: boolean;
   onToggle: () => void;
   label: string;
+  description?: React.ReactNode;
 }
 
 interface TabContextValue {
@@ -66,10 +67,22 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   isOn,
   onToggle,
   label,
+  description,
 }) => (
-  <div className="flex items-center">
+  <div className="group relative flex items-center">
     <span className="mr-2 text-sm">{label}</span>
+    {description && (
+      <span
+        tabIndex={0}
+        aria-label={`About ${label}`}
+        className="mr-2 flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-gray-400 text-[10px] font-semibold text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+      >
+        i
+      </span>
+    )}
     <div
+      role="switch"
+      aria-checked={isOn}
       className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer ${
         isOn ? "bg-green-400" : "bg-gray-300"
       }`}
@@ -81,6 +94,14 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
         }`}
       />
     </div>
+    {description && (
+      <div
+        role="tooltip"
+        className="pointer-events-none invisible absolute right-0 top-full z-20 mt-2 w-80 rounded-md border border-gray-200 bg-white p-3 text-xs leading-relaxed text-gray-700 opacity-0 shadow-lg transition-opacity group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100"
+      >
+        {description}
+      </div>
+    )}
   </div>
 );
 
@@ -407,7 +428,24 @@ Summary of most recent oncology visit (2 weeks ago): 39-year-old male with newly
                         }
                         context?.setShowAIFeatures(!context.showAIFeatures);
                       }}
-                      label="Advanced Mode"
+                      label="Guided Drafting"
+                      description={
+                        <>
+                          <div className="mb-1 font-semibold text-gray-800">
+                            Guided Drafting
+                          </div>
+                          <div>
+                            <b>Off:</b> choose from ready-made AI drafts and
+                            compare them side by side.
+                          </div>
+                          <div className="mt-1">
+                            <b>On:</b> write the reply yourself. Start blank,
+                            type your own bullet points, or tick AI-suggested
+                            points, and the AI turns them into an email you can
+                            edit.
+                          </div>
+                        </>
+                      }
                     />
                   )}
                 </TabContext.Consumer>
@@ -544,6 +582,10 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
     { label: "Non-urgent", icon: "⚪" },
   ];
 
+  const urgencyLegend = ["Immediate", "Emergent", "Urgent", "Less Urgent", "Nonurgent"]
+    .map((label) => urgencyLevels.find((u) => u.label === label))
+    .filter((u): u is { label: string; icon: string } => !!u);
+
   const getUrgency = (categories: any) => {
     if (!categories) return "";
     const found = urgencyLevels.find(({ label }) =>
@@ -633,6 +675,18 @@ const Inbox: React.FC<InboxProps> = ({ dummyData }) => {
           </svg>
         </button>
       </div>
+      <div
+        className="flex flex-wrap items-center gap-x-3 gap-y-1 px-3 py-1 border-b bg-gray-50 text-xs text-gray-600"
+        aria-label="Urgency color legend"
+      >
+        <span className="font-medium text-gray-500">Urgency:</span>
+        {urgencyLegend.map(({ label, icon }) => (
+          <span key={label} className="flex items-center whitespace-nowrap">
+            <span className="mr-1">{icon}</span>
+            {label}
+          </span>
+        ))}
+      </div>
       {processedData.map((entry) => (
         <div
           key={entry.mrn}
@@ -700,6 +754,37 @@ type Feedback = string;
 type Instruction = string;
 
 type AIEditLevel = "high" | "low" | "";
+
+const AI_EDIT_DESCRIPTIONS: Record<
+  string,
+  { summary: string; low: string; high: string }
+> = {
+  grammar: {
+    summary: "Fixes spelling, punctuation and sentence structure.",
+    low: "Low: fix only clear errors and keep your wording.",
+    high: "High: thoroughly correct grammar and rewrite awkward sentences.",
+  },
+  empathy: {
+    summary: "Adds warmth and acknowledges the patient's feelings.",
+    low: "Low: a brief, gentle acknowledgement.",
+    high: "High: stronger, more explicit empathy and reassurance.",
+  },
+  clarity: {
+    summary: "Makes the message easier to follow.",
+    low: "Low: lightly tidy up confusing phrases.",
+    high: "High: reorganize so the message is direct and well ordered.",
+  },
+  professionalism: {
+    summary: "Keeps the tone polite and appropriate for a clinician.",
+    low: "Low: smooth out casual or abrupt phrasing.",
+    high: "High: a formal, polished clinical tone.",
+  },
+  healthLiteracy: {
+    summary: "Uses plain language the patient can understand.",
+    low: "Low: swap a few hard words for simpler ones.",
+    high: "High: plain, simple wording, with medical terms explained.",
+  },
+};
 
 interface AIEditOptions {
   grammar: AIEditLevel;
@@ -784,6 +869,11 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
 
   const [splitViewTab, setSplitViewTab] = useState<number | null>(null);
   const [showSplitView, setShowSplitView] = useState(false);
+
+  const [compareMode, setCompareMode] = useState(false);
+  useEffect(() => {
+    setCompareMode(false);
+  }, [mrn, showAIFeatures]);
 
   const [isAIEditButtonClicked, setIsAIEditButtonClicked] = useState(false);
 
@@ -1038,12 +1128,14 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
       index != 3 &&
       activeTab != 3
     ) {
-      if (e?.ctrlKey || e?.metaKey) {
+      if (e?.ctrlKey || e?.metaKey || compareMode) {
         handleSplitView(index);
+        setCompareMode(false);
       } else {
         setActiveTab(index);
       }
     } else {
+      setCompareMode(false);
       setActiveTab(index);
       if (index === entry.aiReplies.length) {
         setShowBlankReplyForm(true);
@@ -1207,7 +1299,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
     try {
       setIsLoading(true);
 
-      const currentInput = bulletInputs[contextKey] ?? exampleInput;
+      const currentInput = bulletInputs[contextKey] ?? "";
 
       if (!currentInput.trim()) {
         console.error("Please provide your instructions as bullet points.");
@@ -1431,26 +1523,15 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
     setShowReplySection(!showReplySection);
   };
 
-  const exampleInput = `
-    • Purpose: New lab requisition for follow-up on recent symptoms (fatigue)
-    • Tests Needed: CBC, iron panel, vitamin D
-    • Instructions: Go to any LifeLabs location
-    • Important: Bring requisition form (attached)
-    • Deadline: Within 2 weeks
-    • Next Steps: Results will be discussed at next appointment
-    • Additional Info: Patient has history of anemia`;
-
-  const exampleLabels = [
-    "Purpose:",
-    "Tests Needed:",
-    "Instructions:",
-    "Important:",
-    "Deadline:",
-    "Next Steps:",
-    "Additional Info:",
-  ];
-
-  const placeholderText = exampleLabels.map((label) => `• ${label}`).join("\n");
+  const examplePlaceholder = [
+    "• Purpose: New lab requisition for follow-up on recent symptoms (fatigue)",
+    "• Tests Needed: CBC, iron panel, vitamin D",
+    "• Instructions: Go to any LifeLabs location",
+    "• Important: Bring requisition form (attached)",
+    "• Deadline: Within 2 weeks",
+    "• Next Steps: Results will be discussed at next appointment",
+    "• Additional Info: Patient has history of anemia",
+  ].join("\n");
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -1476,7 +1557,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
   const aiPointsList: string[] = extractPoints(entryData?.aiPoints);
 
   const handleKeyDown = (e: ReactKeyboardEvent<HTMLTextAreaElement>) => {
-    const value = bulletInputs[contextKey] ?? exampleInput;
+    const value = bulletInputs[contextKey] ?? "";
 
     if (e.key === "Enter") {
       e.preventDefault();
@@ -1862,35 +1943,47 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
     optionKey: keyof AIEditOptions;
   }
 
-  const OptionToggle: React.FC<OptionToggleProps> = ({ label, optionKey }) => (
-    <div className="flex items-center justify-between mb-2">
-      <span>{label}</span>
-      <div className="flex">
-        <button
-          type="button"
-          className={`px-3 py-1 rounded-l border border-purple-600 ${
-            aiEditOptions[optionKey] === "low"
-              ? "bg-purple-600 text-white"
-              : "bg-white text-purple-600"
-          }`}
-          onClick={() => handleAIEditOptionChange(optionKey, "low")}
-        >
-          Low
-        </button>
-        <button
-          type="button"
-          className={`px-3 py-1 rounded-r border border-purple-600 ${
-            aiEditOptions[optionKey] === "high"
-              ? "bg-purple-600 text-white"
-              : "bg-white text-purple-600"
-          }`}
-          onClick={() => handleAIEditOptionChange(optionKey, "high")}
-        >
-          High
-        </button>
+  const OptionToggle: React.FC<OptionToggleProps> = ({ label, optionKey }) => {
+    const desc = AI_EDIT_DESCRIPTIONS[optionKey];
+    const selected = aiEditOptions[optionKey];
+    return (
+      <div className="mb-3">
+        <div className="flex items-center justify-between">
+          <span>{label}</span>
+          <div className="flex">
+            <button
+              type="button"
+              title={desc.low}
+              className={`px-3 py-1 rounded-l border border-purple-600 ${
+                selected === "low"
+                  ? "bg-purple-600 text-white"
+                  : "bg-white text-purple-600"
+              }`}
+              onClick={() => handleAIEditOptionChange(optionKey, "low")}
+            >
+              Low
+            </button>
+            <button
+              type="button"
+              title={desc.high}
+              className={`px-3 py-1 rounded-r border border-purple-600 ${
+                selected === "high"
+                  ? "bg-purple-600 text-white"
+                  : "bg-white text-purple-600"
+              }`}
+              onClick={() => handleAIEditOptionChange(optionKey, "high")}
+            >
+              High
+            </button>
+          </div>
+        </div>
+        <p className="text-xs text-gray-500 mt-0.5">{desc.summary}</p>
+        {selected && (
+          <p className="text-xs text-purple-700 mt-0.5">{desc[selected]}</p>
+        )}
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="h-full flex flex-col bg-white overflow-auto">
@@ -1970,14 +2063,41 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
       )}
       {showReplySection && (
         <div>
-          <div className="items-center px-4 pt-4">
-            <h3 className="font-semibold text-gray-600 pb-2">
-              Reply: (Click to Edit)
-            </h3>
-            {!showAIFeatures && (
-              <small className="text-xs text-red-500 pb-2">
-                Ctrl+Click to compare replies
-              </small>
+          <div className="px-4 pt-4 pb-2">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="font-semibold text-gray-600">Reply</h3>
+                <p className="text-xs text-gray-500">
+                  {showAIFeatures
+                    ? "Choose how you want to write your reply."
+                    : "Select a draft below to read and edit it."}
+                </p>
+              </div>
+              {!showAIFeatures && entry.aiReplies.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setCompareMode((on) => !on)}
+                  disabled={activeTab >= entry.aiReplies.length}
+                  title={
+                    activeTab >= entry.aiReplies.length
+                      ? "Select an AI draft first, then compare it with another"
+                      : "View two drafts side by side (Ctrl+Click on a tab also works)"
+                  }
+                  className={`shrink-0 px-3 py-1 text-sm rounded border focus:outline-none ${
+                    compareMode
+                      ? "bg-purple-50 border-purple-300 text-purple-700"
+                      : "bg-white border-blue-500 text-blue-600 hover:bg-blue-50"
+                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  {compareMode ? "Cancel compare" : "⇄ Compare drafts"}
+                </button>
+              )}
+            </div>
+            {compareMode && !showAIFeatures && (
+              <div className="mt-2 px-3 py-2 text-sm rounded bg-purple-50 border border-purple-200 text-purple-800">
+                Comparing with <b>{entry.aiReplies[activeTab]?.label}</b>.
+                Click another highlighted draft to see them side by side.
+              </div>
             )}
           </div>
           <div className="flex border-b">
@@ -2026,19 +2146,30 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
                 </button>
               </>
             ) : (
-              entry.aiReplies.map((reply, index) => (
-                <button
-                  key={index}
-                  onClick={(e) => handleTabClick(index, e)}
-                  className={`px-4 py-2 font-medium text-sm focus:outline-none ${
-                    activeTab === index
-                      ? "border-b-2 border-blue-500 text-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                >
-                  {reply.label}
-                </button>
-              ))
+              entry.aiReplies.map((reply, index) => {
+                const isCompareTarget = compareMode && activeTab !== index;
+                return (
+                  <button
+                    key={index}
+                    onClick={(e) => handleTabClick(index, e)}
+                    title={
+                      isCompareTarget
+                        ? `Compare with ${entry.aiReplies[activeTab]?.label}`
+                        : "Click to edit this draft"
+                    }
+                    className={`px-4 py-2 font-medium text-sm focus:outline-none ${
+                      activeTab === index
+                        ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
+                        : isCompareTarget
+                        ? "bg-purple-50 text-purple-700 ring-1 ring-inset ring-purple-200 hover:bg-purple-100"
+                        : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                    }`}
+                  >
+                    {isCompareTarget ? "⇄ " : ""}
+                    {reply.label}
+                  </button>
+                );
+              })
             )}
             <SplitViewPopup />
             {!showAIFeatures && (
@@ -2275,17 +2406,16 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
                 <p className="text-gray-500 mb-2 text-sm">
                   Please provide bullet points for the AI to transform into an
                   Email. Use <b>Enter</b> for a new bullet, or type <b>*</b>{" "}
-                  then <b>Tab</b> for a bullet. You can refer to the example
-                  below.
+                  then <b>Tab</b> for a bullet. The greyed-out text in the box
+                  is an example.
                 </p>
 
                 <SpeechToText
-                  value={bulletInputs[contextKey] ?? exampleInput}
+                  value={bulletInputs[contextKey] ?? ""}
                   onChange={(transcript) =>
                     setBulletInputs((prev) => ({
                       ...prev,
-                      [contextKey]:
-                        (prev[contextKey] ?? exampleInput) + transcript,
+                      [contextKey]: (prev[contextKey] ?? "") + transcript,
                     }))
                   }
                 />
@@ -2294,8 +2424,8 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
                   ref={textareaRef}
                   className="w-full p-2 border rounded mt-2"
                   rows={10}
-                  placeholder={placeholderText}
-                  value={bulletInputs[contextKey] ?? exampleInput}
+                  placeholder={examplePlaceholder}
+                  value={bulletInputs[contextKey] ?? ""}
                   onChange={handleChange}
                   onKeyDown={handleKeyDown}
                 />
@@ -2533,7 +2663,7 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
           )}
           {showAIEditModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded shadow-lg w-80 relative">
+              <div className="bg-white p-6 rounded shadow-lg w-96 max-w-full relative">
                 <button
                   type="button"
                   onClick={() => setShowAIEditModal(false)}
@@ -2544,13 +2674,21 @@ const MessageDetail: React.FC<MessageDetailProps> = ({
                 </button>
                 <h2 className="text-lg font-bold mb-4">AI Edit Options</h2>
                 <div className="space-y-2">
+                  {/*
                   {((activeTab === 3 && !showAIFeatures) ||
                     (activeTab === 0 && showAIFeatures)) && (
                     <OptionToggle label="Grammar" optionKey="grammar" />
+                  )} */}
+                  {activeTab === 3 && !showAIFeatures && (
+                    <OptionToggle label="Grammar" optionKey="grammar" />
                   )}
                   <OptionToggle label="Empathy" optionKey="empathy" />
+                  {/*
                   {((activeTab === 3 && !showAIFeatures) ||
                     (activeTab === 0 && showAIFeatures)) && (
+                    <OptionToggle label="Clarity" optionKey="clarity" />
+                  )} */}
+                  {activeTab === 3 && !showAIFeatures && (
                     <OptionToggle label="Clarity" optionKey="clarity" />
                   )}
                   <OptionToggle
